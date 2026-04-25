@@ -1,0 +1,1060 @@
+/* 90s Pixel / Retro styles */
+:root{
+  --bg:#0b2b3a;
+  --window-bg:#c0c0c0;
+  --titlebar:#000080;
+  --text:#0a0a0a;
+  --accent:#00ff00;
+  --xp-blue:#3a76ff;
+  --xp-grey:#cfcfcf;
+  --range-progress: 0%;
+  --vol-progress: 50%;
+}
+*{box-sizing:border-box}
+.html,body{height:100%;margin:0;background:#0b2b3a;color:var(--text)}
+.html, body { height:100%; margin:0; background:#0b2b3a; color:var(--text); }
+html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;background:#0b2b3a;color:var(--text)}
+.boot-screen{position:fixed;inset:0;background:#000;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:50}
+.boot-content{width:80%;max-width:800px}
+.logo{font-family: Tahoma, "Segoe UI", sans-serif;color:#7fffd4;margin-bottom:10px;text-align:center}
+.boot-lines{background:transparent;border:none;color:var(--accent);font-family:inherit;white-space:pre-wrap}
+.progress{height:10px;background:#222;margin-top:16px;border:2px solid #333}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#00ff00,#7fffd4);animation:bootprogress 3s linear forwards}
+@keyframes bootprogress{to{width:100%}}
+
+/* XP-like starting screen */
+.xp-starting{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:24px}
+.xp-big-logo{width:360px;max-width:80%;height:auto;display:block}
+.xp-loading{display:flex;flex-direction:column;align-items:center;gap:10px;width:420px;max-width:90%}
+.xp-progress-container {
+  width: 300px;
+  height: 22px;
+  border: 2px solid #7c7c7c;
+  border-radius: 6px;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 2px #000;
+  display: flex;
+  align-items: center;
+}
+
+.block-group {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  animation: xp-chase 2s linear infinite;
+}
+
+.block {
+  width: 12px;
+  height: 14px;
+  border-radius: 1px;
+  background: linear-gradient(
+    to bottom,
+    #3a76ff 0%,
+    #7baaff 40%,
+    #3a76ff 60%,
+    #1a46b3 100%
+  );
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes xp-chase {
+  0% { transform: translateX(-50px); }
+  100% { transform: translateX(310px); }
+}
+
+.copyright{font-family: Tahoma, "Segoe UI", sans-serif;color:#fff;opacity:0.85;font-size:12px;text-shadow:0 1px 0 rgba(0,0,0,0.6)}
+
+/* Boot screen bottom text (XP style) */
+.boot-copyright,
+.boot-microsoft{
+  position:fixed;
+  bottom:10px;
+  color:#fff;
+  text-shadow:0 1px 0 rgba(0,0,0,0.8);
+  opacity:0.9;
+  font-size:12px;
+  z-index:80;
+}
+.boot-copyright{left:12px;font-family: Tahoma, "Segoe UI", sans-serif}
+.boot-microsoft{right:12px;font-family: Tahoma, "Segoe UI", sans-serif;letter-spacing:1px;font-size:14px}
+
+
+.hidden{display:none}
+
+/* Desktop */
+.desktop{position:fixed;inset:0;overflow:hidden}
+.wallpaper{position:absolute;inset:0;background-color:#6dbb2f;background-image: url('/assets/img/wallpaper.webp'), url('../assets/img/wallpaper.webp'), url('assets/img/wallpaper.webp');background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0.98}
+.icons{position:relative;padding:20px;display:flex;flex-direction:column;gap:18px}
+.icon{width:96px;cursor:pointer;user-select:none}
+.icon{width:96px;cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform .16s ease;will-change:transform}
+.icon-art{width:64px;height:64px;display:block;object-fit:contain;margin-bottom:6px;background:transparent;border:0;box-shadow:none;filter:none;transition:all .2s ease-in-out}
+
+/* Make WordPad SVG fill the icon slot (96×96) so it matches other desktop icons */
+.icon-art[src$="wordpad.svg"],
+.icon-art[src*="/wordpad.svg"]{
+  width:96px;
+  height:96px;
+  display:block;
+  /* Fill the icon slot so the SVG artwork scales up to occupy the space */
+  object-fit:cover;
+  margin-bottom:6px;
+}
+
+/* Make Projects SVG fill the icon slot (96×96) as well */
+.icon-art[src$="projects.svg"],
+.icon-art[src*="/projects.svg"],
+.icon-art[src$="works.svg"],
+.icon-art[src*="/works.svg"]{
+  width:96px;
+  height:96px;
+  display:block;
+  object-fit:cover;
+  margin-bottom:6px;
+}
+
+
+.icon:hover > .icon-art[src$="bin.svg"],
+.icon:hover > .icon-art[src$="browser.svg"],
+.icon:hover > .icon-art[src$="wordpad.svg"],
+.icon:hover > .icon-art[src*="/bin.svg"],
+.icon:hover > .icon-art[src*="/browser.svg"],
+.icon:hover > .icon-art[src*="/wordpad.svg"] {
+  /* Darken slightly and add soft shadow instead of floating */
+  filter: brightness(.94);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+}
+.icon:active > .icon-art[src$="bin.svg"],
+.icon:active > .icon-art[src$="browser.svg"],
+.icon:active > .icon-art[src$="wordpad.svg"] {
+  transform: scale(.98);
+  filter: brightness(.9);
+}
+.icon-art[src$="bin.svg"],
+.icon-art[src*="/bin.svg"],
+.icon-art[src$="browser.svg"],
+.icon-art[src*="/browser.svg"]{
+  box-shadow: none !important;
+  filter: none !important;
+}
+.icon-label{text-align:center;font-size:8px;font-family: Tahoma, "Segoe UI", sans-serif}
+.icon-label{width:100%;text-align:center;font-size:11px;font-family: Tahoma, "Segoe UI", sans-serif;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.8);line-height:1.1;white-space:normal;word-break:break-word;margin-top:2px}
+.icon .folder{background:linear-gradient(#ffd27f,#ffb84d);position:relative}
+.icon .recycle-bin{background:linear-gradient(#e6f7ff,#cfeeff);display:flex;align-items:center;justify-content:center}
+.icon .recycle-bin::after{content:"🗑️";font-size:24px}
+
+/* Window */
+.window{position:absolute;left:140px;top:100px;width:760px;max-width:90%;background:var(--window-bg);border:4px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,0.6);font-family: Tahoma, "Segoe UI", sans-serif}
+.titlebar, .title-bar {
+  height: 30px;
+  background: linear-gradient(to bottom, #7baaff 0%, #3a76ff 5%, #1a46b3 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 1px #000;
+}
+.title{font-family: Tahoma, "Segoe UI", sans-serif;font-size:12px}
+.close{background:#c0c0c0;border:2px solid #000;padding:4px 8px;cursor:pointer;font-family: Tahoma, "Segoe UI", sans-serif}
+.window-body{padding:12px;background:#e9e9e9;color:#000}
+/* Resume viewer styles for WordPad */
+.resume-toolbar{background:#f3f3f3;border-bottom:1px solid #ddd;padding:8px;display:flex;align-items:center;gap:8px}
+.resume-actions{display:flex;gap:8px;align-items:center}
+.toolbar-btn{background:transparent;border:1px solid transparent;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13px}
+.toolbar-btn img{width:20px;height:20px;display:block}
+.toolbar-btn:hover{background:linear-gradient(#fff,#e9eef8);border-color:#cfdff5}
+.resume-viewer{background:#c9c9c9;padding:18px;display:flex;align-items:center;justify-content:center}
+#resume-viewer .object, .resume-viewer iframe, .resume-viewer object {box-shadow:0 4px 8px rgba(0,0,0,0.18);border:6px solid #fff}
+
+/* Resume viewer viewport: acts like the document preview area (outer window may scroll) */
+#resume-viewer{
+  /* allow outer scrolling when paper is larger than viewport */
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px; /* gap around paper like a viewer */
+  box-sizing:border-box;
+}
+
+/* A4 paper intrinsic size in pixels (approx at 96dpi). We'll scale this via CSS variable --resume-scale. */
+.resume-page{
+  width: 794px;
+  height: 1123px;
+  background: white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+  border: 6px solid #e6e6e6; /* subtle paper border */
+  box-sizing: content-box;
+  transform-origin: center center;
+  transform: scale(var(--resume-scale, 1));
+  transition: transform 240ms ease;
+  overflow: hidden; /* ensure PDF content doesn't show internal scroll */
+  display:block;
+}
+
+/* Make the iframe fill the paper exactly */
+.resume-page > iframe{
+  width:794px;
+  height:1123px;
+  display:block;
+  border:0;
+}
+
+/* Max constrain for very large screens so paper doesn't blow up */
+.resume-page.max-large{ max-width: 90vw; max-height: 90vh; }
+
+/* Small helper: when a manual zoom mode is active we add a class to the viewer for visual state (optional) */
+.resume-viewer--manual-zoom .resume-page{ box-shadow: 0 14px 28px rgba(0,0,0,0.45); }
+#wordpad-window .wmp-window{width:900px; height:720px; background:transparent}
+.viewer-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(0,0,0,0.08);background:linear-gradient(#fff,#f2f5fb);border-radius:6px;cursor:pointer}
+.viewer-btn img{width:20px;height:20px}
+.resume-container{width:100%;max-width:100%;box-sizing:border-box}
+
+/* make sure the worldpad window uses the same titlebar style */
+#wordpad-window .title-bar{height:34px;background:linear-gradient(to bottom,#3a76ff 0%,#1a46b3 100%);color:#fff;padding:6px 10px;display:flex;align-items:center}
+#wordpad-window .title-bar img{width:18px;height:18px;margin-right:8px}
+#wordpad-window .title-bar .window-controls{margin-left:auto;display:flex;gap:6px}
+
+/* white resume page wrapper to match screenshot */
+#wordpad-window .resume-container > div{border-radius:2px}
+
+/* Make WordPad window a comfortable reading size and center content */
+#wordpad-window{ width:940px; height:860px; left:120px; top:40px }
+/* Outer viewer padding and default small centered page */
+/* Outer viewer padding and default page size (increased). Use max caps so it never overflows the window. */
+#wordpad-window .resume-viewer{ padding:0 }
+#wordpad-window .resume-viewer object, #wordpad-window .resume-viewer iframe{ width:100%; height:100%; max-width:100%; max-height:100%; }
+
+/* Restore toolbar and chrome for the WordPad resume view to match screenshot */
+/* Hide only the window titlebar but keep menu/toolbar visible */
+#wordpad-window .title-bar { display: none !important; }
+#wordpad-window .wmp-window > .title-bar { display: none !important; }
+#wordpad-window .window-controls { display: none !important; }
+
+/* Ensure the menu-bar (toolbar) is visible and styled like the screenshot */
+#wordpad-window .menu-bar,
+#wordpad-window .toolbar-left,
+#wordpad-window .viewer-btn,
+#wordpad-window .wmp-window .menu-bar { display: flex !important; align-items:center; gap:10px; }
+
+#wordpad-window .menu-bar{ background: linear-gradient(#f6f7f9,#e9edf5); padding:8px 12px; border-bottom:1px solid rgba(0,0,0,0.08); }
+#wordpad-window .viewer-btn{ background:linear-gradient(#fff,#f3f6fb); border:1px solid rgba(0,0,0,0.08); padding:6px 10px; border-radius:6px; gap:8px; font-size:13px }
+#wordpad-window .viewer-btn img{ width:18px; height:18px }
+
+/* Grey area surrounding the centered resume page */
+#wordpad-window .wmp-content{ background:#9f9f9f; padding:18px; }
+#wordpad-window .resume-viewer{ display:flex; justify-content:center; align-items:flex-start; padding:28px; background:transparent }
+
+/* The white resume "page" centered with shadow and small rounded corners */
+/* White page wrapper: center, add stronger shadow and roomy padding to create wide gutters */
+#wordpad-window .resume-container > div{ background:#fff; padding:28px; box-shadow:0 10px 30px rgba(0,0,0,0.45); border-radius:6px; display:inline-block; box-sizing:border-box }
+
+/* Make the embedded PDF scale to a comfortable reading width while keeping aspect ratio */
+#wordpad-window .resume-container object, #wordpad-window .resume-container iframe{ width:680px; height:960px; max-width: calc(100% - 160px); max-height: calc(100vh - 240px); display:block; border:0 }
+
+/* Responsive tweaks */
+@media (max-width:1100px){
+  #wordpad-window .resume-container object, #wordpad-window .resume-container iframe{ width:calc(100% - 120px); height:calc(100% - 220px); }
+}
+
+@media (max-width:1100px){
+  #wordpad-window{ width:calc(100% - 80px); height:calc(100% - 140px); left:40px; top:60px }
+  #wordpad-window .resume-viewer object, #wordpad-window .resume-viewer iframe{ width:calc(100% - 120px); height:calc(100% - 220px) }
+}
+
+/* Maximized WordPad window: nearly full-bleed, minimal chrome and paddings */
+#wordpad-window.maximized{ left:8px !important; top:8px !important; width:calc(100% - 16px) !important; height:calc(100% - 76px) !important; }
+#wordpad-window.maximized .wmp-window{ width:100% !important; height:100% !important }
+#wordpad-window.maximized .menu-bar{ padding:8px 12px; }
+#wordpad-window.maximized .wmp-content{ background:#d8d8d8; padding:6px !important }
+
+/* Reduce outer gutters and make the white page fill most of the area when maximized */
+#wordpad-window.maximized .resume-viewer{ padding:12px !important; display:flex; justify-content:center; align-items:flex-start }
+#wordpad-window.maximized .resume-container > div{ padding:12px !important; box-shadow:none; border-radius:4px; display:block; width:100%; box-sizing:border-box; }
+
+/* When maximized, make the embedded PDF large and readable but capped to viewport */
+#wordpad-window.maximized .resume-container object,
+#wordpad-window.maximized .resume-container iframe{
+  width: min(960px, 84vw) !important;
+  height: calc(100vh - 200px) !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  display:block;
+  border:0 !important;
+}
+
+/* Ensure scrollbars appear on outer viewer when needed */
+#wordpad-window.maximized #resume-viewer{ overflow:auto }
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+/* Strong overrides to ensure resume fills WordPad popup and removes gutters/margins */
+#wordpad-window{
+  width:760px !important;
+  height:560px !important;
+  left:140px !important;
+  top:100px !important;
+}
+#wordpad-window .wmp-window{ width:100% !important; height:100% !important }
+#wordpad-window .menu-bar{ height:48px; box-sizing:border-box }
+#wordpad-window .wmp-content{ height:calc(100% - 48px); padding:0 !important; box-sizing:border-box; display:flex; }
+/* For the WordPad window: keep the resume as an intrinsic A4 paper and let the outer viewer scroll when needed.
+   Avoid forcing the paper to 100% of the window which caused internal scroll and stretching. */
+#wordpad-window .resume-viewer{
+  padding:0 !important;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto; /* allow outer scrolling when the scaled paper is larger than the window */
+}
+#wordpad-window .resume-container{ width:100%; height:100%; display:flex; align-items:center; justify-content:center }
+#wordpad-window .resume-container .resume-page{
+  /* Use intrinsic A4 size but allow scaling via --resume-scale */
+  width:794px;
+  height:1123px;
+  margin:0;
+  background:#fff;
+  box-sizing:content-box;
+}
+#wordpad-window .resume-container iframe, #wordpad-window .resume-container object{
+  /* Match the intrinsic paper dimensions; allow them to shrink via max constraints */
+  width:794px;
+  height:1123px;
+  max-width: calc(100% - 56px);
+  max-height: calc(100% - 56px);
+  display:block;
+  border:0;
+}
+
+.tabs button{background:#ddd;border:2px solid #000;padding:6px 10px;cursor:pointer;font-family: Tahoma, "Segoe UI", sans-serif}
+.tabs button.active{background:#b0d4ff}
+.page h1,.page h2{font-family: Tahoma, "Segoe UI", sans-serif}
+.about-grid{display:flex;gap:12px;align-items:flex-start}
+.profile-pic{width:140px;height:140px;border:3px solid #000;background:#fff}
+.about-text p{margin:0 0 8px 0}
+.about-text h3{margin:8px 0 4px 0}
+
+/* Small screens */
+@media (max-width:700px){
+  .window{left:12px;top:60px;width:calc(100% - 24px)}
+  .icons{flex-direction:row;gap:12px;padding:12px}
+}
+
+/* Taskbar styles (Windows XP like) */
+.taskbar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:40px;
+  background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #1941a5 100%);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  z-index:1000;
+}
+
+.start-button {
+  display: flex;
+  align-items: center;      /* Vertically centers logo and text */
+  justify-content: center;   /* Horizontally centers logo and text */
+  gap: 12px;                /* Slight gap increase for better spacing */
+
+  /* Dimensions */
+  height: 100%;             /* Fills the taskbar height */
+  min-width: 125px;         /* Increased by 5px (was 120px) */
+  padding: 0 18px;          /* Increased padding for a beefier look */
+  box-sizing: border-box;
+
+  /* Shape & Border */
+  background: linear-gradient(to bottom, #5fd35f 0%, #3cbf3c 50%, #2e9c2e 100%);
+  border-top-left-radius: 0px !important;    /* Straight left edge */
+  border-bottom-left-radius: 0px !important; /* Straight left edge */
+  border-top-right-radius: 15px;             /* Curved right edge */
+  border-bottom-right-radius: 15px;          /* Curved right edge */
+  border: 1px solid #0b4d0b;
+  border-left: none;                         /* Sits flush against screen */
+
+  /* Text Styling */
+  color: #fff;
+  font-family: Tahoma, sans-serif;
+  font-size: 24px;          /* Increased (was 20px) */
+  font-weight: bold;
+  font-style: italic;       /* Classic XP style */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -2px 2px rgba(0,0,0,0.25);
+}
+
+/* Ensure the logo behaves inside the centered flexbox */
+.start-button img, 
+.start-button .start-logo {
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
+  display: block;
+  margin: 0; /* Removed margin-left to ensure center alignment works */
+}
+
+.start-button .start-text {
+  margin: 0; /* Let the 'gap' property handle the spacing */
+  line-height: 1;
+}
+
+
+.start-button{box-sizing:border-box}
+.start-button .start-logo{display:block;width:28px;height:28px;object-fit:contain;margin:0;border:0;background:transparent;padding:0;vertical-align:middle}
+.start-button .start-text{font-family:Tahoma, sans-serif;font-size:20px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.4);margin-left:8px;line-height:1}
+.quicklaunch{display:flex;gap:6px;margin-left:6px}
+.quick-launch{background:transparent;border:2px solid rgba(255,255,255,0.12);width:34px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer}
+.taskbar-items{display:flex;gap:6px;align-items:center;flex:1;margin-left:8px}
+.task-item{background:#d7e9ff;border:2px solid #022c6a;padding:10px 20px;font-family: Tahoma, "Segoe UI", sans-serif;cursor:pointer;border-radius:3px}
+.task-item.hidden{display:none}
+.task-item.active{background:#b0d4ff}
+
+/* Positioning helpers: first open task goes to the left, second to the right */
+.task-item.left{order:0}
+.task-item.right{order:1}
+
+.system-tray{height:100%;display:flex;align-items:center;padding:0 10px;background:linear-gradient(to bottom, #0ea3f8 0%, #0089e5 100%);border-left:1px solid #106ad2}
+.tray{display:flex;align-items:center;gap:12px}
+.tray-icons{display:flex;gap:8px;margin-right:12px;align-items:center}
+.tray-icon{font-size:16px;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;width:20px;height:20px}
+
+.notif-wrapper{position:relative;display:flex;align-items:center}
+.balloon{display:none;position:absolute;bottom:45px;right:-10px;width:280px;background:#ffffef;border:1px solid #000;border-radius:8px;padding:10px;box-shadow:2px 2px 4px rgba(0,0,0,0.4);font-size:12px;z-index:2000;pointer-events:none}
+.notif-wrapper:hover .balloon{display:block}
+.balloon-header{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:4px}
+.balloon-tail{position:absolute;bottom:-10px;right:15px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:10px solid #000}
+.balloon-tail::after{content:'';position:absolute;bottom:1px;right:-10px;border-left:10px solid transparent;border-right:10px solid transparent;border-top:10px solid #ffffef}
+
+/* Clock: light-blue bordered, with the volume icon inside */
+.clock{color:#fff;font-size:11px;text-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:Tahoma, 'Segoe UI', sans-serif}
+.clock .tray-icon{width:18px;height:18px;flex:0 0 18px;display:block;margin-right:0px;padding:0;background:transparent;border-radius:2px;box-shadow:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,0.6));}
+.clock .tray-icon{position:relative}
+
+/* Tooltip for tray icons (uses the element's title attr) */
+.clock .tray-icon::after{
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #fff;
+  color: #062a4a;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  border: 1px solid #0ea3f8;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease, transform .12s ease;
+  z-index: 220;
+}
+.clock .tray-icon::before{
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+  opacity: 0;
+  transition: opacity .12s ease, transform .12s ease;
+  z-index: 221;
+}
+.clock .tray-icon:hover::after,
+.clock .tray-icon:hover::before{
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.clock .clock-time{font-family: Tahoma, "Segoe UI", sans-serif;color:#062a4a}
+
+/* XP-style Start button overrides (applies user's design) */
+.start-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+
+  min-width: 130px;
+  height: 100%; /* keep filling the taskbar height */
+  padding: 0 15px;
+  cursor: pointer;
+
+  background: linear-gradient(to bottom, #4fba4f 0%, #359d35 50%, #207a20 100%);
+  border-radius: 0 20px 20px 0;
+  border: 1px solid #144f14;
+  border-left: none;
+
+  box-shadow:
+    inset 1px 3px 5px rgba(255,255,255,0.7),
+    inset -3px -3px 6px rgba(0,0,0,0.4),
+    0 1px 1px rgba(0,0,0,0.6);
+  color: #fff;
+}
+
+.start-button .start-logo,
+.start-button img {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
+  display: block;
+  margin: 0;
+}
+
+.start-button .start-text {
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+  font-size: 26px;
+  font-weight: bold;
+  font-style: italic;
+  color: #fff;
+  text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-left: 8px;
+}
+
+
+.win-controls { margin-left: auto; display: flex; gap: 2px; }
+.win-btn {
+  width: 21px;
+  height: 21px;
+  border: 1px solid rgba(255,255,255,0.65);
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform .1s ease, box-shadow .1s ease, background .12s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12) inset;
+}
+.win-btn:hover{ box-shadow: 0 14px 28px rgba(0,0,0,0.28); filter: brightness(.94); }
+.win-btn.close { background: linear-gradient(to bottom, #ffd1d1 0%, #e04343 50%, #b82222 100%); }
+
+/* ER / Browser window: use Firefox-like chrome */
+#er-window{
+  width:900px;
+  height:600px;
+  background:#fff;
+  border:4px solid #002d96;
+  border-radius:8px 8px 0 0;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+
+/* Only render ER window as flex when it's not hidden so .hidden controls visibility */
+#er-window:not(.hidden){display:flex;flex-direction:column}
+
+/* Titlebar compatibility: copy music-player title style to existing .titlebar used by ER window */
+.menu-bar {
+  background: #eff0f1;
+  padding: 2px 10px;
+  font-size: 11px;
+  display: flex;
+  gap: 12px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Menu item hover: subtle lift + shadow animation */
+.menu-bar span{
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: transform .1s cubic-bezier(.2,.8,.2,1), box-shadow .1s ease;
+  position: relative;
+}
+.menu-bar span:hover{
+  box-shadow: 0 8px 20px rgba(0,0,0,0.20);
+  filter: brightness(.95);
+  z-index: 3;
+}
+/* Tab-bar (for browser tabs) */
+.tab-bar {
+  background: #dce4f1;
+  padding-top: 5px;
+  display: flex;
+  padding-left: 8px;
+  border-bottom: 1px solid #999;
+  align-items: center;
+}
+.tab {
+  background: #f0f0f0;
+  border: 1px solid #999;
+  border-bottom: none;
+  padding: 5px 15px;
+  font-size: 11px;
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 120px;
+}
+.tab.active { background: #fff; position: relative; top: 1px; z-index: 2; }
+.plus-tab { padding: 5px 10px; background: #ccc; border: 1px solid #999; border-bottom: none; margin-left: 2px; cursor: pointer; }
+
+/* Navbar (address/search bar) */
+.navbar {
+  background: var(--toolbar-bg);
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #999;
+}
+.nav-btn { width:28px; height:28px; background:#fff; border:1px solid #999; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; font-size:18px; }
+.url-bar { flex-grow:1; height:22px; border:1px solid #999; padding:0 8px; font-size:12px; display:flex; align-items:center; background:#fff; }
+.search-bar { width:180px; height:22px; border:1px solid #999; background:#fff; display:flex; align-items:center; padding:0 5px; }
+.browser-content { flex-grow:1; background:#fff; padding:12px; overflow:auto; }
+
+/* Remove the old CSS play triangle */
+.wmp-icon-small::after {
+    display: none;
+}
+
+/* New class for an <img> SVG icon in the title bar */
+.wmp-icon-svg{
+  width:18px;
+  height:18px;
+  margin-right:8px;
+  display:block;
+  object-fit:contain;
+}
+.window-controls{margin-left:auto;display:flex;gap:3px}
+.win-btn{width:22px;height:22px;border:1px solid rgba(255,255,255,0.65);border-radius:3px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-size:14px;transition:transform .1s ease, box-shadow .1s ease}
+.win-btn.close{background:linear-gradient(to bottom,#ffd1d1 0%, #e04343 50%, #b82222 100%)}
+.menu-bar{background:#fff;padding:4px 12px;font-size:11px;display:flex;gap:15px;border-bottom:1px solid #999}
+.wmp-content{flex-grow:1;background:var(--wmp-bg);display:flex;padding:10px;gap:5px}
+.sidebar{width:140px;display:flex;flex-direction:column;gap:4px;padding-top:5px}
+.tab{padding:12px 10px;font-size:11px;font-weight:bold;color:#000;background:linear-gradient(to bottom,#e6effb,#c6d9f7);border:1px solid #9bbbf7;text-align:left;cursor:pointer;transition:all 0.2s}
+.tab:hover{ background:#f7fbff; box-shadow:0 8px 18px rgba(0,0,0,0.14); filter: brightness(.985); z-index:10 }
+.tab.active{background:#fff;border-right:none;transform:none;box-shadow:none}
+.player-main{flex-grow:1;display:flex;flex-direction:column}
+.video-container{flex-grow:1;background:#000;border:2px solid #555;border-radius:4px 4px 0 0;overflow:hidden;position:relative}
+.progress-area{height:35px;background:#222;display:flex;align-items:center;padding:0 12px;gap:15px;border:2px solid #555;border-top:none;border-radius:0 0 4px 4px}
+/* Seek / duration bar - cross-browser visuals using CSS variables */
+.seek-bar{flex-grow:1;appearance:none;height:6px;background:linear-gradient(to right,var(--xp-blue) var(--range-progress),#444 var(--range-progress));border-radius:3px;outline:none;cursor:pointer}
+.seek-bar::-webkit-slider-runnable-track{background:transparent;height:6px;border-radius:3px}
+.seek-bar::-moz-range-track{background:#444;height:6px;border-radius:3px}
+.seek-bar::-moz-range-progress{background:var(--xp-blue);height:6px;border-radius:3px}
+input[type="range"]::-webkit-slider-thumb{appearance:none;height:14px;width:14px;background:#fff;border:1px solid #888;border-radius:50%;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.5);margin-top:-4px}
+.time-display{color:#fff;font-size:11px;font-family: Tahoma, "Segoe UI", sans-serif;min-width:35px}
+.control-panel{height:100px;background:linear-gradient(to bottom,#d6e4f9 0%,#a4bedb 50%,#d6e4f9 100%);border-top:1px solid #778;display:flex;align-items:center;padding:0 30px}
+.transport-group{display:flex;align-items:center;gap:15px}
+.btn-main{width:55px;height:55px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);border:1px solid rgba(68,68,85,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s ease, box-shadow .12s ease;box-shadow:0 3px 6px rgba(0,0,0,0.28)}
+.btn-main:hover{ box-shadow:0 12px 26px rgba(0,0,0,0.30); filter: brightness(.95); }
+.btn-small{width:36px;height:36px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);border:1px solid rgba(119,119,119,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow .12s ease, filter .08s ease}
+.btn-small:hover{ box-shadow:0 10px 20px rgba(0,0,0,0.24); filter: brightness(.95); }
+.volume-section{margin-left:auto;display:flex;align-items:center;gap:12px}
+.vol-slider{width:120px;appearance:none;height:6px;background:linear-gradient(to right,var(--xp-blue) var(--vol-progress),var(--xp-grey) var(--vol-progress));border-radius:3px;outline:none}
+.vol-slider::-webkit-slider-runnable-track{background:transparent;height:6px;border-radius:3px}
+.vol-slider::-moz-range-track{background:var(--xp-grey);height:6px;border-radius:3px}
+.vol-slider::-moz-range-progress{background:var(--xp-blue);height:6px;border-radius:3px}
+
+.start-menu{position:fixed;left:8px;bottom:54px;width:220px;background:linear-gradient(#ffffff,#e6eef8);border:3px solid #000;padding:8px;z-index:70}
+.start-menu ul{list-style:none;margin:0;padding:0}
+.start-menu li{margin:6px 0}
+.start-menu button{width:100%;text-align:left;padding:6px;border:2px solid #fff;background:#000;cursor:pointer}
+
+/* Click animations: XP-style float-out and zoom-out for clicked items */
+.xp-click { animation-duration: 320ms; animation-timing-function: cubic-bezier(.2,.8,.2,1); animation-fill-mode: forwards; pointer-events: none; }
+@keyframes xp-float-out {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  40% { transform: translateY(-6px) scale(1.04); }
+  100% { transform: translateY(-18px) scale(0.96); opacity: 0; }
+}
+@keyframes xp-zoom-out {
+  0% { transform: scale(1); opacity: 1; }
+  45% { transform: scale(1.12); }
+  100% { transform: scale(0.85); opacity: 0; }
+}
+.xp-click--float { animation-name: xp-float-out; }
+.xp-click--zoom  { animation-name: xp-zoom-out; }
+
+/* Quick pressed feedback for buttons and controls */
+.press-feedback { transition: transform .08s ease; }
+.press-feedback:active { transform: translateY(2px) scale(0.98); }
+
+@media (max-width:480px){
+  .taskbar{height:60px}
+  .start-button{padding:8px}
+}
+
+/* User-provided loading screen styles (appended) */
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  /* font-family: ocr-a-std, monospace; */
+  font-family: monospace;
+  font-weight: 400;
+  font-style: normal;
+  color: white;
+  /* mobile friendly font size */
+  font-size: 16px;
+}
+
+/* if on mobile */
+@media only screen and (max-width: 768px) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p {
+    font-size: 10px;
+  }
+}
+
+br {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  height: 16px;
+}
+
+.loading::after {
+  display: inline-block;
+  animation: dotty steps(1, end) 1s infinite;
+  content: '';
+}
+
+@keyframes dotty {
+  0% {
+    content: '   ';
+  }
+  25% {
+    content: '. ';
+  }
+  50% {
+    content: '.. ';
+  }
+  75% {
+    content: '...';
+  }
+  100% {
+    content: '   ';
+  }
+}
+.blinking-cursor {
+  background-color: #fff;
+  width: 0.8em;
+  height: 0.15em;
+  -webkit-animation: 0.65s blink step-end infinite;
+  -moz-animation: 0.65s blink step-end infinite;
+  -ms-animation: 0.65s blink step-end infinite;
+  -o-animation: 0.65s blink step-end infinite;
+  animation: 0.65s blink step-end infinite;
+}
+
+@keyframes blink {
+  from,
+  to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: white;
+  }
+}
+
+@-moz-keyframes blink {
+  from,
+  to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: white;
+  }
+}
+
+@-webkit-keyframes blink {
+  from,
+  to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: white;
+  }
+}
+
+@-ms-keyframes blink {
+  from,
+  to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: white;
+  }
+}
+
+@-o-keyframes blink {
+  from,
+  to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: white;
+  }
+}
+
+.bios-start-button {
+  background-color: #000;
+  border: 4px solid #fff;
+  border-width: 4px 3px 4px 3px;
+}
+
+.bios-start-button p {
+  box-sizing: border-box;
+  padding: 8px;
+}
+
+.bios-start-button:hover p {
+  background-color: #fff;
+  cursor: pointer;
+  color: #000;
+}
+
+.loading-screen-header {
+  padding: 48px;
+}
+
+.loading-screen-body {
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+.loading-screen-footer {
+  padding: 48px;
+  padding-bottom: 64px;
+}
+
+.info-wrapper {
+  top: 64px;
+  left: 64px;
+}
+
+/* if on mobile make all loading screen elements have a padding of 16 */
+@media only screen and (max-width: 768px) {
+  .loading-screen-header {
+    padding: 16px;
+  }
+
+  .info-wrapper {
+    top: 16px;
+    left: 16px;
+  }
+
+  .blinking-cursor {
+    background-color: #fff;
+    width: 0.4em;
+    height: 0.08em;
+    -webkit-animation: 0.65s blink step-end infinite;
+    -moz-animation: 0.65s blink step-end infinite;
+    -ms-animation: 0.65s blink step-end infinite;
+    -o-animation: 0.65s blink step-end infinite;
+    animation: 0.65s blink step-end infinite;
+  }
+    
+  .loading-screen-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .loading-screen-footer {
+    padding: 16px;
+    padding-bottom: 32px;
+  }
+}
+
+/* Loading overlay styles (added by loadingScreen integration) */
+.loading-overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background-color:#000;
+  z-index:20000;
+  transition:opacity .25s ease, transform .25s ease;
+  opacity:1;
+}
+.loading-overlay.hidden{opacity:0;transform:scale(1.08);pointer-events:none}
+.loading-popup{background:#000;padding:24px;border:7px solid #fff;display:flex;flex-direction:column;justify-content:center;max-width:500px;color:#fff;font-family: 'VT323', 'Press Start 2P', monospace, sans-serif;line-height:1.45}
+.loading-text{white-space:pre-wrap;font-size:14px}
+.bios-start-button{border:3px solid #fff;padding:8px 18px;display:inline-block;cursor:pointer;margin-top:6px;background:transparent;transition:background-color .18s ease,color .18s ease;border-radius:2px}
+.bios-start-button p{margin:0;font-size:12px;letter-spacing:1px;color:#fff}
+.bios-start-button:hover{background:#ffffff;border-color:#000}
+.bios-start-button:hover p{color:#000}
+.mobile-warning{color:yellow;font-weight:bold}
+.webgl-error{max-width:460px}
+.hidden{display:none}
+.loading-popup{opacity:0;transform:scale(.98);transition:opacity .25s ease, transform .25s ease}
+.loading-popup.show{opacity:1;transform:scale(1)}
+
+/* WordPad popup: exact Firefox/About window frame + size */
+#wordpad-window.wordpad-firefox-window{
+  width: 900px !important;
+  height: 600px !important;
+  left: 140px !important;
+  top: 100px !important;
+  background: #fff;
+  border: 4px solid #002d96;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+#wordpad-window.wordpad-firefox-window:not(.hidden){
+  display: flex;
+  flex-direction: column;
+}
+
+#wordpad-window.wordpad-firefox-window .titlebar{
+  display: flex !important;
+  height: 30px;
+  align-items: center;
+}
+
+#wordpad-window.wordpad-firefox-window .win-controls{
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+
+/* Keep popup controls visible in the Firefox-style WordPad titlebar */
+#wordpad-window.wordpad-firefox-window .window-controls,
+#wordpad-window.wordpad-firefox-window .win-controls{
+  display: flex !important;
+  margin-left: auto;
+  gap: 2px;
+}
+
+#wordpad-window.wordpad-firefox-window .win-btn{
+  width: 21px !important;
+  height: 21px !important;
+  border: 1px solid rgba(255,255,255,0.72) !important;
+  border-radius: 3px !important;
+  background: linear-gradient(to bottom, #cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%) !important;
+  color: #fff !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 12px !important;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12) inset !important;
+}
+
+#wordpad-window.wordpad-firefox-window #wordpad-minimize{font-size:13px;padding-bottom:2px}
+#wordpad-window.wordpad-firefox-window #wordpad-maximize{font-size:12px;padding-bottom:1px}
+#wordpad-window.wordpad-firefox-window #wordpad-close{font-size:13px;padding-bottom:1px}
+
+#wordpad-window.wordpad-firefox-window .win-btn.close{
+  background: linear-gradient(to bottom, #ffd1d1 0%, #e04343 50%, #b82222 100%) !important;
+}
+
+#wordpad-window.wordpad-firefox-window .win-btn:hover{
+  filter: brightness(.95);
+}
+
+#wordpad-window.wordpad-firefox-window .menu-bar{
+  background: #eff0f1;
+  padding: 2px 10px;
+  font-size: 11px;
+  display: flex !important;
+  gap: 12px;
+  border-bottom: 1px solid #ccc;
+}
+
+#wordpad-window.wordpad-firefox-window .tab-bar{
+  background: #dce4f1;
+  padding-top: 5px;
+  display: flex;
+  padding-left: 8px;
+  border-bottom: 1px solid #999;
+  align-items: center;
+}
+
+#wordpad-window.wordpad-firefox-window .wordpad-toolbar{
+  background: #ebf0f8;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #999;
+}
+
+#wordpad-window.wordpad-firefox-window .viewer-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid #a7b4c9;
+  border-radius: 5px;
+  background: linear-gradient(#ffffff,#edf2f9);
+  cursor: pointer;
+  font-size: 12px;
+  color: #1a1a1a;
+}
+
+#wordpad-window.wordpad-firefox-window .viewer-btn img{
+  width: 14px;
+  height: 14px;
+}
+
+#wordpad-window.wordpad-firefox-window .wordpad-browser-content{
+  flex-grow: 1;
+  background: #bdbdbd;
+  padding: 12px;
+  overflow: auto;
+}
+
+#wordpad-window.wordpad-firefox-window #resume-viewer{
+  width: 100%;
+  min-height: 100%;
+  overflow: auto;
+  background: #2f3136;
+  border: 1px solid #8d8d8d;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14px;
+}
+
+#wordpad-window.wordpad-firefox-window .resume-page{
+  margin: 0 auto;
+  background: #fff;
+  border: 8px solid #f7f7f7;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+#wordpad-window.wordpad-firefox-window.maximized{
+  left: 8px !important;
+  top: 8px !important;
+  width: calc(100% - 16px) !important;
+  height: calc(100% - 56px) !important;
+  border-radius: 6px 6px 0 0;
+}
+
+@media (max-width: 1120px){
+  #wordpad-window.wordpad-firefox-window{
+    width: calc(100% - 24px) !important;
+    height: calc(100% - 84px) !important;
+    left: 12px !important;
+    top: 12px !important;
+  }
+}

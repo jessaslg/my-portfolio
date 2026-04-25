@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Jessa Saligao - Portfolio</title>
+		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="src/styles.css">
+	</head>
+	<body>
+		<!-- Loading overlay inserted by loadingScreen integration -->
+		<div id="loading-overlay" class="loading-overlay" aria-hidden="false">
+			<div class="loading-popup start-popup" role="dialog" aria-label="Start popup">
+				<p class="loading-text">It gets easier. Every day it gets a little easier, but you gotta do it everyday. That's the hard part. But it does easier.</p>
+				<div class="mobile-warning" style="display:none;color:yellow;margin-top:8px;font-weight:bold">WARNING: This experience is best viewed on a desktop or laptop computer.</div>
+				<div style="display:flex;justify-content:center;margin-top:16px">
+					<button class="bios-start-button" type="button"><p>START</p></button>
+				</div>
+			</div>
+
+			<div id="webgl-error" class="loading-popup webgl-error hidden" role="alert" aria-hidden="true">
+				<p><strong style="color:red">CRITICAL ERROR:</strong> No WebGL Detected</p>
+				<p>WebGL is required to run this site. Please enable it or switch to a browser which supports WebGL.</p>
+			</div>
+		</div>
+		<div id="boot" class="boot-screen hidden">
+			<div class="boot-content">
+
+
+				<!-- XP-like starting screen (shown after progress completes) -->
+				<div class="xp-starting hidden" id="xp-starting" aria-hidden="true">
+					<img src="assets/img/xp-logo1.png" alt="Microsoft Windows" class="xp-big-logo">
+					<div class="xp-loading" aria-hidden="true">
+						<div class="xp-progress-container">
+							<div class="block-group">
+								<div class="block"></div>
+								<div class="block"></div>
+								<div class="block"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<!-- bottom-left/right copyright / brand text (XP-style) -->
+			<div class="boot-copyright hidden">Copyright ® Microsoft Corporation</div>
+			<div class="boot-microsoft hidden">Microsoft</div>
+			</div>
+		</div>
+
+		<div id="desktop" class="desktop hidden">
+			<div class="wallpaper" style="background-image: url('assets/img/wallpaper.webp?v=2'); background-position:center; background-size:cover;"></div>
+
+			<div class="icons">
+
+				<div class="icon" id="er-folder" data-click-anim="float">
+					<img src="assets/img/browser.svg" alt="ER" class="icon-art">
+					<div class="icon-label">About Me</div>
+				</div>
+
+				<div class="icon" id="project" data-click-anim="float">
+					<img src="assets/img/projects.svg" alt="My Projects" class="icon-art">
+					<div class="icon-label">My Projects</div>
+				</div>
+
+								<div class="icon" id="wordpad" data-click-anim="float">
+									<img src="assets/img/wordpad.svg" alt="WordPad" class="icon-art">
+									<div class="icon-label">WordPad</div>
+								</div>
+								
+			</div>
+
+			<div id="er-window" class="window hidden firefox-window" role="dialog" aria-label="Jessa Portfolio">
+				<div class="titlebar">
+					<img src="assets/img/browser.svg" class="wmp-icon-svg ff-icon" alt="Mozilla Firefox">
+					<span>Mozilla Firefox</span>
+					<div class="window-controls win-controls">
+						<div class="win-btn" id="er-minimize">_</div><div class="win-btn" id="er-maximize">□</div><div class="win-btn close" id="er-close">×</div>
+					</div>
+				</div>
+
+				<div class="menu-bar">
+					<span>File</span> <span>Edit</span> <span>View</span> <span>History</span> <span>Bookmarks</span> <span>Tools</span> <span>Help</span>
+				</div>
+
+				<nav id="nav-tabs" class="tab-bar" role="tablist">
+					<div class="tab active">
+						<img src="assets/img/browser.svg" style="width:12px;" alt="">
+						Jessa Portfolio
+					</div>
+					<div class="plus-tab">+</div>
+				</nav>
+
+				<div class="navbar">
+					<div class="nav-btn">←</div>
+					<div class="nav-btn">→</div>
+					<div class="url-bar">about:home</div>
+					<div class="search-bar">
+						<span style="font-size:11px; color:#666;">Google</span>
+						<span style="margin-left:auto; color:#999;">🔍</span>
+					</div>
+					<div class="nav-btn" style="border-radius:3px; width:22px; height:22px; font-size:12px;">🏠</div>
+				</div>
+
+				<div class="browser-content">
+					<div class="page" id="page-home">
+						<h1>Welcome to my portfolio</h1>
+						<p>Double-click the Jessa folder to explore. Use the tabs to navigate.</p>
+					</div>
+
+					<div class="page hidden" id="page-about">
+						<h2>About Jessa</h2>
+						<div class="about-grid">
+							<img src="assets/profile.svg" alt="Jessa profile" class="profile-pic">
+							<div class="about-text">
+								<p>Hi, I'm <strong>Jessa</strong>. I'm a front-end enthusiast who loves <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">JavaScript</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">HTML</a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">CSS</a>. I build playful, nostalgic web experiences that blend retro aesthetics with modern accessibility.</p>
+								<h3>Education</h3>
+								<ul>
+									<li><strong>B.S. Computer Science</strong> — Example University (2018–2022)</li>
+								</ul>
+								<h3>Experience</h3>
+								<ul>
+									<li>Front-End Developer — <a href="https://example.com" target="_blank">Acme Co.</a> (2023)</li>
+									<li>Intern — Widget Labs (2021)</li>
+								</ul>
+								<h3>Skills</h3>
+								<p>HTML, CSS, JavaScript, React, Accessibility, Pixel art</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="page hidden" id="page-portfolio">
+						<h2>Portfolio</h2>
+						<p>Projects will be listed here. Replace these placeholders with real project links and screenshots.</p>
+					</div>
+
+					<div class="page hidden" id="page-contact">
+						<h2>Contact</h2>
+						<p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
+						<p>LinkedIn: <a href="https://linkedin.com" target="_blank">Profile</a></p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Projects floating window (hidden by default) -->
+			<div id="project-window" class="window hidden" role="dialog" aria-label="Projects">
+				<div class="titlebar">
+					<img src="assets/img/projects.svg" class="wmp-icon-svg" alt="Projects">
+					<span>My Projects</span>
+					<div class="window-controls win-controls">
+						<div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div>
+					</div>
+				</div>
+
+				<div class="menu-bar">
+					<span>File</span> <span>Edit</span> <span>View</span> <span>Help</span>
+				</div>
+
+				<nav class="tab-bar" role="tablist">
+					<div class="tab active">Projects</div>
+				</nav>
+
+				<div class="window-body">
+					<h2>My Projects</h2>
+					<p>Here are some highlighted projects. Replace with real project links and screenshots.</p>
+					<ul>
+						<li><strong>Project A</strong> — Description and link.</li>
+						<li><strong>Project B</strong> — Description and link.</li>
+						<li><strong>Project C</strong> — Description and link.</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Music Player floating window (hidden by default) -->
+			<div id="music-player-window" class="music-player hidden" role="dialog" aria-label="Music Player">
+				<div class="wmp-window">
+					<div class="title-bar">
+							<img src="assets/img/music-player.svg" class="wmp-icon-svg" alt="WMP Icon">
+							<span>Windows Media Player</span>
+							<div class="window-controls">
+								<div class="win-btn">_</div><div class="win-btn">□</div><div class="win-btn close">×</div>
+							</div>
+						</div>
+
+				    <div class="menu-bar">
+				        <span>File</span> <span>View</span> <span>Play</span> <span>Tools</span> <span>Help</span>
+				    </div>
+
+				    <div class="wmp-content">
+				        <div class="sidebar">
+				            <div class="tab active">Now Playing</div>
+				            <div class="tab">Media Guide</div>
+				            <div class="tab">Copy from CD</div>
+				            <div class="tab">Media Library</div>
+				            <div class="tab">Radio Tuner</div>
+				            <div class="tab">Copy to CD or Device</div>
+				        </div>
+
+				        <div class="player-main">
+				            <div class="video-container">
+				                <video id="wmpVideo" loop muted playsinline>
+				                    <source src="https://assets.mixkit.co/videos/preview/mixkit-small-flowering-plants-in-the-wind-432-large.mp4" type="video/mp4">
+				                </video>
+				            </div>
+				            <div class="progress-area">
+				                <span class="time-display" id="wmp-current-time">0:00</span>
+				                <input type="range" class="seek-bar" id="wmp-seek-bar" value="0" max="100" style="--range-progress: 0%;">
+				                <span class="time-display" id="wmp-duration-time">0:00</span>
+				            </div>
+				        </div>
+				    </div>
+
+				    <div class="control-panel">
+				        <div class="transport-group">
+				            <button class="btn-small" id="wmp-rewind">◀◀</button>
+				            <button class="btn-main" id="wmp-play">
+				                <span id="wmp-play-icon" style="margin-left:5px; font-size: 24px;">▶</span>
+				            </button>
+				            <button class="btn-small" id="wmp-stop">⏹</button>
+				            <button class="btn-small" id="wmp-forward">▶▶</button>
+				        </div>
+
+				        <div class="volume-section">
+				            <span style="font-size: 18px; color: var(--xp-blue);">🔊</span>
+				            <input type="range" id="wmp-volume-slider" class="vol-slider" min="0" max="1" step="0.01" value="0.5" style="--vol-progress: 50%;">
+				        </div>
+				    </div>
+				</div>
+				<audio id="wmp-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+			</div>
+
+			<!-- WordPad / Resume floating window (hidden by default) -->
+			<div id="wordpad-window" class="window hidden firefox-window wordpad-firefox-window" role="dialog" aria-label="WordPad">
+				<div class="titlebar">
+					<img src="assets/img/wordpad.svg" class="wmp-icon-svg ff-icon" alt="WordPad">
+					<span>My Resume</span>
+					<div class="window-controls win-controls">
+						<div class="win-btn" id="wordpad-minimize">_</div><div class="win-btn" id="wordpad-maximize">□</div><div class="win-btn close" id="wordpad-close">×</div>
+					</div>
+				</div>
+
+				<div class="menu-bar">
+					<span>File</span> <span>Edit</span> <span>View</span> <span>History</span> <span>Bookmarks</span> <span>Tools</span> <span>Help</span>
+				</div>
+
+				<nav class="tab-bar" role="tablist" aria-label="WordPad tabs">
+					<div class="tab active">
+						<img src="assets/img/wordpad.svg" style="width:12px;" alt="">
+						My Resume
+					</div>
+					<div class="plus-tab">+</div>
+				</nav>
+
+				<div class="navbar wordpad-toolbar" role="toolbar" aria-label="Resume toolbar">
+					<div class="nav-btn">←</div>
+					<div class="nav-btn">→</div>
+					<div class="url-bar">about:resume</div>
+					<button class="viewer-btn" id="resume-zoom"><img src="assets/img/zoom-icon.svg" alt="Zoom"><span>Zoom</span></button>
+					<button class="viewer-btn" id="resume-save"><img src="assets/img/save-icon.svg" alt="Save"><span>Save</span></button>
+					<button class="viewer-btn" id="resume-print"><span>Print</span></button>
+				</div>
+
+				<div class="browser-content wordpad-browser-content">
+					<div class="resume-viewer resume-container" id="resume-viewer">
+						<div class="resume-page">
+							<iframe id="resume-pdf" src="assets/PDF/resume.pdf#toolbar=0&navpanes=0" type="application/pdf" frameborder="0" aria-label="Resume PDF"></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Taskbar (Windows XP style) -->
+			<div class="taskbar" role="toolbar" aria-label="Taskbar">
+				<button id="start-btn" class="start-button"><img src="assets/img/xp-logo.svg" alt="Start logo" class="start-logo"><span class="start-text">Start</span></button>
+
+				<div class="taskbar-items" id="taskbar-items">
+					<!-- dynamic task buttons -->
+					<button class="task-item hidden" id="task-er">ER — Portfolio</button>
+					<button class="task-item hidden" id="task-wordpad">WordPad</button>
+					<button class="task-item hidden" id="task-project">Projects</button>
+					<button class="task-item hidden" id="task-music">Music Player</button>
+				</div>
+				<div class="system-tray">
+					<div class="tray-icons">
+						<!-- tray icons removed -->
+					</div>
+
+					<div class="clock" id="taskbar-clock">
+						<span class="clock-time">00:00</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Start menu -->
+			<div id="start-menu" class="start-menu hidden" role="menu" aria-hidden="true">
+				<ul>
+					<li><button data-page="home">Home</button></li>
+					<li><button data-page="about">About</button></li>
+					<li><button data-page="portfolio">Portfolio</button></li>
+					<li><button data-page="contact">Contact</button></li>
+				</ul>
+			</div>
+		</div>
+
+		<script src="assets/loadingScreen.js"></script>
+		<script src="src/app.js"></script>
+	</body>
+</html>
