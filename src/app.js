@@ -142,16 +142,17 @@ document.addEventListener('DOMContentLoaded',()=>{
     const paper = resumeViewer.querySelector('.resume-page');
     if(!paper) return;
     // available viewport inside the viewer (account for padding)
-    const availableW = resumeViewer.clientWidth - 36; // matches padding
-    const availableH = resumeViewer.clientHeight - 36;
+    const availableW = Math.max(0, resumeViewer.clientWidth);
+    const availableH = Math.max(0, resumeViewer.clientHeight);
+    const fitScale = Math.min(1, availableW / RESUME_PX.w, availableH / RESUME_PX.h) || 1;
     if(manualZoom){
-      paper.style.setProperty('--resume-scale', manualScale);
+      // Keep manual zoom capped so the page still fits in the popup with no scrollbars.
+      paper.style.setProperty('--resume-scale', Math.min(manualScale, fitScale));
       resumeViewer.classList.add('resume-viewer--manual-zoom');
       return;
     }
     // Fit-to-view scale (don't exceed 1 to preserve natural size)
-    const scale = Math.min(1, availableW / RESUME_PX.w, availableH / RESUME_PX.h) || 1;
-    paper.style.setProperty('--resume-scale', scale);
+    paper.style.setProperty('--resume-scale', fitScale);
     resumeViewer.classList.remove('resume-viewer--manual-zoom');
   }
 

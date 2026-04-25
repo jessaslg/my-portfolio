@@ -1058,3 +1058,53 @@ br {
     top: 12px !important;
   }
 }
+
+/* Final WordPad resume fit rules: cap page to popup and remove scrollbars */
+#wordpad-window.wordpad-firefox-window .wordpad-browser-content{
+  overflow: hidden !important;
+  padding: 0 !important;
+  background: #fff !important;
+}
+
+#wordpad-window.wordpad-firefox-window #resume-viewer{
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#wordpad-window.wordpad-firefox-window .resume-container{
+  width: 500% !important;
+  height:50% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #fff !important;
+}
+
+
+#wordpad-window.wordpad-firefox-window .resume-page {
+  width: 5000% !important;
+  height: 350% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+#wordpad-window.wordpad-firefox-window .resume-page > iframe {
+  width: 1000% !important;
+  height: 1000% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  background: #fff !important;
+  display: block;
+}
