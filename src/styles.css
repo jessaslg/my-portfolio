@@ -1,3 +1,91 @@
+/* Resume Window Absolute Positioning for Taskbar Alignment */
+.resume-window {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  /* change this variable to match your OS taskbar height */
+  --taskbar-height: 40px;
+  bottom: var(--taskbar-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  z-index: 20;
+}
+/* Responsive Resume Container Styles */
+.resume-container {
+  max-width: 1000px; /* matched to Mitch Ivin screenshot */
+  width: 1000px;
+  margin: 18px auto; /* slightly larger top gap like example */
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 2rem 1.5rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #222;
+  font-size: 1rem;
+  line-height: 1.6;
+  box-sizing: border-box;
+  /* Let the container stretch to fill the available height inside .resume-window */
+  flex: 1 1 auto;
+  height: 1000%;
+  overflow: auto; /* scroll when content is taller than the available area */
+}
+
+.resume-container h1, .resume-container h2, .resume-container h3 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-weight: 700;
+}
+
+.resume-container h1 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+.resume-container hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 1.2em 0;
+}
+
+.resume-container ul {
+  padding-left: 1.2em;
+  margin: 0.5em 0 1em 0;
+}
+
+.resume-container .section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #333;
+}
+
+@media (max-width: 700px) {
+  .resume-container {
+    max-width: 98vw;
+    padding: 1rem 0.5rem;
+    font-size: 0.97rem;
+  }
+  .resume-container h1 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .resume-container {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.92rem;
+  }
+  .resume-container h1 {
+    font-size: 1.1rem;
+  }
+}
 /* 90s Pixel / Retro styles */
 :root{
   --bg:#0b2b3a;
@@ -28,7 +116,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 .xp-loading{display:flex;flex-direction:column;align-items:center;gap:10px;width:420px;max-width:90%}
 .xp-progress-container {
   width: 300px;
-  height: 22px;
+  height: 100px;
   border: 2px solid #7c7c7c;
   border-radius: 6px;
   background-color: #000;
@@ -140,7 +228,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   filter: none !important;
 }
 .icon-label{text-align:center;font-size:8px;font-family: Tahoma, "Segoe UI", sans-serif}
-.icon-label{width:100%;text-align:center;font-size:11px;font-family: Tahoma, "Segoe UI", sans-serif;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.8);line-height:1.1;white-space:normal;word-break:break-word;margin-top:2px}
+.icon-label{width:100%;text-align:center;font-size:11px;font-family: Tahoma, "Segoe UI", sans-serif;color:#000000;text-shadow:0 1px 0 rgba(0,0,0,0.8);line-height:1.1;white-space:normal;word-break:break-word;margin-top:2px}
 .icon .folder{background:linear-gradient(#ffd27f,#ffb84d);position:relative}
 .icon .recycle-bin{background:linear-gradient(#e6f7ff,#cfeeff);display:flex;align-items:center;justify-content:center}
 .icon .recycle-bin::after{content:"🗑️";font-size:24px}
@@ -236,7 +324,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 #wordpad-window .wmp-window > .title-bar { display: none !important; }
 #wordpad-window .window-controls { display: none !important; }
 
-/* Ensure the menu-bar (toolbar) is visible and styled like the screenshot */
+/* Ensure the menu-bar (toolbar) is visible and styled */
 #wordpad-window .menu-bar,
 #wordpad-window .toolbar-left,
 #wordpad-window .viewer-btn,
@@ -247,8 +335,26 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 #wordpad-window .viewer-btn img{ width:18px; height:18px }
 
 /* Grey area surrounding the centered resume page */
-#wordpad-window .wmp-content{ background:#9f9f9f; padding:18px; }
-#wordpad-window .resume-viewer{ display:flex; justify-content:center; align-items:flex-start; padding:28px; background:transparent }
+#wordpad-window .wmp-content {
+  background: #888;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#wordpad-window .resume-viewer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
 
 /* The white resume "page" centered with shadow and small rounded corners */
 /* White page wrapper: center, add stronger shadow and roomy padding to create wide gutters */
@@ -306,28 +412,48 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 #wordpad-window .resume-viewer{
   padding:0 !important;
   flex:1;
-  display:flex;
+  display:stretch;
   align-items:center;
   justify-content:center;
   overflow:auto; /* allow outer scrolling when the scaled paper is larger than the window */
 }
-#wordpad-window .resume-container{ width:100%; height:100%; display:flex; align-items:center; justify-content:center }
-#wordpad-window .resume-container .resume-page{
-  /* Use intrinsic A4 size but allow scaling via --resume-scale */
-  width:794px;
-  height:1123px;
-  margin:0;
-  background:#fff;
-  box-sizing:content-box;
+#wordpad-window .resume-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
-#wordpad-window .resume-container iframe, #wordpad-window .resume-container object{
-  /* Match the intrinsic paper dimensions; allow them to shrink via max constraints */
-  width:794px;
-  height:1123px;
-  max-width: calc(100% - 56px);
-  max-height: calc(100% - 56px);
-  display:block;
-  border:0;
+#wordpad-window .resume-container .resume-page {
+  width: 100%;
+  height: 100%;
+  max-width: 900px;
+  max-height: 98vh;
+  aspect-ratio: 794 / 1123;
+  background: #fff;
+  box-sizing: border-box;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#wordpad-window .resume-container iframe,
+#wordpad-window .resume-container object {
+  width: 100%;
+  height: 100%;
+  max-width: 900px;
+  max-height: 98vh;
+  aspect-ratio: 794 / 1123;
+  display: block;
+  border: none;
+  background: #fff;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 .tabs button{background:#ddd;border:2px solid #000;padding:6px 10px;cursor:pointer;font-family: Tahoma, "Segoe UI", sans-serif}
@@ -410,7 +536,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 
 .start-button{box-sizing:border-box}
-.start-button .start-logo{display:block;width:28px;height:28px;object-fit:contain;margin:0;border:0;background:transparent;padding:0;vertical-align:middle}
+.start-button .start-logo{display:block;width:28px;height:28px;object-fit:contain;margin:0;border:0;background:transparent;padding:0}
 .start-button .start-text{font-family:Tahoma, sans-serif;font-size:20px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,0.4);margin-left:8px;line-height:1}
 .quicklaunch{display:flex;gap:6px;margin-left:6px}
 .quick-launch{background:transparent;border:2px solid rgba(255,255,255,0.12);width:34px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer}
@@ -1108,3 +1234,27 @@ br {
   background: #fff !important;
   display: block;
 }
+
+/* About-pane avatar and layout tweaks (ensure sizing matches provided image) */
+.xp-system-top {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.xp-system-avatar {
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px #7e9eca;
+}
+
+.xp-system-headline h1 {
+  font-size: 28px;
+  margin: 0 0 6px 0;
+}
+
+.xp-lead { font-weight: 700; }
+

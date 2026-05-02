@@ -6,6 +6,7 @@
 		<title>Jessa Saligao - Portfolio</title>
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="src/styles.css">
+		<link rel="stylesheet" href="src/about/about.css">
 	</head>
 	<body>
 		<!-- Loading overlay inserted by loadingScreen integration -->
@@ -64,7 +65,7 @@
 
 								<div class="icon" id="wordpad" data-click-anim="float">
 									<img src="assets/img/wordpad.svg" alt="WordPad" class="icon-art">
-									<div class="icon-label">WordPad</div>
+									<div class="icon-label">Resume</div>
 								</div>
 								
 			</div>
@@ -107,26 +108,74 @@
 						<p>Double-click the Jessa folder to explore. Use the tabs to navigate.</p>
 					</div>
 
-					<div class="page hidden" id="page-about">
-						<h2>About Jessa</h2>
-						<div class="about-grid">
-							<img src="assets/profile.svg" alt="Jessa profile" class="profile-pic">
-							<div class="about-text">
-								<p>Hi, I'm <strong>Jessa</strong>. I'm a front-end enthusiast who loves <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">JavaScript</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">HTML</a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">CSS</a>. I build playful, nostalgic web experiences that blend retro aesthetics with modern accessibility.</p>
-								<h3>Education</h3>
-								<ul>
-									<li><strong>B.S. Computer Science</strong> — Example University (2018–2022)</li>
-								</ul>
-								<h3>Experience</h3>
-								<ul>
-									<li>Front-End Developer — <a href="https://example.com" target="_blank">Acme Co.</a> (2023)</li>
-									<li>Intern — Widget Labs (2021)</li>
-								</ul>
-								<h3>Skills</h3>
-								<p>HTML, CSS, JavaScript, React, Accessibility, Pixel art</p>
-							</div>
-						</div>
-					</div>
+										<div class="page hidden" id="page-about">
+												<section class="xp-content xp-about-system">
+													<div class="xp-system-tabs" role="tablist" aria-label="About tabs" id="about-tabs">
+														<button type="button" data-tab="general" class="is-active">General</button>
+														<button type="button" data-tab="experience">Experience</button>
+														<button type="button" data-tab="mindset">Mindset</button>
+													</div>
+
+													<div class="xp-pane xp-system-panel" id="about-panes">
+														<div data-pane="general">
+															<div class="xp-system-top">
+																<img src="assets/img/jessa.JPEG" alt="Jessa profile" class="xp-system-avatar">
+																<div class="xp-system-headline">
+																	<h1>Jessa Saligao</h1>
+																	<p class="xp-lead">Understanding backend logic strengthens every frontend creative choice.<br>Interested in Graphic Designing, Backend Development, and Artificial Intelligence</p>
+																</div>
+															</div>
+
+															<div class="xp-system-specs">
+																<div class="xp-system-row bio">
+																	<p class="xp-bio">Adaptable and outgoing IT professional focused on backend systems and database work. Skilled in full-stack development and graphic design, creating both reliable and visually appealing solutions. Communicates clearly, adjusts quickly, and consistently delivers quality work with a professional approach.</p>
+																</div>
+																<div class="xp-system-row"><span>Location:</span><strong>San Juan, Batangas</strong></div>
+																<div class="xp-system-row"><span>Focus:</span><strong>Providing Innovative Solution</strong></div>
+																<div class="xp-system-row"><span>Hobbies:</span><strong>Graphic Design, Mobile Games, Cycling</strong></div>
+																<div class="xp-system-row"><span>Registered to:</span><strong>Jessa Saligao</strong></div>
+
+																<div class="xp-system-license">
+																	<span>Socials:</span>
+																	<div class="xp-socials">
+																		<a href="https://www.instagram.com/dyesaabel_" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="assets/img/instagram-logo.svg" alt="Instagram"></a>
+																		<a href="https://www.facebook.com/saligaojessa" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="assets/img/facebook-logo.svg" alt="Facebook"></a>
+																		<a href="https://www.linkedin.com/in/jessa-saligao-53834a380" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><img src="assets/img/linkedin-logo.svg" alt="LinkedIn"></a>
+																		<a href="https://github.com/jessaslg" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><img src="assets/img/github-logo.svg" alt="GitHub"></a>
+																	</div>
+																</div>
+														</div>
+
+														<div data-pane="experience" class="hidden">
+															<div class="xp-system-note">
+																<strong>Experience</strong>
+																<p>AI Research Engineer Intern @ Asan Medical Center</p>
+																<p>Sergeant - 8th U.S. Army (2ID KATUSA)</p>
+															</div>
+
+															<div class="xp-system-experience">
+																<strong>Highlights</strong>
+																<ul class="xp-list">
+																	<li>Research and prototype development</li>
+																	<li>Event logistics and production</li>
+																</ul>
+															</div>
+														</div>
+
+														<div data-pane="mindset" class="hidden">
+															<div class="xp-system-note">
+																<strong>How I think and work</strong>
+																<p>I prefer projects that begin slightly unformed and sharpen through iteration.</p>
+															</div>
+
+															<div class="xp-system-specs">
+																<div class="xp-system-row"><span>Style</span><strong>Direct, experimental</strong></div>
+																<div class="xp-system-row"><span>Build loop</span><strong>Sketch, ship, adjust</strong></div>
+															</div>
+														</div>
+													</div>
+												</section>
+										</div>
 
 					<div class="page hidden" id="page-portfolio">
 						<h2>Portfolio</h2>

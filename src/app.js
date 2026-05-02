@@ -42,9 +42,36 @@ document.addEventListener('DOMContentLoaded',()=>{
   };
 
   // Open ER window on single OR double click (browser desktop icon)
+  function showPage(pageId){
+    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+    const show = document.getElementById(pageId);
+    if(show) show.classList.remove('hidden');
+  }
+
+  // Initialize About tabs (General / Experience / Mindset)
+  function initAboutTabs(){
+    const tabsEl = document.getElementById('about-tabs');
+    const panes = document.querySelectorAll('#about-panes > [data-pane]');
+    if(!tabsEl) return;
+    tabsEl.querySelectorAll('button[data-tab]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const t = btn.getAttribute('data-tab');
+        // toggle active class
+        tabsEl.querySelectorAll('button[data-tab]').forEach(b=>b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        // show matching pane
+        panes.forEach(p=>{ if(p.getAttribute('data-pane')===t){ p.classList.remove('hidden'); } else { p.classList.add('hidden'); } });
+      });
+    });
+    // Open portfolio/home from about
+    const openHomeBtn = document.getElementById('about-open-home');
+    if(openHomeBtn){ openHomeBtn.addEventListener('click', (e)=>{ showPage('page-home'); }); }
+  }
+
   if(erFolder){
-    erFolder.addEventListener('click',(e)=>{ openWindow(); });
-    erFolder.addEventListener('dblclick',(e)=>{ openWindow(); });
+    const openAbout = ()=>{ openWindow(); showPage('page-about'); initAboutTabs(); };
+    erFolder.addEventListener('click', openAbout);
+    erFolder.addEventListener('dblclick', openAbout);
   }
 
   // Music player icon open/close handling
@@ -371,7 +398,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     try{ setTimeout(()=>{ if(typeof updateResumeScale === 'function') updateResumeScale(); }, 80); }catch(e){}
   }
 
-  if(wordpadIcon){ wordpadIcon.addEventListener('click', openWordpad); wordpadIcon.addEventListener('dblclick', openWordpad); }
+  function openResumeInNewTab(){
+    const url = (resumePdf && (resumePdf.getAttribute('data') || resumePdf.getAttribute('src'))) || 'assets/PDF/resume.pdf';
+    try{ const w = window.open(url.split('#')[0], '_blank'); if(w) w.focus(); }catch(e){ window.location.href = url.split('#')[0]; }
+  }
+
+  if(wordpadIcon){ wordpadIcon.addEventListener('click', openResumeInNewTab); wordpadIcon.addEventListener('dblclick', openResumeInNewTab); }
   if(wordpadCloseBtn) wordpadCloseBtn.addEventListener('click', closeWordpad);
   if(wordpadMinBtn) wordpadMinBtn.addEventListener('click', minimizeWordpad);
   if(wordpadMaxBtn) wordpadMaxBtn.addEventListener('click', toggleWordpadMaximize);
@@ -387,14 +419,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   makeDraggable(wordpadWin, '.titlebar');
   makeDraggable(wordpadWin, '.title-bar');
 
-  // Ensure clicks on the icon still open WordPad (delegation fallback)
+  // Ensure clicks on the Resume icon open the resume in a new browser tab (delegation fallback)
   document.addEventListener('click', (e) => {
     const ic = e.target.closest('#wordpad');
-    if(ic) openWordpad();
+    if(ic) openResumeInNewTab();
   });
   document.addEventListener('dblclick', (e) => {
     const ic = e.target.closest('#wordpad');
-    if(ic) openWordpad();
+    if(ic) openResumeInNewTab();
   });
 
   // Wire player controls if present
@@ -650,16 +682,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
-  // toggle by clicking WordPad taskbar button
+  // clicking the Resume taskbar button should open the resume in a new browser tab
   if(taskWordpad){
     taskWordpad.addEventListener('click',()=>{
-      if(!wordpadWin) return;
-      if(wordpadWin.classList.contains('hidden')){
-        if(wordpadIsMinimized) restoreWordpad();
-        else openWordpad();
-      }
-      else { minimizeWordpad(); }
-      reflectTaskbar();
+      openResumeInNewTab();
     });
   }
 
