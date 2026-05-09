@@ -714,6 +714,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   padding-top: 5px;
   display: flex;
   gap: 10px; /* add spacing between tabs */
+  padding-bottom: 8px; /* space so active tab doesn't overlap content */
   padding-left: 8px;
   border-bottom: 1px solid #999;
   align-items: center;
@@ -757,7 +758,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 .tab[data-tab="resume"]:hover > img{
   transform: scale(2.2);
 }
-.tab.active { background: #fff; position: relative; top: 1px; z-index: 2; }
+.tab.active { background: #fff; position: relative; top: 0; z-index: 2; }
 .plus-tab { padding: 5px 10px; background: #ccc; border: 1px solid #999; border-bottom: none; margin-left: 2px; cursor: pointer; }
 
 /* Navbar (address/search bar) */

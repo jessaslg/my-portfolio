@@ -622,6 +622,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
   reflectTaskbar();
+  // Ensure About pane tabs are wired even if About is opened from the Start menu
+  try{ initAboutTabs(); }catch(e){}
   // Add click/press feedback classes to interactive elements for instant tactile response
   document.querySelectorAll('button, .win-btn, .nav-btn, .task-item, .btn-main, .btn-small, .start-button, .quick-launch, .tab, .menu-bar span, .icon').forEach(el=>{ el.classList.add('press-feedback'); });
 
