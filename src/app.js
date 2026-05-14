@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(xpStarting){
       xpStarting.classList.remove('hidden');
       xpStarting.setAttribute('aria-hidden','false');
+      try{ document.body.classList.add('loading-fullscreen'); }catch(e){}
       // show the bottom-left and bottom-right boot texts with the logo
       const bootLeft = document.querySelector('.boot-copyright');
       const bootRight = document.querySelector('.boot-microsoft');
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     setTimeout(()=>{
       if(boot) boot.classList.add('hidden');
       if(desktop) desktop.classList.remove('hidden');
+      try{ document.body.classList.remove('loading-fullscreen'); }catch(e){}
     },2600);
   };
 

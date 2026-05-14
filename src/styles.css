@@ -493,6 +493,18 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   z-index:1000;
 }
 
+/* When the XP starting screen shows, hide the taskbar and lower UI so loading appears fullscreen */
+body.loading-fullscreen .taskbar,
+body.loading-fullscreen .start-button,
+body.loading-fullscreen .taskbar-items,
+body.loading-fullscreen .system-tray,
+body.loading-fullscreen .clock{
+  display: none !important;
+}
+
+/* Also hide any bottom-positioned windows while loading to avoid visible chrome */
+body.loading-fullscreen .window{ visibility: hidden; }
+
 .start-button {
   display: flex;
   align-items: center;      /* Vertically centers logo and text */
