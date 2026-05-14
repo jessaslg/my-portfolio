@@ -104,16 +104,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             console.log('about-pane-diagnostics:', diag);
           }
         }catch(e){ console.error(e); }
-        // Forced visual injection for diagnosing invisible content
-        try{
-          const ap2 = document.querySelector('#about-panes > [data-pane="experience"]');
-          if(ap2){
-            const markerId = 'xp-debug-inject';
-            if(!document.getElementById(markerId)){
-              ap2.insertAdjacentHTML('afterbegin', '<div id="'+markerId+'" style="background:#fffbdb;border:2px solid #ffd27f;padding:12px;margin-bottom:12px;font-weight:800;color:#0b2b3a">DEBUG: Experience content injected — if you see this, rendering is OK.</div>');
-            }
-          }
-        }catch(e){}
+        // Debug injection removed to prevent visible debug banner in production.
         // scroll the outer browser-content so the about block is visible at top
         try{
           if(browserContent && aboutBlock){
@@ -143,6 +134,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     // Open portfolio/home from about
     const openHomeBtn = document.getElementById('about-open-home');
     if(openHomeBtn){ openHomeBtn.addEventListener('click', (e)=>{ showPage('page-home'); }); }
+    const openResumeBtn = document.getElementById('about-open-resume');
+    if(openResumeBtn){ openResumeBtn.addEventListener('click', (e)=>{ openResumeInNewTab(); }); }
     // Ensure there is an active pane on init (match the active tab button if present)
     const activeBtn = tabsEl.querySelector('button[data-tab].is-active') || tabsEl.querySelector('button[data-tab]');
     if(activeBtn){
@@ -396,7 +389,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
     if(erFolder){
-    const openAbout = ()=>{ openWindow(); showPage('page-about'); initAboutTabs(); try{ requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ try{ copyExperienceSizeToGeneral(); }catch(e){} try{ copyExperienceStylesToGeneral(); }catch(e){} try{ const exp = document.querySelector('#about-panes > [data-pane="experience"]'); const gen = document.querySelector('#about-panes > [data-pane="general"]'); if(exp && gen) copyComputedStyles(exp, gen); }catch(e){} try{ ensureExperienceHasContent(); }catch(e){} try{ fitErWindowToExperience(); }catch(e){} try{ normalizeAboutScrolling(); }catch(e){} try{ scheduleUpdateAboutHeights(); }catch(e){} }); }); }catch(e){} };
+    const openAbout = ()=>{
+      // If the ER/About window is already open and visible, ignore the click.
+      try{
+        if(erWindow && !erWindow.classList.contains('hidden')) return;
+      }catch(e){}
+      openWindow();
+      showPage('page-about');
+      initAboutTabs();
+      try{ requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ try{ copyExperienceSizeToGeneral(); }catch(e){} try{ copyExperienceStylesToGeneral(); }catch(e){} try{ const exp = document.querySelector('#about-panes > [data-pane="experience"]'); const gen = document.querySelector('#about-panes > [data-pane="general"]'); if(exp && gen) copyComputedStyles(exp, gen); }catch(e){} try{ ensureExperienceHasContent(); }catch(e){} try{ fitErWindowToExperience(); }catch(e){} try{ normalizeAboutScrolling(); }catch(e){} try{ scheduleUpdateAboutHeights(); }catch(e){} }); }); }catch(e){}
+    };
     erFolder.addEventListener('click', openAbout);
     erFolder.addEventListener('dblclick', openAbout);
   }
@@ -771,8 +773,20 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   function openResumeInNewTab(){
+    // Backwards-compatible: open resume in a new tab if requested.
     const url = (resumePdf && (resumePdf.getAttribute('data') || resumePdf.getAttribute('src'))) || 'assets/PDF/resume.pdf';
     try{ const w = window.open(url.split('#')[0], '_blank'); if(w) w.focus(); }catch(e){ window.location.href = url.split('#')[0]; }
+  }
+
+  // Show the resume inside the ER browser window (no separate WordPad window)
+  function showResumePage(){
+    try{ openWindow(); }catch(e){}
+    // hide all pages then reveal the resume page
+    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+    const show = document.getElementById('page-resume');
+    if(show) show.classList.remove('hidden');
+    // reflect active nav tab state
+    try{ tabs.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active')); const rt = document.querySelector('#nav-tabs [data-tab="resume"]'); if(rt) rt.classList.add('active'); }catch(e){}
   }
 
   if(wordpadIcon){ wordpadIcon.addEventListener('click', openResumeInNewTab); wordpadIcon.addEventListener('dblclick', openResumeInNewTab); }
@@ -857,15 +871,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
-  // Tabs navigation
-  tabs.addEventListener('click',(e)=>{
-    const btn = e.target.closest('button[data-page]');
-    if(!btn) return;
-    [...tabs.querySelectorAll('button')].forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const page = btn.dataset.page;
-    [...document.querySelectorAll('.page')].forEach(p=>p.classList.add('hidden'));
-    const show = document.getElementById('page-'+page);
+  // Tabs navigation (top nav tabs use data-tab attributes on .tab elements)
+  tabs.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-tab]');
+    if(!el) return;
+    const tabName = el.getAttribute('data-tab');
+    // reflect active state
+    tabs.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    // Resume opens the resume PDF in a new browser tab
+    if(tabName === 'resume'){
+      openResumeInNewTab();
+      return;
+    }
+    // Portfolio tab should open the Projects window (match desktop icon behavior)
+    if(tabName === 'portfolio'){
+      openProjectWindow();
+      return;
+    }
+    // For other tabs (home, about, contact), open the ER window and show the matching page
+    openWindow();
+    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+    const show = document.getElementById('page-' + tabName);
     if(show) show.classList.remove('hidden');
   });
 
