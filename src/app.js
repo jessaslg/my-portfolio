@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
     const show = document.getElementById(pageId);
     if(show) show.classList.remove('hidden');
+    // When the About page is visible, prevent the outer browser-content from scrolling
+    // so the outer browser-content shows the scrollbar for the whole About content.
+    try{
+      const browserContent = document.querySelector('.browser-content');
+      if(browserContent){
+        if(pageId === 'page-about') browserContent.classList.remove('no-outer-scroll');
+        else browserContent.classList.remove('no-outer-scroll');
+      }
+    }catch(e){/* non-blocking */}
   }
 
   // Initialize About tabs (General / Experience / Mindset)
@@ -59,20 +68,351 @@ document.addEventListener('DOMContentLoaded',()=>{
         // toggle active class
         tabsEl.querySelectorAll('button[data-tab]').forEach(b=>b.classList.remove('is-active'));
         btn.classList.add('is-active');
-        // show matching pane
-        panes.forEach(p=>{ if(p.getAttribute('data-pane')===t){ p.classList.remove('hidden'); } else { p.classList.add('hidden'); } });
+        // show matching pane by explicitly showing/hiding panes so behavior is deterministic
+        const browserContent = document.querySelector('.browser-content');
+        const aboutBlock = document.querySelector('#page-about .xp-about-system');
+        panes.forEach(p=>{
+          if(p.getAttribute('data-pane')===t){
+            p.classList.add('active');
+            p.classList.remove('hidden');
+            p.style.display = 'block';
+            console.log('Showing about pane:', t, 'content:', p.innerText.trim().slice(0,120));
+          } else {
+            p.classList.remove('active');
+            p.classList.add('hidden');
+            p.style.display = 'none';
+          }
+        });
+        try{ const activePane = document.querySelector('#about-panes > [data-pane].active'); if(activePane) revealPaneElements(activePane); }catch(e){}
+        try{
+          const ap = document.querySelector('#about-panes > [data-pane].active');
+          if(ap){
+            const top = ap.querySelector('.xp-system-top');
+            const specs = ap.querySelector('.xp-system-specs');
+            const diag = {
+              pane: ap.getAttribute('data-pane'),
+              childCount: ap.children.length,
+              innerTextLen: (ap.innerText||'').trim().length,
+              hasTop: !!top,
+              hasSpecs: !!specs,
+              topTextLen: top ? (top.innerText||'').trim().length : 0,
+              specsTextLen: specs ? (specs.innerText||'').trim().length : 0,
+              rect: ap.getBoundingClientRect(),
+              computed: {}
+            };
+            try{ const cs = getComputedStyle(ap); ['display','visibility','opacity','color','font-size','transform','clip','clip-path'].forEach(p=>diag.computed[p]=cs.getPropertyValue(p)); }catch(e){}
+            console.log('about-pane-diagnostics:', diag);
+          }
+        }catch(e){ console.error(e); }
+        // Forced visual injection for diagnosing invisible content
+        try{
+          const ap2 = document.querySelector('#about-panes > [data-pane="experience"]');
+          if(ap2){
+            const markerId = 'xp-debug-inject';
+            if(!document.getElementById(markerId)){
+              ap2.insertAdjacentHTML('afterbegin', '<div id="'+markerId+'" style="background:#fffbdb;border:2px solid #ffd27f;padding:12px;margin-bottom:12px;font-weight:800;color:#0b2b3a">DEBUG: Experience content injected — if you see this, rendering is OK.</div>');
+            }
+          }
+        }catch(e){}
+        // scroll the outer browser-content so the about block is visible at top
+        try{
+          if(browserContent && aboutBlock){
+            const bcRect = browserContent.getBoundingClientRect();
+            const aboutRect = aboutBlock.getBoundingClientRect();
+            const scrollDelta = (aboutRect.top - bcRect.top);
+            browserContent.scrollTop += Math.max(0, Math.round(scrollDelta));
+          }
+        }catch(e){}
+        // keep layout stable: run sizing & style-copy after paint so measurements are accurate
+        try{ syncAboutPaneHeights(); }catch(e){}
+        try{
+          requestAnimationFrame(()=>{
+            requestAnimationFrame(()=>{
+              try{ copyExperienceSizeToGeneral(); }catch(e){}
+              try{ copyExperienceStylesToGeneral(); }catch(e){}
+              try{ const exp = document.querySelector('#about-panes > [data-pane="experience"]'); const gen = document.querySelector('#about-panes > [data-pane="general"]'); if(exp && gen) copyComputedStyles(exp, gen); }catch(e){}
+              try{ ensureExperienceHasContent(); }catch(e){}
+              try{ fitErWindowToExperience(); }catch(e){}
+              try{ normalizeAboutScrolling(); }catch(e){}
+              try{ scheduleUpdateAboutHeights(); }catch(e){}
+            });
+          });
+        }catch(e){}
       });
     });
     // Open portfolio/home from about
     const openHomeBtn = document.getElementById('about-open-home');
     if(openHomeBtn){ openHomeBtn.addEventListener('click', (e)=>{ showPage('page-home'); }); }
+    // Ensure there is an active pane on init (match the active tab button if present)
+    const activeBtn = tabsEl.querySelector('button[data-tab].is-active') || tabsEl.querySelector('button[data-tab]');
+    if(activeBtn){
+      const defaultTab = activeBtn.getAttribute('data-tab');
+      panes.forEach(p=>{
+        if(p.getAttribute('data-pane')===defaultTab){
+          p.classList.add('active'); p.classList.remove('hidden'); p.style.display = 'block';
+        } else {
+          p.classList.remove('active'); p.classList.add('hidden'); p.style.display = 'none';
+        }
+      });
+      try{ const activePane = document.querySelector('#about-panes > [data-pane].active'); if(activePane) revealPaneElements(activePane); }catch(e){}
+    }
   }
 
-  if(erFolder){
-    const openAbout = ()=>{ openWindow(); showPage('page-about'); initAboutTabs(); };
+  // Measure all about panes and set a uniform min-height equal to the tallest pane
+  function syncAboutPaneHeights(){
+    const panes = document.querySelectorAll('#about-panes > [data-pane]');
+    if(!panes || panes.length===0) return;
+    let max = 0;
+    panes.forEach(p=>{
+      const isHidden = p.classList.contains('hidden') || getComputedStyle(p).display === 'none';
+      let height;
+      if(isHidden){
+        const prev = { display: p.style.display, visibility: p.style.visibility, position: p.style.position };
+        p.style.position = 'absolute'; p.style.visibility = 'hidden'; p.style.display = 'block';
+        height = p.scrollHeight;
+        p.style.display = prev.display; p.style.visibility = prev.visibility; p.style.position = prev.position;
+      } else {
+        height = p.scrollHeight;
+      }
+      if(height > max) max = height;
+    });
+    // apply a little padding so content fits comfortably
+    const pad = 12;
+    panes.forEach(p=>{ p.style.minHeight = (max + pad) + 'px'; });
+  }
+
+  // Copy the Experience pane's computed height and apply it to the General pane
+  function copyExperienceSizeToGeneral(){
+    const exp = document.querySelector('#about-panes > [data-pane="experience"]');
+    const panel = document.querySelector('#about-panes');
+    const gen = document.querySelector('#about-panes > [data-pane="general"]');
+    if(!exp || !gen || !panel) return;
+    // measure full height of the experience pane even if hidden
+    const wasHidden = exp.classList.contains('hidden') || getComputedStyle(exp).display === 'none';
+    let measuredHeight;
+    if(wasHidden){
+      const prev = { display: exp.style.display, visibility: exp.style.visibility, position: exp.style.position };
+      exp.style.position = 'absolute'; exp.style.visibility = 'hidden'; exp.style.display = 'block';
+      measuredHeight = exp.getBoundingClientRect().height;
+      exp.style.display = prev.display; exp.style.visibility = prev.visibility; exp.style.position = prev.position;
+    } else {
+      measuredHeight = exp.getBoundingClientRect().height;
+    }
+    // Do not set any inner scrolling; let the outer `.browser-content` handle overflow.
+  }
+
+  // Normalize About scrolling: remove any inline height/minHeight on container and panes
+  // and ensure inner panes handle overflow. Call this after tab switches.
+  function normalizeAboutScrolling(){
+    try{
+      const panel = document.querySelector('#about-panes');
+      if(panel){
+        // remove any inline height set previously
+        panel.style.removeProperty('height');
+        panel.style.removeProperty('min-height');
+      }
+      const panes = document.querySelectorAll('#about-panes > [data-pane]');
+      panes.forEach(p=>{
+        // preserve min-height when explicitly marked (copied from Experience)
+        if(!p.classList.contains('preserve-min')) p.style.removeProperty('min-height');
+        // ensure inner panes do NOT create their own scrollbars
+        p.style.removeProperty('overflow');
+        p.style.removeProperty('overflow-y');
+        p.style.removeProperty('height');
+      });
+      // after DOM changes, force a reflow so scrollbars update reliably
+      void document.body.offsetHeight;
+    }catch(e){/* non-blocking */}
+  }
+
+  // Calculate and set the xp-system-panel height so the inner panes can scroll
+  // while the outer window remains fixed. This computes available space inside
+  // the `.browser-content` area and sizes the panel to fit exactly.
+  function updateAboutHeights(){
+    try{
+      const erWindow = document.getElementById('er-window');
+      const browserContent = erWindow ? erWindow.querySelector('.browser-content') : document.querySelector('.browser-content');
+      const xpAbout = document.querySelector('#page-about .xp-about-system');
+      const panel = document.querySelector('#page-about .xp-system-panel');
+      if(!browserContent || !xpAbout || !panel) return;
+      const bcRect = browserContent.getBoundingClientRect();
+      const aboutRect = xpAbout.getBoundingClientRect();
+      // offset from top of browserContent to top of about block
+      const offsetTop = Math.max(0, aboutRect.top - bcRect.top);
+      // leave a small bottom gap so shadows/padding don't clip
+      const bottomGap = 12;
+      const available = Math.max(180, Math.floor(bcRect.height - offsetTop - bottomGap));
+      // Do not set fixed heights on the panel or panes; allow the content to flow
+      // so the outer `.browser-content` scrollbar controls the About section.
+      panel.style.removeProperty('height');
+      panel.style.removeProperty('max-height');
+      const panes = document.querySelectorAll('#about-panes > [data-pane]');
+      panes.forEach(p=>{
+        p.style.removeProperty('height');
+        p.style.removeProperty('overflow');
+        p.style.removeProperty('overflow-y');
+      });
+      // ensure the outer browser-content shows scrollbars for About
+      const bc = document.querySelector('.browser-content'); if(bc) bc.classList.remove('no-outer-scroll');
+    }catch(e){/* non-blocking */}
+  }
+
+  // Debounced resize handler for window changes
+  function debounce(fn, wait){ let t; return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this,args), wait); }; }
+  window.addEventListener('resize', debounce(()=>{ try{ updateAboutHeights(); normalizeAboutScrolling(); }catch(e){} }, 120));
+
+  // Schedule an about height update after the next paint(s) so layout changes settle
+  function scheduleUpdateAboutHeights(){
+    try{
+      requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ try{ updateAboutHeights(); }catch(e){} }); });
+    }catch(e){ try{ setTimeout(updateAboutHeights, 50); }catch(e){} }
+  }
+
+  // Copy selected computed styles from Experience pane to General pane so design/spacing match
+  function copyExperienceStylesToGeneral(){
+    const exp = document.querySelector('#about-panes > [data-pane="experience"]');
+    const gen = document.querySelector('#about-panes > [data-pane="general"]');
+    if(!exp || !gen) return;
+    const cs = getComputedStyle(exp);
+    const props = ['padding','background','border','box-shadow','border-radius','background-color','background-image','background-size'];
+    props.forEach(p=>{
+      try{ const v = cs.getPropertyValue(p); if(v) gen.style.setProperty(p, v); }catch(e){}
+    });
+    // measure experience full height (even if hidden) and apply as min-height to general
+    try{
+      const wasHidden = exp.classList.contains('hidden') || getComputedStyle(exp).display === 'none';
+      let measured = 0;
+      if(wasHidden){
+        const prev = { display: exp.style.display, visibility: exp.style.visibility, position: exp.style.position };
+        exp.style.position = 'absolute'; exp.style.visibility = 'hidden'; exp.style.display = 'block';
+        measured = Math.ceil(exp.scrollHeight);
+        exp.style.display = prev.display; exp.style.visibility = prev.visibility; exp.style.position = prev.position;
+      } else {
+        measured = Math.ceil(exp.scrollHeight);
+      }
+      if(measured > 0) gen.style.minHeight = measured + 'px';
+    }catch(e){}
+    try{ gen.style.minWidth = cs.getPropertyValue('min-width') || gen.style.minWidth; }catch(e){}
+    // mark general pane so its computed min-height is preserved by normalization
+    try{ gen.classList.add('preserve-min'); }catch(e){}
+  }
+
+  // Copy most computed styles from source to target for a closer visual match
+  function copyComputedStyles(source, target){
+    if(!source || !target) return;
+    const cs = getComputedStyle(source);
+    const allowed = [
+      'padding','padding-top','padding-bottom','padding-left','padding-right',
+      'border','border-top','border-bottom','border-left','border-right',
+      'border-width','border-style','border-color',
+      'box-shadow','background','background-color','background-image','background-size',
+      'min-height','min-width','max-width','max-height','box-sizing','border-radius',
+      'gap','grid-template-columns','grid-template-rows','align-items','justify-content',
+      'font-size','line-height','color'
+    ];
+    allowed.forEach(prop=>{
+      try{ const val = cs.getPropertyValue(prop); const pri = cs.getPropertyPriority(prop); if(val) target.style.setProperty(prop, val, pri); }catch(e){}
+    });
+  }
+
+  // Ensure Experience pane has visible profile/specs content; if empty, clone from General
+  function ensureExperienceHasContent(){
+    try{
+      const exp = document.querySelector('#about-panes > [data-pane="experience"]');
+      const gen = document.querySelector('#about-panes > [data-pane="general"]');
+      if(!exp || !gen) return;
+      const text = (exp.innerText || '').trim();
+      if(text && text.length > 10) return; // already has content
+      // Only insert if missing
+      if(!exp.querySelector('.xp-system-top')){
+        const genTop = gen.querySelector('.xp-system-top');
+        if(genTop) exp.insertBefore(genTop.cloneNode(true), exp.firstChild);
+      }
+      if(!exp.querySelector('.xp-system-specs')){
+        const genSpecs = gen.querySelector('.xp-system-specs');
+        if(genSpecs) exp.appendChild(genSpecs.cloneNode(true));
+      }
+      // If still empty (some CSS may hide nodes), try stronger populate
+      try{ populateExperienceFallback(exp, gen); }catch(e){}
+    }catch(e){/* non-blocking */}
+  }
+
+  // Strong fallback: build Experience content from General clones or template and insert as innerHTML
+  function populateExperienceFallback(exp, gen){
+    if(!exp) return;
+    const currentText = (exp.innerText || '').trim();
+    if(currentText && currentText.length > 10) return;
+    let pieces = [];
+    try{
+      // prefer cloning from General to keep source of truth
+      if(gen){
+        const top = gen.querySelector('.xp-system-top');
+        const specs = gen.querySelector('.xp-system-specs');
+        if(top) pieces.push(top.outerHTML);
+        if(specs) pieces.push(specs.outerHTML);
+      }
+    }catch(e){}
+    // include additional Experience-only sections if present in DOM (background, experience list)
+    try{
+      const bg = document.querySelector('.xp-background-details'); if(bg) pieces.push(bg.outerHTML);
+      const expList = document.querySelector('.xp-system-experience'); if(expList) pieces.push(expList.outerHTML);
+    }catch(e){}
+    // fallback template (minimal) if nothing found
+    if(pieces.length === 0){
+      pieces.push('<div class="xp-system-note"><strong>Experience</strong><p>AI Research Engineer Intern @ Asan Medical Center</p><p>Sergeant - 8th U.S. Army (2ID KATUSA)</p></div>');
+    }
+    // inject into pane
+    exp.innerHTML = pieces.join('\n');
+    // ensure pane styles make it visible
+    exp.classList.remove('hidden'); exp.style.display = 'block'; exp.style.visibility = 'visible'; exp.style.opacity = '1';
+  }
+
+  // Measure the Experience pane and adjust the outer ER window size so the chrome (titlebar) doesn't overlap content
+  function fitErWindowToExperience(){
+    if(!erWindow) return;
+    const exp = document.querySelector('#about-panes > [data-pane="experience"]');
+    if(!exp) return;
+    const prev = { display: exp.style.display, visibility: exp.style.visibility, position: exp.style.position };
+    // ensure we can measure even if hidden
+    if(getComputedStyle(exp).display === 'none'){
+      exp.style.position = 'absolute'; exp.style.visibility = 'hidden'; exp.style.display = 'block';
+    }
+    const expRect = exp.getBoundingClientRect();
+    // measure chrome heights
+    const titlebar = document.querySelector('#er-window .titlebar');
+    const menuBar = document.querySelector('#er-window .menu-bar');
+    const tabBar = document.querySelector('#er-window .tab-bar');
+    const navbar = document.querySelector('#er-window .navbar');
+    let chromeH = 0;
+    [titlebar, menuBar, tabBar, navbar].forEach(el=>{ if(el) chromeH += el.getBoundingClientRect().height; });
+    // add some padding/border allowances
+    const extra = 36;
+    const targetHeight = Math.ceil(expRect.height + chromeH + extra);
+    // Do NOT change the outer ER window size; instead, update the internal panel heights
+    // so the content scrolls inside the fixed window. This prevents outer scrollbars.
+    try{ updateAboutHeights(); }catch(e){}
+    // restore exp styles
+    exp.style.display = prev.display; exp.style.visibility = prev.visibility; exp.style.position = prev.position;
+  }
+
+    if(erFolder){
+    const openAbout = ()=>{ openWindow(); showPage('page-about'); initAboutTabs(); try{ requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ try{ copyExperienceSizeToGeneral(); }catch(e){} try{ copyExperienceStylesToGeneral(); }catch(e){} try{ const exp = document.querySelector('#about-panes > [data-pane="experience"]'); const gen = document.querySelector('#about-panes > [data-pane="general"]'); if(exp && gen) copyComputedStyles(exp, gen); }catch(e){} try{ ensureExperienceHasContent(); }catch(e){} try{ fitErWindowToExperience(); }catch(e){} try{ normalizeAboutScrolling(); }catch(e){} try{ scheduleUpdateAboutHeights(); }catch(e){} }); }); }catch(e){} };
     erFolder.addEventListener('click', openAbout);
     erFolder.addEventListener('dblclick', openAbout);
   }
+
+  // Ensure about tabs are wired on load so clicking Experience works even
+  // if the About page was not opened via the desktop icon first.
+  try{ initAboutTabs(); scheduleUpdateAboutHeights(); }catch(e){}
+  // Also proactively apply Experience -> General styles on load so General matches immediately
+  try{
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+      try{ copyExperienceSizeToGeneral(); }catch(e){}
+      try{ copyExperienceStylesToGeneral(); }catch(e){}
+      try{ const exp = document.querySelector('#about-panes > [data-pane="experience"]'); const gen = document.querySelector('#about-panes > [data-pane="general"]'); if(exp && gen) copyComputedStyles(exp, gen); }catch(e){}
+      try{ normalizeAboutScrolling(); }catch(e){}
+    }); });
+  }catch(e){}
 
   // Music player icon open/close handling
   const musicIcon = document.getElementById('music-player');
@@ -244,6 +584,38 @@ document.addEventListener('DOMContentLoaded',()=>{
     syncErMaxButton();
     removeFromTaskOrder('task-er');
     if(typeof reflectTaskbar === 'function') reflectTaskbar();
+    function revealPaneElements(pane){
+      try{
+        console.log('revealPaneElements:', pane.getAttribute('data-pane'), 'children=', pane.children.length);
+        pane.classList.remove('hidden');
+        pane.style.display = 'block';
+        pane.style.visibility = 'visible';
+        pane.style.opacity = '1';
+        pane.style.transform = 'none';
+        // Force-reveal any descendants that might be hidden via classes or CSS
+        const descendants = pane.querySelectorAll('*');
+        descendants.forEach(el=>{
+          try{
+            // clear hiding styles and force visible if computed style says hidden
+            el.classList.remove('hidden');
+            el.style.visibility = 'visible';
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            // ensure element participates in layout
+            el.style.removeProperty('clip');
+            el.style.removeProperty('clip-path');
+            // fix display if computed is none
+            const cs = getComputedStyle(el);
+            if(cs.display === 'none') el.style.display = 'block';
+          }catch(e){}
+        });
+        // scroll pane to top
+        try{ pane.scrollTop = 0; }catch(e){}
+        // log resulting computed style for diagnosis
+        const csPane = getComputedStyle(pane);
+        console.log('pane computed:', { display: csPane.display, visibility: csPane.visibility, opacity: csPane.opacity, height: pane.getBoundingClientRect().height, scrollHeight: pane.scrollHeight });
+      }catch(e){ console.error(e); }
+    }
   }
 
   function minimizeERWindow(){
@@ -624,6 +996,24 @@ document.addEventListener('DOMContentLoaded',()=>{
   reflectTaskbar();
   // Ensure About pane tabs are wired even if About is opened from the Start menu
   try{ initAboutTabs(); }catch(e){}
+  try{ syncAboutPaneHeights(); }catch(e){}
+  try{ copyExperienceSizeToGeneral(); }catch(e){}
+  try{ copyExperienceStylesToGeneral(); }catch(e){}
+  try{ fitErWindowToExperience(); }catch(e){}
+  try{ copyComputedStyles(document.querySelector('#about-panes > [data-pane="experience"]'), document.querySelector('#about-panes > [data-pane="general"]')); }catch(e){}
+
+  // Recalculate sizes on window resize (debounced)
+  let _resizeTimer = null;
+  window.addEventListener('resize', ()=>{
+    if(_resizeTimer) clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(()=>{
+      try{ syncAboutPaneHeights(); }catch(e){}
+      try{ copyExperienceSizeToGeneral(); }catch(e){}
+      try{ copyExperienceStylesToGeneral(); }catch(e){}
+      try{ fitErWindowToExperience(); }catch(e){}
+        try{ copyComputedStyles(document.querySelector('#about-panes > [data-pane="experience"]'), document.querySelector('#about-panes > [data-pane="general"]')); }catch(e){}
+    }, 120);
+  });
   // Add click/press feedback classes to interactive elements for instant tactile response
   document.querySelectorAll('button, .win-btn, .nav-btn, .task-item, .btn-main, .btn-small, .start-button, .quick-launch, .tab, .menu-bar span, .icon').forEach(el=>{ el.classList.add('press-feedback'); });
 

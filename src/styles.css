@@ -236,15 +236,24 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 /* Window */
 .window{position:absolute;left:140px;top:100px;width:760px;max-width:90%;background:var(--window-bg);border:4px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,0.6);font-family: Tahoma, "Segoe UI", sans-serif}
 .titlebar, .title-bar {
-  height: 30px;
+  height: 48px; /* increased height for clearer chrome and to avoid overlap */
   background: linear-gradient(to bottom, #7baaff 0%, #3a76ff 5%, #1a46b3 100%);
   display: flex;
   align-items: center;
-  padding: 0 8px;
+  padding: 6px 16px; /* more padding so icons/text have breathing room */
   color: white;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   text-shadow: 1px 1px #000;
+  position: relative; /* ensure titlebar sits above content */
+  z-index: 9999;
+}
+
+/* Slightly larger icon in the titlebar and spacing to the text */
+.titlebar img.wmp-icon-svg, .title-bar img.wmp-icon-svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
 }
 .title{font-family: Tahoma, "Segoe UI", sans-serif;font-size:12px}
 .close{background:#c0c0c0;border:2px solid #000;padding:4px 8px;cursor:pointer;font-family: Tahoma, "Segoe UI", sans-serif}
@@ -304,7 +313,7 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 .resume-container{width:100%;max-width:100%;box-sizing:border-box}
 
 /* make sure the worldpad window uses the same titlebar style */
-#wordpad-window .title-bar{height:34px;background:linear-gradient(to bottom,#3a76ff 0%,#1a46b3 100%);color:#fff;padding:6px 10px;display:flex;align-items:center}
+#wordpad-window .title-bar{height:36px;background:linear-gradient(to bottom,#3a76ff 0%,#1a46b3 100%);color:#fff;padding:6px 10px;display:flex;align-items:center}
 #wordpad-window .title-bar img{width:18px;height:18px;margin-right:8px}
 #wordpad-window .title-bar .window-controls{margin-left:auto;display:flex;gap:6px}
 
@@ -775,6 +784,11 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 .search-bar { width:180px; height:22px; border:1px solid #999; background:#fff; display:flex; align-items:center; padding:0 5px; }
 .browser-content { flex-grow:1; background:#fff; padding:12px; overflow:auto; }
 
+/* When the About page is active we want the inner panes to handle scrolling
+  so the outer browser-content does not show a second scrollbar. JS toggles
+  the `no-outer-scroll` class when showing/hiding the About page. */
+.browser-content.no-outer-scroll { overflow: hidden; }
+
 /* Remove the old CSS play triangle */
 .wmp-icon-small::after {
     display: none;
@@ -782,14 +796,15 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 /* New class for an <img> SVG icon in the title bar */
 .wmp-icon-svg{
-  width:18px;
-  height:18px;
-  margin-right:8px;
+  width:24px; /* larger icon so it's clearly visible */
+  height:24px;
+  margin-right:10px;
   display:block;
   object-fit:contain;
+  flex-shrink:0;
 }
 .window-controls{margin-left:auto;display:flex;gap:3px}
-.win-btn{width:22px;height:22px;border:1px solid rgba(255,255,255,0.65);border-radius:3px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-size:14px;transition:transform .1s ease, box-shadow .1s ease}
+.win-btn{width:26px;height:26px;border:1px solid rgba(255,255,255,0.65);border-radius:4px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-size:14px;transition:transform .1s ease, box-shadow .1s ease}
 .win-btn.close{background:linear-gradient(to bottom,#ffd1d1 0%, #e04343 50%, #b82222 100%)}
 .menu-bar{background:#fff;padding:4px 12px;font-size:11px;display:flex;gap:15px;border-bottom:1px solid #999}
 .wmp-content{flex-grow:1;background:var(--wmp-bg);display:flex;padding:10px;gap:5px}

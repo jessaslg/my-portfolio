@@ -14,6 +14,14 @@
   margin-top: 10px;
   box-shadow: 0 6px 18px rgba(12,38,63,0.06);
   border-radius: 6px;
+  /* Fixed single-panel layout: keep the panel a stable height so tab switches don't resize window */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 420px; /* ensure enough space for content */
+  /* allow the panel to grow naturally so the outer scrollbar controls overflow */
+  position: relative; /* keep below chrome */
+  z-index: 1;
 }
 
 #page-about .xp-system-tabs {
@@ -131,6 +139,11 @@
   text-justify: inter-word;
 }
 
+/* Smaller screens: allow panels to shrink naturally */
+@media (max-width: 700px) {
+  #page-about .xp-system-panel { min-height: auto; }
+}
+
 /* Background details card for Experience pane */
 #page-about .xp-background-details {
   margin-top: 12px;
@@ -147,6 +160,29 @@
 
 #page-about .xp-bg-section { flex:1; min-width:0 }
 
+/* About panes: single shared container for tab content */
+/* Ensure the panel container itself allows overflow so a child scrollbar can sit outside
+  the white panel area. Keep layout and sizing unchanged. */
+#about-panes, .xp-pane.xp-system-panel { position: relative; flex: 1 1 auto; display:block; overflow: visible; }
+
+/* Each pane participates in normal document flow so the outer .browser-content
+   scrollbar controls the full About section. Hidden panes are controlled
+   by the global `.hidden` class (display:none) and the active pane simply
+   remains visible and flows below the tabs. */
+#about-panes > [data-pane] {
+  position: relative;
+  display: block;
+  padding: 12px 10px 18px 10px;
+  box-sizing: border-box;
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
+}
+
+/* Avoid double scrollbars: allow the panel to show the pane scrollbar outside
+  the panel border while preventing the outer browser-content from scrolling. */
+#page-about .xp-system-panel { overflow: visible; }
+
 #page-about .xp-bg-heading { font-weight:800; color:#0b2b3a; margin-bottom:6px }
 
 #page-about .xp-bg-subtext { color:#23383f; font-size:14px; line-height:1.5 }
@@ -158,4 +194,43 @@
 #page-about .xp-highlights-box { border:1px solid #e6eef8; padding:12px; border-radius:4px; background:#fbfdff }
 
 #page-about .xp-highlights-box ul { margin:8px 0 0 18px 18px }
+
+/* Strong-visibility fallback for About panes (diagnostic & override) */
+#about-panes > [data-pane].active {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+}
+#about-panes > [data-pane].active, #about-panes > [data-pane].active * {
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #0b2b3a !important;
+}
+/* Ensure core About sections are not collapsed by other rules */
+#about-panes > [data-pane] .xp-system-top,
+#about-panes > [data-pane] .xp-system-specs,
+#about-panes > [data-pane] .xp-background-details,
+#about-panes > [data-pane] .xp-system-experience {
+  display: block !important;
+}
+
+/* Visual debug border for the active pane (remove later) */
+#about-panes > [data-pane].active { outline: 2px dashed rgba(15,90,140,0.18); }
+
+/* If the Experience tab button has .is-active, force-show the Experience pane
+   (works even if the pane still has .hidden). This lets the tab styling control
+   visibility without relying solely on runtime class removal. */
+.xp-system-tabs button.is-active[data-tab="experience"] ~ #about-panes > [data-pane="experience"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+}
+.xp-system-tabs button.is-active[data-tab="experience"] ~ #about-panes > [data-pane="experience"] * {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: #0b2b3a !important;
+}
 
