@@ -185,7 +185,7 @@
 
 #page-about .xp-bg-heading { font-weight:800; color:#0b2b3a; margin-bottom:6px }
 
-#page-about .xp-bg-subtext { color:#23383f; font-size:14px; line-height:1.5 }
+#page-about .xp-bg-subtext { color:#23383f; font-size:15px; line-height:1.6; font-family: inherit; font-weight:400; text-align:left }
 
 #page-about .xp-bg-links a { color:#0b66cc; text-decoration:underline }
 
