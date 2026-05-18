@@ -1299,4 +1299,75 @@ document.addEventListener('DOMContentLoaded',()=>{
   makeDraggable(musicWin, '.title-bar');
   syncErMaxButton();
   syncWordpadMaxButton();
+  
+  /* Certificate preview handler: open assets/certifications files inside a modal */
+  (function(){
+    const modal = document.getElementById('cert-modal');
+    const modalBody = document.getElementById('cert-body');
+    if(!modal) return;
+
+    function openCert(url, title){
+      if(!modalBody) return;
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden','false');
+      modalBody.innerHTML = '<div class="cert-loading">Loading certificate…</div>';
+      const cleanUrl = (url||'').split('#')[0];
+      // Check resource exists before embedding to avoid empty modal
+      fetch(cleanUrl, { method: 'HEAD' }).then(res => {
+        if(!res.ok) throw new Error('Not found');
+        const lower = cleanUrl.split('?')[0].toLowerCase();
+        // PDFs: use <object> with fallback link
+        if(lower.endsWith('.pdf')){
+          const obj = document.createElement('object');
+          obj.className = 'cert-object';
+          obj.type = 'application/pdf';
+          obj.data = cleanUrl;
+          obj.innerHTML = `<div style="padding:18px;text-align:center;color:#062a4a;font-weight:600;">Unable to display the PDF here.<br><a href="${cleanUrl}" target="_blank" rel="noopener">Open or download the certificate</a></div>`;
+          modalBody.innerHTML = '';
+          modalBody.appendChild(obj);
+        } else if(lower.match(/\.(png|jpe?g|webp|gif)$/)){
+          const img = document.createElement('img');
+          img.src = cleanUrl;
+          img.alt = title || 'Certificate image';
+          img.onload = ()=>{};
+          img.onerror = ()=>{
+            modalBody.innerHTML = `<div style="padding:18px;text-align:center;color:#062a4a;font-weight:600;">Unable to load image.<br><a href="${cleanUrl}" target="_blank" rel="noopener">Open or download</a></div>`;
+          };
+          modalBody.innerHTML = '';
+          modalBody.appendChild(img);
+        } else {
+          const obj = document.createElement('object');
+          obj.className = 'cert-object';
+          obj.data = cleanUrl;
+          obj.innerHTML = `<div style="padding:18px;text-align:center;color:#062a4a;font-weight:600;">Unable to display this file.<br><a href="${cleanUrl}" target="_blank" rel="noopener">Open or download</a></div>`;
+          modalBody.innerHTML = '';
+          modalBody.appendChild(obj);
+        }
+        try{ modal.style.zIndex = 99999; }catch(e){}
+      }).catch(err=>{
+        modalBody.innerHTML = `<div style="padding:18px;text-align:center;color:#fff;font-weight:600;">Certificate not found or unavailable.<br><a href="${cleanUrl}" target="_blank" rel="noopener">Open or download file</a></div>`;
+      });
+    }
+
+    function closeModal(){
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden','true');
+      if(modalBody) modalBody.innerHTML = '';
+    }
+
+    document.addEventListener('click', function(e){
+      const link = e.target.closest && e.target.closest('.cert-link a');
+      if(link){
+        e.preventDefault();
+        const url = link.getAttribute('data-cert') || link.getAttribute('href');
+        const title = link.closest && link.closest('.cert-item') ? (link.closest('.cert-item').querySelector('.cert-title')?.textContent || '') : '';
+        if(url) openCert(url, title);
+        return;
+      }
+      const closeTrigger = e.target.closest && e.target.closest('[data-action="close"]');
+      if(closeTrigger) closeModal();
+    }, false);
+
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeModal(); });
+  })();
 });

@@ -659,6 +659,28 @@ body.loading-fullscreen .window{ visibility: hidden; }
 .clock{padding:6px 10px;border-radius:6px;background:linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.06);display:inline-flex;align-items:center;gap:8px}
 .clock .clock-time{color:#fff}
 
+/* Certification list (row layout similar to screenshot) */
+.cert-list{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.cert-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:linear-gradient(#ffffff,#f0f7ff);border:1px solid rgba(12,70,140,0.08);border-radius:8px}
+.cert-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(#fff,#eaf4ff);border-radius:6px;color:#14427a}
+.cert-title{flex:1;font-weight:500;color:#062a4a}
+.cert-meta{width:120px;text-align:left;color:#2a5aa8;font-size:13px}
+.cert-link{width:140px;text-align:right}
+.cert-link a{display:inline-block;padding:6px 10px;background:#eaf4ff;border:1px solid rgba(42,90,168,0.12);border-radius:6px;color:#0d4aa6;text-decoration:none;font-weight:600}
+
+/* Certificate preview modal */
+.cert-modal.hidden{display:none}
+.cert-modal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center}
+.cert-modal-overlay{position:absolute;inset:0;background:rgba(2,10,24,0.6);backdrop-filter:blur(4px)}
+.cert-modal-content{position:relative;z-index:2;background:#fff;border-radius:10px;max-width:90%;max-height:90%;width:900px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.45);display:flex;flex-direction:column}
+.cert-close{position:absolute;right:10px;top:8px;z-index:3;border:none;background:transparent;font-size:22px;cursor:pointer;color:#062a4a}
+.cert-body{flex:1;overflow:auto;background:#fafcff;display:flex;align-items:center;justify-content:center;padding:18px}
+.cert-body img{max-width:100%;max-height:100%;object-fit:contain}
+.cert-body iframe{width:100%;height:100%;border:0}
+.cert-object{width:100%;height:100%;border:0}
+
+.cert-loading{color:#fff;padding:18px;font-weight:600}
+
 /* XP-style Start button overrides (applies user's design) */
 .start-button {
   display: flex;

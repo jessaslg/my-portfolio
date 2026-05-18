@@ -233,14 +233,80 @@
 		<strong>Certification</strong>
 	</div>
 
-	<div class="xp-background-details">
-		<div class="xp-bg-section">
-			<div class="xp-bg-heading">Certifications</div>
-			<div class="xp-bg-subtext">
-				<p>No certifications listed yet. Add certificate names and issuing organizations here.</p>
+		<div class="xp-background-details">
+			<div class="xp-bg-section">
+				<div class="xp-bg-heading">Academic</div>
+				<div class="xp-bg-subtext">
+					<div class="cert-list">
+						<div class="cert-item">
+							<span class="cert-icon">🎓</span>
+							<div class="cert-title">Introduction to Red Hat OpenShift AI</div>
+							<div class="cert-link"><a href="assets/certifications/OPENSHIFT.png" data-cert="assets/certifications/OPENSHIFT.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">🎓</span>
+							<div class="cert-title">Red Hat Application Development I: Programming in Java EE</div>
+							<div class="cert-link"><a href="assets/certifications/JAVA-EE.png" data-cert="assets/certifications/JAVA-EE.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">🎓</span>
+							<div class="cert-title">Technolympics: The Great Hackathon</div>
+							<div class="cert-link"><a href="assets/certifications/technolympics.png" data-cert="assets/certifications/technolympics.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">🎓</span>
+							<div class="cert-title">BITCON2024: Navigating the Future of Technology: Integration, Innovation, adn Security</div>
+							<div class="cert-link"><a href="assets/certifications/bitcon 2024.png" data-cert="assets/certifications/bitcon 2024.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">🎓</span>
+							<div class="cert-title">DATABIZ: Future-Proof Skills: Empowering Students with Data, AI, and Analytics</div>
+							<div class="cert-link"><a href="assets/certifications/databiz 2025.png" data-cert="assets/certifications/databiz 2025.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">🎓</span>
+							<div class="cert-title">BITCON2025: Building a Connected Tomorrow: IoT Innovations and Beyond</div>
+							<div class="cert-link"><a href="assets/certifications/BITCON 2025.png" data-cert="assets/certifications/BITCON 2025.png">Details</a></div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
+
+			<div class="xp-bg-section">
+				<div class="xp-bg-heading">Extracurricular</div>
+				<div class="xp-bg-subtext">
+					<div class="cert-list">
+						<div class="cert-item">
+							<span class="cert-icon">📜</span>
+							<div class="cert-title">Introduction to Machine Learning</div>
+							<div class="cert-link"><a href="assets/certifications/INTRO-MACHINE-LEARNING.png" data-cert="assets/certifications/INTRO-MACHINE-LEARNING.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">📜</span>
+							<div class="cert-title">Digital Tools for Cooperative Efficiency</div>
+							<div class="cert-link"><a href="assets/certifications/DIGITAL-BUSINESS-TOOLS.png" data-cert="assets/certifications/DIGITAL-BUSINESS-TOOLS.png">Details</a></div>
+						</div>
+						<div class="cert-item">
+							<span class="cert-icon">📜</span>
+							<div class="cert-title">Querying Fundamentals of MySQL</div>
+							<div class="cert-link"><a href="assets/certifications/FUNDAMENTALS-WITH-MYSQL.png" data-cert="assets/certifications/FUNDAMENTALS-WITH-MYSQL.png">Details</a></div>
+						</div>
+							</div>
+							</div>
+						</div>
+					<div class="xp-bg-section">
+						<div class="xp-bg-heading">Achievement</div>
+						<div class="xp-bg-subtext">
+							<ul>
+								<li>Dean's Lister First Semester A.Y 2022-2023</li>
+								<li>Dean's Lister Second Semester A.Y 2022-2023</li>
+								<li>Dean's Lister First Semester A.Y 2023-2024</li>
+								<li>Dean's Lister First Semester A.Y 2024-2025</li>
+								<li>Dean's Lister Second Semester A.Y 2024-2025</li>
+							</ul>
+						</div>
+					</div>
+					</div>
 </div>
      	</div>
             </div>
@@ -436,6 +502,16 @@
 
 			<!-- Background ambient sound controlled by the taskbar Sound button -->
 			<audio id="sound-audio" src="assets/music/pinatubo music.mp3" loop preload="auto"></audio>
+
+			<!-- Certificate preview modal (shows PDFs or images from assets/certifications) -->
+			<div id="cert-modal" class="cert-modal hidden" role="dialog" aria-hidden="true" aria-label="Certificate preview">
+				<div class="cert-modal-overlay" data-action="close"></div>
+				<div class="cert-modal-content" role="document">
+					<button class="cert-close" aria-label="Close certificate preview" data-action="close">×</button>
+					<div class="cert-body" id="cert-body" aria-live="polite"></div>
+				</div>
+			</div>
+
 			<script src="src/app.js"></script>
 	</body>
 </html>
