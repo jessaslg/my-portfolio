@@ -631,8 +631,8 @@ body.loading-fullscreen .window{ visibility: hidden; }
 .tray-btn{
   display:inline-flex;
   align-items:center;
-  gap:8px;
-  padding:4px 14px;
+  gap:10px;
+  padding:4px 12px;
   margin-right:10px;
   /* match system-tray blue blur look */
   background: linear-gradient(to bottom, #0d6fd6 0%, #0d6fd6 100%);
@@ -645,11 +645,11 @@ body.loading-fullscreen .window{ visibility: hidden; }
   cursor:pointer;
   backdrop-filter: blur(6px);
   box-sizing: border-box;
-  height: 36px; /* fixed height to prevent layout shift */
-  min-width: 180px; /* wider to ensure icon + full label fit */
+  height: 36px; /* restore previous button height so size doesn't change */
+  min-width: 180px; /* restore previous min-width */
   justify-content: flex-start; /* keep icon+label aligned */
 }
-.tray-btn .tray-icon{width:32px;height:32px;display:block;flex:0 0 32px;object-fit:contain;margin-right:8px}
+.tray-btn .tray-icon{width:20px;height:20px;display:block;flex:0 0 20px;object-fit:contain;margin-right:12px;transform:scale(1.9);transform-origin:center left;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.7)) saturate(1.2)}
 .tray-btn .tray-label{color:#fff;font-family:'Press Start 2P','VT323',monospace;font-size:13px;letter-spacing:0.3px;display:inline-block;width:auto;overflow:visible;white-space:nowrap}
 .tray-btn:hover{filter:brightness(1.06)}
 .tray-btn:focus{outline: 3px solid rgba(255,196,58,0.95); outline-offset: -3px}
