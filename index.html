@@ -410,6 +410,11 @@
 						<!-- tray icons removed -->
 					</div>
 
+					<button id="sound-btn" class="tray-btn" title="Sound" aria-label="" role="button" aria-pressed="true">
+						<img src="assets/img/sound-icon.svg" alt="Sound" class="tray-icon">
+						<span class="tray-label">SoundOn</span>
+					</button>
+
 					<div class="clock" id="taskbar-clock">
 						<span class="clock-time">00:00</span>
 					</div>
@@ -428,6 +433,9 @@
 		</div>
 
 		<script src="assets/loadingScreen.js"></script>
-		<script src="src/app.js"></script>
+
+			<!-- Background ambient sound controlled by the taskbar Sound button -->
+			<audio id="sound-audio" src="assets/music/pinatubo music.mp3" loop preload="auto"></audio>
+			<script src="src/app.js"></script>
 	</body>
 </html>

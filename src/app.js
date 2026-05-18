@@ -803,6 +803,54 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
+  // Sound button toggle (on/off)
+  const soundBtn = document.getElementById('sound-btn');
+  if(soundBtn){
+    // initialize from localStorage
+    const saved = window.localStorage.getItem('soundEnabled');
+    const enabled = saved === null ? true : saved === 'true';
+    setSoundState(enabled, false);
+
+    soundBtn.addEventListener('click', ()=>{
+      const isOn = soundBtn.classList.contains('active');
+      setSoundState(!isOn, true);
+    });
+  }
+
+  function setSoundState(on, persist){
+    const btn = document.getElementById('sound-btn');
+    if(!btn) return;
+    const icon = btn.querySelector('.tray-icon');
+    const label = btn.querySelector('.tray-label');
+    if(on){
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
+      if(label) label.textContent = 'SoundOn';
+      if(icon) icon.style.filter = 'none';
+    } else {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed','false');
+      if(label) label.textContent = 'SoundOff';
+      if(icon) icon.style.filter = 'grayscale(100%) brightness(.8)';
+    }
+    // Control the ambient sound audio element if present
+    try{
+      const soundAudio = document.getElementById('sound-audio');
+      if(soundAudio){
+        if(on){
+          soundAudio.loop = true;
+          const playPromise = soundAudio.play();
+          if(playPromise && typeof playPromise.catch === 'function') playPromise.catch(()=>{});
+        } else {
+          soundAudio.pause();
+          try{ soundAudio.currentTime = 0; }catch(e){}
+        }
+      }
+    }catch(e){}
+
+    if(persist) try{ window.localStorage.setItem('soundEnabled', on ? 'true' : 'false'); }catch(e){}
+  }
+
   // make WordPad window draggable like the others
   makeDraggable(wordpadWin, '.titlebar');
   makeDraggable(wordpadWin, '.title-bar');
