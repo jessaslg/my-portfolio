@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(desktop) desktop.classList.remove('hidden');
       try{ document.body.classList.remove('loading-fullscreen'); }catch(e){}
     },2600);
+    // Reveal taskbar after boot completes (keeps it hidden during the Start popup)
+    try{
+      setTimeout(()=>{
+        const taskbar = document.querySelector('.taskbar');
+        if(taskbar) taskbar.classList.remove('hidden');
+      }, 2700);
+    }catch(e){}
   };
 
   // Open ER window on single OR double click (browser desktop icon)
@@ -946,12 +953,26 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(show) show.classList.remove('hidden');
   });
 
+  // Keyboard accessibility for ER nav tabs
+  tabs.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      const el = e.target.closest('[data-tab]'); if(!el) return; el.click(); e.preventDefault();
+    }
+  });
+
   // Projects icon (replaces recycle) - open Projects window on click/dblclick
   const projectIcon = document.getElementById('project');
   const projectWin = document.getElementById('project-window');
   const taskProject = document.getElementById('task-project');
   function openProjectWindow(){
     if(!projectWin) return;
+    const erRect = erWindow ? erWindow.getBoundingClientRect() : null;
+    const erStyle = erWindow ? getComputedStyle(erWindow) : null;
+    // If ER is visible, copy its frame and chrome for exact parity
+    if(erWindow && !erWindow.classList.contains('hidden') && erRect && erRect.width > 0){
+      setProjectRect({ width: erRect.width, height: erRect.height });
+      try{ projectWin.style.border = erStyle.border; projectWin.style.borderRadius = erStyle.borderRadius; projectWin.style.boxShadow = erStyle.boxShadow; }catch(e){}
+    }
     projectWin.classList.remove('hidden');
     projectWin.focus && projectWin.focus();
     addToTaskOrder('task-project');
@@ -966,6 +987,90 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(projectIcon){ projectIcon.addEventListener('click', openProjectWindow); projectIcon.addEventListener('dblclick', openProjectWindow); }
   const projectClose = document.querySelector('#project-window .win-btn.close');
   if(projectClose) projectClose.addEventListener('click', closeProjectWindow);
+
+  // Project window controls and scoped tab handling (namespaced with proj-)
+  const projMinBtn = document.getElementById('proj-minimize');
+  const projMaxBtn = document.getElementById('proj-maximize');
+  const projCloseBtn = document.getElementById('proj-close');
+  let projectIsMinimized = false;
+  let projectIsMaximized = false;
+  let projectRestoreRect = null;
+
+  function setProjectRect(rect){
+    if(!projectWin || !rect) return;
+    if(rect.left != null) projectWin.style.setProperty('left', `${Math.round(rect.left)}px`, 'important');
+    if(rect.top != null) projectWin.style.setProperty('top', `${Math.round(rect.top)}px`, 'important');
+    if(rect.width != null) projectWin.style.setProperty('width', `${Math.round(rect.width)}px`, 'important');
+    if(rect.height != null) projectWin.style.setProperty('height', `${Math.round(rect.height)}px`, 'important');
+  }
+
+  function clearProjectRect(){ if(!projectWin) return; projectWin.style.removeProperty('left'); projectWin.style.removeProperty('top'); projectWin.style.removeProperty('width'); projectWin.style.removeProperty('height'); }
+
+  function syncProjectMaxButton(){ if(!projMaxBtn) return; projMaxBtn.innerHTML = projectIsMaximized ? '&#9638;' : '&#9633;'; }
+
+  function minimizeProjectWindow(){ if(!projectWin || projectWin.classList.contains('hidden')) return; projectIsMinimized = true; projectWin.classList.add('hidden'); addToTaskOrder('task-project'); if(typeof reflectTaskbar === 'function') reflectTaskbar(); }
+
+  function restoreProjectWindow(){ if(!projectWin) return; projectIsMinimized = false; projectWin.classList.remove('hidden'); bringWindowToFront(projectWin); syncProjectMaxButton(); if(typeof reflectTaskbar === 'function') reflectTaskbar(); }
+
+  function toggleProjectMaximize(){
+    if(!projectWin) return;
+    if(projectWin.classList.contains('hidden')){ if(projectIsMinimized) restoreProjectWindow(); else openProjectWindow(); }
+    if(!projectIsMaximized){
+      const rect = projectWin.getBoundingClientRect();
+      projectRestoreRect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+      projectWin.classList.add('maximized');
+      projectWin.style.setProperty('left', '8px', 'important');
+      projectWin.style.setProperty('top', '8px', 'important');
+      projectWin.style.setProperty('width', 'calc(100% - 16px)', 'important');
+      projectWin.style.setProperty('height', 'calc(100% - 56px)', 'important');
+      projectIsMaximized = true;
+    } else {
+      projectWin.classList.remove('maximized');
+      if(projectRestoreRect){ projectWin.style.setProperty('left', `${Math.round(projectRestoreRect.left)}px`, 'important'); projectWin.style.setProperty('top', `${Math.round(projectRestoreRect.top)}px`, 'important'); projectWin.style.setProperty('width', `${Math.round(projectRestoreRect.width)}px`, 'important'); projectWin.style.setProperty('height', `${Math.round(projectRestoreRect.height)}px`, 'important'); }
+      projectIsMaximized = false;
+    }
+    syncProjectMaxButton();
+  }
+
+  if(projCloseBtn) projCloseBtn.addEventListener('click', closeProjectWindow);
+  if(projMinBtn) projMinBtn.addEventListener('click', minimizeProjectWindow);
+  if(projMaxBtn) projMaxBtn.addEventListener('click', toggleProjectMaximize);
+
+  const projTabs = document.getElementById('proj-nav-tabs');
+  if(projTabs){
+    // Click handler for project window tabs
+    projTabs.addEventListener('click', (e)=>{
+      const el = e.target.closest('[data-tab]');
+      if(!el) return;
+      const tabName = el.getAttribute('data-tab');
+      projTabs.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active'));
+      el.classList.add('active');
+      // If the user clicked Resume on the Projects tab, open resume in a new browser tab
+      if(tabName === 'resume'){ openResumeInNewTab(); return; }
+      // If the user clicked Jessa Portfolio (home) from Projects, open the ER/About window
+      if(tabName === 'home'){
+        try{ openWindow(); }catch(e){}
+        try{ showPage('page-about'); }catch(e){}
+        return;
+      }
+      // Otherwise attempt to show pages scoped to the project window (if present)
+      try{ projectWin.querySelectorAll('.page').forEach(p=>p.classList.add('hidden')); }catch(e){}
+      const show = projectWin ? projectWin.querySelector('#proj-page-' + tabName) : null;
+      if(show) show.classList.remove('hidden');
+    });
+    // Keyboard accessibility: activate tab with Enter or Space
+    projTabs.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        const el = e.target.closest('[data-tab]'); if(!el) return; el.click(); e.preventDefault();
+      }
+    });
+  }
+
+  // allow dragging the Projects window like ER/WordPad
+  makeDraggable(projectWin, '.titlebar');
+  makeDraggable(projectWin, '.title-bar');
+  const projTitlebar = document.querySelector('#project-window .titlebar');
+  if(projTitlebar){ projTitlebar.addEventListener('dblclick', (e)=>{ if(e.target.closest('.win-btn')) return; toggleProjectMaximize(); }); }
 
   // Close on Escape
   document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ closeERWindow(); } });

@@ -99,9 +99,9 @@
   --vol-progress: 50%;
 }
 *{box-sizing:border-box}
-.html,body{height:100%;margin:0;background:#0b2b3a;color:var(--text)}
-.html, body { height:100%; margin:0; background:#0b2b3a; color:var(--text); }
-html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;background:#0b2b3a;color:var(--text)}
+html,body{height:100%;margin:0;background:#0b2b3a;color:var(--text);overflow:hidden;overscroll-behavior:none}
+html, body { height:100%; margin:0; background:#0b2b3a; color:var(--text); overflow:hidden; overscroll-behavior:none; }
+html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;background:#0b2b3a;color:var(--text);overflow:hidden}
 .boot-screen{position:fixed;inset:0;background:#000;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:50}
 .boot-content{width:80%;max-width:800px}
 .logo{font-family: Tahoma, "Segoe UI", sans-serif;color:#7fffd4;margin-bottom:10px;text-align:center}
@@ -235,6 +235,21 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 /* Window */
 .window{position:absolute;left:140px;top:100px;width:760px;max-width:90%;background:var(--window-bg);border:4px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,0.6);font-family: Tahoma, "Segoe UI", sans-serif}
+/* Ensure windows are clipped when moved off-screen and scroll internally when needed */
+.window{
+  position:absolute;
+  left:140px;
+  top:100px;
+  width:760px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 120px);
+  background: var(--window-bg);
+  border:4px solid #000;
+  box-shadow:8px 8px 0 rgba(0,0,0,0.6);
+  font-family: Tahoma, "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  overflow: auto; /* allow inner scrolling inside windows */
+}
 .titlebar, .title-bar {
   height: 48px; /* increased height for clearer chrome and to avoid overlap */
   background: linear-gradient(to bottom, #7baaff 0%, #3a76ff 5%, #1a46b3 100%);
@@ -251,10 +266,51 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 /* Slightly larger icon in the titlebar and spacing to the text */
 .titlebar img.wmp-icon-svg, .title-bar img.wmp-icon-svg {
-  width: 18px;
-  height: 18px;
-  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
 }
+
+/* Title text inside titlebar: shared for all firefox-style windows */
+.titlebar > span {
+  display: inline-block;
+  font-family: Tahoma, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  margin-left: 6px;
+  line-height: 1;
+}
+
+/* Ensure firefox-window titlebar metrics are locked so all firefox-style windows match */
+.firefox-window .titlebar,
+.firefox-window .title-bar {
+  height: 48px !important;
+  padding: 6px 16px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.firefox-window .titlebar img.wmp-icon-svg,
+.firefox-window .title-bar img.wmp-icon-svg {
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 12px !important;
+}
+
+/* Make Projects titlebar icon match ER browser icon size precisely */
+#project-window .titlebar img.wmp-icon-svg{
+  width: 28px !important;
+  height: 28px !important;
+  margin-right: 12px !important;
+  transform: none !important;
+  display: inline-block;
+  object-fit: contain;
+}
+
+.firefox-window .win-controls, .firefox-window .window-controls { margin-left: auto; display:flex; gap:6px; }
+.firefox-window .win-btn { width:26px !important; height:26px !important; font-size:14px !important; border-radius:4px !important; }
 .title{font-family: Tahoma, "Segoe UI", sans-serif;font-size:12px}
 .close{background:#c0c0c0;border:2px solid #000;padding:4px 8px;cursor:pointer;font-family: Tahoma, "Segoe UI", sans-serif}
 .window-body{padding:12px;background:#e9e9e9;color:#000}
@@ -496,7 +552,17 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   display:flex;
   align-items:center;
   justify-content:space-between;
-  z-index:1000;
+  z-index:99999; /* keep taskbar above all windows so they slide under it */
+}
+
+/* Responsive: on small viewports make desktop scrollable and stack windows
+   so the portfolio remains usable on phones */
+@media (max-width: 700px){
+  html,body{overflow:auto}
+  .desktop{position:relative;min-height:100vh;overflow:auto}
+  .window{position:relative;left:auto;top:auto;width:calc(100% - 24px);max-width:100%;margin:12px auto;height:auto;max-height:none;overflow:visible}
+  .firefox-window{border-radius:6px}
+  .navbar,.menu-bar,.tab-bar{padding-left:10px;padding-right:10px}
 }
 
 /* When the XP starting screen shows, hide the taskbar and lower UI so loading appears fullscreen */
@@ -752,8 +818,8 @@ body.loading-fullscreen .window{ visibility: hidden; }
 .win-btn:hover{ box-shadow: 0 14px 28px rgba(0,0,0,0.28); filter: brightness(.94); }
 .win-btn.close { background: linear-gradient(to bottom, #ffd1d1 0%, #e04343 50%, #b82222 100%); }
 
-/* ER / Browser window: use Firefox-like chrome */
-#er-window{
+/* Shared Firefox-like chrome for ER and Project windows */
+.firefox-window{
   width:900px;
   height:600px;
   background:#fff;
@@ -763,8 +829,8 @@ body.loading-fullscreen .window{ visibility: hidden; }
   overflow:hidden;
 }
 
-/* Only render ER window as flex when it's not hidden so .hidden controls visibility */
-#er-window:not(.hidden){display:flex;flex-direction:column}
+/* Render firefox-style windows as flex columns when visible */
+.firefox-window:not(.hidden){display:flex;flex-direction:column}
 
 /* Titlebar compatibility: copy music-player title style to existing .titlebar used by ER window */
 .menu-bar {
@@ -776,19 +842,7 @@ body.loading-fullscreen .window{ visibility: hidden; }
   border-bottom: 1px solid #ccc;
 }
 
-/* Make the Projects window match the ER/About window chrome and size */
-#project-window{
-  width:900px;
-  height:600px;
-  background:#fff;
-  border:4px solid #002d96;
-  border-radius:8px 8px 0 0;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  overflow:hidden;
-}
-
-/* Render Projects window as flex column when visible (same as ER window) */
-#project-window:not(.hidden){display:flex;flex-direction:column}
+/* Both ER and Projects windows use the shared `.firefox-window` chrome above. */
 
 
 /* Menu item hover: subtle lift + shadow animation */
