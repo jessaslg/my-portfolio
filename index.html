@@ -84,7 +84,7 @@
 				</div>
 
 				<nav id="nav-tabs" class="tab-bar" role="tablist">
-					<div class="tab active" data-tab="home" role="tab" aria-selected="true">
+					<div class="tab active disabled-tab" data-tab="home" role="tab" aria-selected="true">
 						<img src="assets/img/browser.svg" style="width:12px;" alt="">
 						Jessa Portfolio
 					</div>
@@ -335,7 +335,7 @@
 			</div>
 
 			<!-- Projects floating window (hidden by default) -->
-			<div id="project-window" class="window hidden" role="dialog" aria-label="Projects">
+			<div id="project-window" class="window hidden firefox-window" role="dialog" aria-label="Projects">
 				<div class="titlebar">
 					<img src="assets/img/projects.svg" class="wmp-icon-svg" alt="Projects">
 					<span>My Projects</span>
@@ -349,17 +349,19 @@
 				</div>
 
 				<nav class="tab-bar" role="tablist">
-					<div class="tab active">Projects</div>
+					<div class="tab active" data-tab="portfolio"><img src="assets/img/projects.svg" style="width:12px;" alt="">Projects</div>
 				</nav>
 
-				<div class="window-body">
-					<h2>My Projects</h2>
-					<p>Here are some highlighted projects. Replace with real project links and screenshots.</p>
-					<ul>
-						<li><strong>Project A</strong> — Description and link.</li>
-						<li><strong>Project B</strong> — Description and link.</li>
-						<li><strong>Project C</strong> — Description and link.</li>
-					</ul>
+				<div class="browser-content">
+					<div class="page" id="page-portfolio">
+						<h2>My Projects</h2>
+						<p>Here are some highlighted projects. Replace with real project links and screenshots.</p>
+						<ul>
+							<li><strong>Project A</strong> — Description and link.</li>
+							<li><strong>Project B</strong> — Description and link.</li>
+							<li><strong>Project C</strong> — Description and link.</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 
