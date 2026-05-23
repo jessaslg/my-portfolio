@@ -18,6 +18,107 @@ document.addEventListener('DOMContentLoaded',()=>{
   const bootLines = document.getElementById('boot-lines');
   const progress = document.querySelector('.progress');
 
+  function forceShowTaskbar(){
+    try{ document.body.classList.remove('loading-fullscreen'); }catch(e){}
+
+    const taskbar = document.querySelector('.taskbar');
+    const startButton = document.querySelector('.start-button, #start-btn');
+    const taskbarItems = document.querySelector('.taskbar-items, #taskbar-items');
+    const systemTray = document.querySelector('.system-tray');
+    const clock = document.querySelector('.clock, #taskbar-clock');
+
+    [taskbar, startButton, taskbarItems, systemTray, clock].forEach((el)=>{
+      if(!el) return;
+      el.classList.remove('hidden');
+      el.removeAttribute('hidden');
+      el.setAttribute('aria-hidden', 'false');
+      el.style.removeProperty('visibility');
+      el.style.removeProperty('opacity');
+      el.style.visibility = 'visible';
+      el.style.opacity = '1';
+    });
+
+    if(taskbar){
+      taskbar.style.setProperty('display', 'flex', 'important');
+      taskbar.style.setProperty('position', 'fixed', 'important');
+      taskbar.style.setProperty('bottom', '0', 'important');
+      taskbar.style.setProperty('left', '0', 'important');
+      taskbar.style.setProperty('right', '0', 'important');
+      taskbar.style.setProperty('height', '40px', 'important');
+      taskbar.style.setProperty('z-index', '999999', 'important');
+    }
+
+    if(startButton) startButton.style.setProperty('display', 'flex', 'important');
+    if(taskbarItems) taskbarItems.style.setProperty('display', 'flex', 'important');
+    if(systemTray) systemTray.style.setProperty('display', 'flex', 'important');
+    if(clock) clock.style.setProperty('display', 'inline-flex', 'important');
+  }
+
+  function finishLoadingScreen(){
+    const loadingOverlay = document.querySelector('.loading-overlay');
+
+    if(boot){
+      boot.classList.add('hidden');
+      boot.setAttribute('aria-hidden', 'true');
+    }
+
+    if(loadingOverlay){
+      loadingOverlay.classList.add('hidden');
+      loadingOverlay.setAttribute('aria-hidden', 'true');
+      loadingOverlay.style.pointerEvents = 'none';
+    }
+
+    if(desktop){
+      desktop.classList.remove('hidden');
+      desktop.setAttribute('aria-hidden', 'false');
+    }
+
+    forceShowTaskbar();
+
+    // Repeat because some click/open handlers and boot transitions can re-apply .hidden.
+    try{ requestAnimationFrame(()=>forceShowTaskbar()); }catch(e){}
+    setTimeout(forceShowTaskbar, 100);
+    setTimeout(forceShowTaskbar, 500);
+    setTimeout(forceShowTaskbar, 1000);
+    setTimeout(forceShowTaskbar, 2000);
+  }
+
+  window.finishLoadingScreen = finishLoadingScreen;
+
+  // Last-resort CSS override created by JS so the taskbar stays visible after loading.
+  const taskbarFixStyle = document.createElement('style');
+  taskbarFixStyle.textContent = `
+    body:not(.loading-fullscreen) .taskbar {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: 40px !important;
+      z-index: 999999 !important;
+    }
+    body:not(.loading-fullscreen) .start-button,
+    body:not(.loading-fullscreen) #start-btn,
+    body:not(.loading-fullscreen) .taskbar-items,
+    body:not(.loading-fullscreen) #taskbar-items,
+    body:not(.loading-fullscreen) .system-tray {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    body:not(.loading-fullscreen) .clock,
+    body:not(.loading-fullscreen) #taskbar-clock {
+      display: inline-flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  `;
+  document.head.appendChild(taskbarFixStyle);
+
+
+
   // Boot sequence is invoked explicitly via window.startBoot()
   window.startBoot = function(){
     // hide initial boot-lines / progress if present
@@ -35,20 +136,17 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(bootRight) { bootRight.classList.remove('hidden'); bootRight.setAttribute('aria-hidden','false'); }
     }
 
-    // after XP screen finishes (approx 2.6s) show desktop
-    setTimeout(()=>{
-      if(boot) boot.classList.add('hidden');
-      if(desktop) desktop.classList.remove('hidden');
-      try{ document.body.classList.remove('loading-fullscreen'); }catch(e){}
-    },2600);
-    // Reveal taskbar after boot completes (keeps it hidden during the Start popup)
-    try{
-      setTimeout(()=>{
-        const taskbar = document.querySelector('.taskbar');
-        if(taskbar) taskbar.classList.remove('hidden');
-      }, 2700);
-    }catch(e){}
+    // after XP screen finishes, show desktop and restore taskbar immediately
+    setTimeout(finishLoadingScreen, 2600);
   };
+
+  // Fallback: if the loading screen is removed by another script or by CSS,
+  // still make the website taskbar visible after the page settles.
+  setTimeout(()=>{
+    if(!document.body.classList.contains('loading-fullscreen')){
+      forceShowTaskbar();
+    }
+  }, 3200);
 
   // Open ER window on single OR double click (browser desktop icon)
   function showPage(pageId){
@@ -399,9 +497,16 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     if(erFolder){
     const openAbout = ()=>{
-      // If the ER/About window is already open and visible, ignore the click.
       try{
-        if(erWindow && !erWindow.classList.contains('hidden')) return;
+        if(erWindow){
+          // If visible, bring to front and restore if minimized
+          if(!erWindow.classList.contains('hidden')){
+            if(erIsMinimized) restoreERWindow();
+            bringWindowToFront(erWindow);
+            erWindow.focus && erWindow.focus();
+            return;
+          }
+        }
       }catch(e){}
       openWindow();
       showPage('page-about');
@@ -966,6 +1071,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   const taskProject = document.getElementById('task-project');
   function openProjectWindow(){
     if(!projectWin) return;
+    try{
+      if(projectWin){
+        if(!projectWin.classList.contains('hidden')){
+          if(projectIsMinimized) restoreProjectWindow();
+          bringWindowToFront(projectWin);
+          projectWin.focus && projectWin.focus();
+          return;
+        }
+      }
+    }catch(e){}
     const erRect = erWindow ? erWindow.getBoundingClientRect() : null;
     const erStyle = erWindow ? getComputedStyle(erWindow) : null;
     // If ER is visible, copy its frame and chrome for exact parity
@@ -974,6 +1089,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       try{ projectWin.style.border = erStyle.border; projectWin.style.borderRadius = erStyle.borderRadius; projectWin.style.boxShadow = erStyle.boxShadow; }catch(e){}
     }
     projectWin.classList.remove('hidden');
+    bringWindowToFront(projectWin);
     projectWin.focus && projectWin.focus();
     addToTaskOrder('task-project');
     if(typeof reflectTaskbar === 'function') reflectTaskbar();
@@ -1176,6 +1292,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   }
   reflectTaskbar();
+  if(!document.body.classList.contains('loading-fullscreen')){
+    try{ forceShowTaskbar(); }catch(e){}
+  }
   // Ensure About pane tabs are wired even if About is opened from the Start menu
   try{ initAboutTabs(); }catch(e){}
   try{ syncAboutPaneHeights(); }catch(e){}
@@ -1453,6 +1572,16 @@ document.addEventListener('DOMContentLoaded',()=>{
         modalBody.innerHTML = `<div style="padding:18px;text-align:center;color:#fff;font-weight:600;">Certificate not found or unavailable.<br><a href="${cleanUrl}" target="_blank" rel="noopener">Open or download file</a></div>`;
       });
     }
+
+    // Clicking any visible part of a window should bring it to the front
+    document.querySelectorAll('.window').forEach(w=>{
+      w.addEventListener('mousedown', (e)=>{
+        // ignore clicks on window controls that already handle focus
+        if(e.target.closest('.win-btn')) return;
+        try{ bringWindowToFront(w); }catch(e){}
+        try{ w.focus && w.focus(); }catch(e){}
+      });
+    });
 
     function closeModal(){
       modal.classList.add('hidden');

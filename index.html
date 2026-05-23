@@ -10,8 +10,24 @@
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="src/styles.css">
 		<link rel="stylesheet" href="src/about/about.css">
+	
+		<style>
+			body.loading-fullscreen .taskbar,
+			body.loading-fullscreen #start-menu {
+				display: none !important;
+				visibility: hidden !important;
+				opacity: 0 !important;
+			}
+
+			body:not(.loading-fullscreen) .taskbar {
+				display: flex !important;
+				visibility: visible !important;
+				opacity: 1 !important;
+			}
+		</style>
+
 	</head>
-	<body>
+	<body class="loading-fullscreen">
 		<!-- Loading overlay inserted by loadingScreen integration -->
 		<div id="loading-overlay" class="loading-overlay" aria-hidden="false">
 			<div class="loading-popup start-popup" role="dialog" aria-label="Start popup">
@@ -384,7 +400,7 @@
 		</div>
 	</div>
 
-		<div class="xp-system-tabs" role="tablist" aria-label="About tabs" id="about-tabs">
+		<div class="xp-system-tabs" role="tablist" aria-label="Project tabs" id="project-tabs">
 
 		<button type="button" data-tab="general" class="is-active">Application Development</button>
 
@@ -392,10 +408,13 @@
 
 		</div>
 
+</div>
+<!-- End Projects Window -->
+
 		<script src="assets/loadingScreen.js"></script>
 
 		<!-- Taskbar (Windows XP style) -->
-		<div class="taskbar hidden" role="toolbar" aria-label="Taskbar">
+		<div class="taskbar" role="toolbar" aria-label="Taskbar">
 			<button id="start-btn" class="start-button"><img src="assets/img/xp-logo.svg" alt="Start logo" class="start-logo"><span class="start-text">Start</span></button>
 
 			<div class="taskbar-items" id="taskbar-items">
@@ -441,7 +460,6 @@
 					<div class="cert-body" id="cert-body" aria-live="polite"></div>
 				</div>
 			</div>
-
-			<script src="src/app.js"></script>
+<script src="src/script.js"></script>
 	</body>
 </html>
