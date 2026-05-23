@@ -4,6 +4,9 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<title>Jessa Saligao - Portfolio</title>
+		<!-- Use Jessa's photo as the site favicon/logo shown beside the page title -->
+		<link rel="icon" href="assets/img/jessa.JPEG" type="image/jpeg" sizes="32x32">
+		<link rel="apple-touch-icon" href="assets/img/jessa.JPEG">
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="src/styles.css">
 		<link rel="stylesheet" href="src/about/about.css">
@@ -111,11 +114,6 @@
 				</div>
 
 				<div class="browser-content">
-					<div class="page" id="page-home">
-						<h1>Welcome to my portfolio</h1>
-						<p>Double-click the Jessa folder to explore. Use the tabs to navigate.</p>
-					</div>
-
 										<div class="page hidden" id="page-about">
 												<section class="xp-content xp-about-system">
 													<div class="xp-system-tabs" role="tablist" aria-label="About tabs" id="about-tabs">
@@ -327,7 +325,7 @@
 
 	<!-- TITLEBAR -->
 	<div class="titlebar">
-		<img src="assets/img/projects.svg" class="wmp-icon-svg ff-icon" alt="Projects" style="width: 40px; height: 40px;">
+		<img src="assets/img/projects.svg" class="wmp-icon-svg ff-icon" alt="Jessa Saligao" width="28" height="28">
 		<span>My Projects</span>
 
 		<div class="window-controls win-controls">
@@ -385,7 +383,14 @@
 			🏠
 		</div>
 	</div>
-    		</div>
+
+		<div class="xp-system-tabs" role="tablist" aria-label="About tabs" id="about-tabs">
+
+		<button type="button" data-tab="general" class="is-active">Application Development</button>
+
+		<button type="button" data-tab="certification">Graphic Design</button>
+
+		</div>
 
 		<script src="assets/loadingScreen.js"></script>
 
