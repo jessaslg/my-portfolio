@@ -400,13 +400,67 @@
 		</div>
 	</div>
 
-		<div class="xp-system-tabs" role="tablist" aria-label="Project tabs" id="project-tabs">
+	<div class="browser-content project-browser-content">
+		<div class="page" id="page-projects">
+			<section class="xp-content xp-project-system">
+				<div class="xp-system-tabs" role="tablist" aria-label="Project tabs" id="project-tabs">
+					<button type="button" data-tab="general" class="is-active">Application Development</button>
+					<button type="button" data-tab="certification">Graphic Design</button>
+				</div>
 
-		<button type="button" data-tab="general" class="is-active">Application Development</button>
+				<!-- Project panes: Application Development & Graphic Design -->
+				<div class="xp-pane xp-system-panel" id="project-panes">
+					<div data-pane="general" class="active">
+						<div class="xp-system-note">
+							<strong>Application Development</strong>
+						</div>
 
-		<button type="button" data-tab="certification">Graphic Design</button>
+						<div class="xp-background-details">
+							<div class="xp-bg-section">
+								<div class="xp-bg-heading">Applications</div>
+								<div class="xp-bg-subtext">
+									<p>Projects and apps focused on backend and full-stack development.</p>
+								</div>
+							</div>
+						</div>
+					</div>
 
+					<div data-pane="certification" class="hidden">
+						<div class="xp-system-note">
+							<strong>Graphic Design</strong>
+						</div>
+
+						<div class="xp-background-details">
+							<div class="xp-bg-section">
+								<div class="xp-bg-heading">Portfolio</div>
+								<div class="xp-bg-subtext">
+									<div class="cert-list">
+										<div class="cert-item">
+											<span class="cert-icon">🖼️</span>
+											<div class="cert-title">Branding Poster — Project A</div>
+											<div class="cert-link"><a href="#" data-asset="#">Details</a></div>
+										</div>
+
+										<div class="cert-item">
+											<span class="cert-icon">🖼️</span>
+											<div class="cert-title">Social Media Kit — Campaign B</div>
+											<div class="cert-link"><a href="#" data-asset="#">Details</a></div>
+										</div>
+
+										<div class="cert-item">
+											<span class="cert-icon">🖼️</span>
+											<div class="cert-title">Event Poster — Design C</div>
+											<div class="cert-link"><a href="#" data-asset="#">Details</a></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
 		</div>
+	</div>
 
 </div>
 <!-- End Projects Window -->
