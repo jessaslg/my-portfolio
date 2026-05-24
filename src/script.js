@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded',()=>{
         const descendants = pane.querySelectorAll('*');
         descendants.forEach(el=>{
           try{
+            // Do not force-visible the project detail panel; its visibility
+            // should be controlled by its own logic when a Details button is clicked.
+            if(el.matches && el.matches('.detail-panel')) return;
             el.classList.remove('hidden'); el.style.visibility = 'visible'; el.style.opacity = '1'; el.style.transform = 'none';
             el.style.removeProperty('clip'); el.style.removeProperty('clip-path');
             const cs = getComputedStyle(el);
@@ -149,19 +152,72 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
-  // Project detail panel handling: populate and show the detail panel inside the Graphic Design pane
+  // Project detail panel handling: dropdown-style under each item
   try{
-    const projectPanesEl = document.getElementById('project-panes');
+    const projectWin = document.getElementById('project-window');
+    const projectPanesEl = projectWin ? projectWin.querySelector('#project-panes') : document.getElementById('project-panes');
+    const panel = projectWin ? projectWin.querySelector('#project-detail-panel') : document.getElementById('project-detail-panel');
     let currentDetailSource = null;
-    if(projectPanesEl){
+    if(projectPanesEl && panel){
+      // ensure panel starts hidden via aria attribute and removed from layout
+      panel.setAttribute('aria-hidden','true');
+      panel.style.maxHeight = '0px';
+      panel.style.visibility = 'hidden';
+      panel.style.transition = 'none';
+      panel.style.display = 'none';
+
+      function closePanel(){
+        try{
+          // animate to 0 then remove from layout when transition ends
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          // force a paint so the starting maxHeight is applied
+          requestAnimationFrame(()=>{
+            panel.style.transition = 'max-height 260ms ease';
+            panel.style.maxHeight = '0px';
+            panel.setAttribute('aria-hidden','true');
+            panel.style.visibility = 'hidden';
+            // after transition, hide from layout to avoid any sliver
+            const onEnd = function(){
+              panel.style.display = 'none';
+              panel.removeEventListener('transitionend', onEnd);
+            };
+            panel.addEventListener('transitionend', onEnd);
+          });
+        }catch(e){}
+        currentDetailSource = null;
+      }
+
+      function openPanelAfter(itemEl){
+        // move panel directly after the clicked .cert-item
+        itemEl.insertAdjacentElement('afterend', panel);
+        // ensure it's in the layout so we can measure it
+        panel.style.display = 'block';
+        panel.style.visibility = 'visible';
+        // prepare for animation
+        panel.style.transition = 'none';
+        panel.style.maxHeight = '0px';
+        panel.setAttribute('aria-hidden','false');
+        // allow paint then animate to its scrollHeight
+        requestAnimationFrame(()=>{
+          const h = panel.scrollHeight;
+          panel.style.transition = 'max-height 260ms ease';
+          panel.style.maxHeight = h + 'px';
+        });
+      }
+
       projectPanesEl.addEventListener('click', (e)=>{
         const a = e.target.closest('.cert-link a');
         if(!a) return;
         e.preventDefault();
+        const item = a.closest('.cert-item');
+        if(!item) return;
+        // toggle if panel is already open for this item
+        if(panel.parentElement === item.parentElement && item.nextElementSibling === panel){
+          closePanel();
+          return;
+        }
+        // populate panel with data
         currentDetailSource = a;
-        const pane = a.closest('[data-pane]') || projectPanesEl;
-        const panel = pane.querySelector('#project-detail-panel');
-        if(!panel) return;
         const title = a.dataset.title || a.textContent.trim();
         const category = a.dataset.category || '';
         const badge = a.dataset.badge || '';
@@ -173,25 +229,18 @@ document.addEventListener('DOMContentLoaded',()=>{
         try{ panel.querySelector('.detail-title').textContent = title; }catch(e){}
         try{ panel.querySelector('.detail-desc').textContent = desc; }catch(e){}
         try{ const badges = panel.querySelector('.detail-badges'); badges.innerHTML = `<span class="badge">${badge}</span><span class="badge meta">${meta}</span>`; }catch(e){}
-        panel.classList.remove('hidden'); panel.setAttribute('aria-hidden','false');
-        try{ panel.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+        // open dropdown after the item
+        openPanelAfter(item);
       });
 
-      // Close and CTA buttons inside the panel
+      // panel-level actions
       projectPanesEl.addEventListener('click', (e)=>{
-        const close = e.target.closest('.detail-close');
-        if(close){
-          const panel = projectPanesEl.querySelector('#project-detail-panel');
-          if(panel){ panel.classList.add('hidden'); panel.setAttribute('aria-hidden','true'); }
-          currentDetailSource = null;
-        }
+        const closeBtn = e.target.closest('.detail-close');
+        if(closeBtn){ closePanel(); }
         const cta = e.target.closest('.detail-cta');
-        if(cta){
-          // open repository or asset from the source link
-          if(currentDetailSource){
-            const repo = currentDetailSource.dataset.repo || currentDetailSource.getAttribute('data-asset') || null;
-            if(repo && repo !== '#') window.open(repo, '_blank');
-          }
+        if(cta && currentDetailSource){
+          const repo = currentDetailSource.dataset.repo || currentDetailSource.getAttribute('data-asset') || null;
+          if(repo && repo !== '#') window.open(repo, '_blank');
         }
       });
     }
@@ -690,6 +739,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   // if the About page was not opened via the desktop icon first.
   try{ initAboutTabs(); scheduleUpdateAboutHeights(); }catch(e){}
   try{ initProjectTabs(); }catch(e){}
+  // Ensure the project detail panel is hidden on initial load. Some reveal helpers
+  // iterate descendants and may have exposed the panel unintentionally.
+  try{
+    const projectWin = document.getElementById('project-window');
+    const _panel = projectWin ? projectWin.querySelector('#project-detail-panel') : document.getElementById('project-detail-panel');
+    if(_panel){
+      _panel.setAttribute('aria-hidden','true');
+      _panel.style.maxHeight = '0px';
+      _panel.style.visibility = 'hidden';
+      _panel.style.transition = 'none';
+    }
+  }catch(e){}
   // Also proactively apply Experience -> General styles on load so General matches immediately
   try{
     requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
@@ -1835,8 +1896,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.addEventListener('click', function(e){
       const link = e.target.closest && e.target.closest('.cert-link a');
       if(link){
+        // If the link doesn't point to a real certificate (href="#" or empty),
+        // do not open the cert modal. This prevents project detail anchors
+        // (which reuse .cert-link markup) from triggering the cert modal.
+        const rawUrl = link.getAttribute('data-cert') || link.getAttribute('href') || '';
+        const url = (rawUrl||'').split('#')[0];
+        if(!url || url.trim() === '' ){
+          // Let other handlers (e.g. project detail dropdown) handle this click
+          return;
+        }
         e.preventDefault();
-        const url = link.getAttribute('data-cert') || link.getAttribute('href');
         const title = link.closest && link.closest('.cert-item') ? (link.closest('.cert-item').querySelector('.cert-title')?.textContent || '') : '';
         if(url) openCert(url, title);
         return;
