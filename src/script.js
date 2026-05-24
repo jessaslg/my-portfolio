@@ -149,6 +149,54 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
+  // Project detail panel handling: populate and show the detail panel inside the Graphic Design pane
+  try{
+    const projectPanesEl = document.getElementById('project-panes');
+    let currentDetailSource = null;
+    if(projectPanesEl){
+      projectPanesEl.addEventListener('click', (e)=>{
+        const a = e.target.closest('.cert-link a');
+        if(!a) return;
+        e.preventDefault();
+        currentDetailSource = a;
+        const pane = a.closest('[data-pane]') || projectPanesEl;
+        const panel = pane.querySelector('#project-detail-panel');
+        if(!panel) return;
+        const title = a.dataset.title || a.textContent.trim();
+        const category = a.dataset.category || '';
+        const badge = a.dataset.badge || '';
+        const meta = a.dataset.meta || '';
+        const desc = a.dataset.desc || '';
+        const img = a.dataset.img || (a.getAttribute('data-asset') || 'assets/img/placeholder.png');
+        try{ panel.querySelector('.detail-img').src = img; }catch(e){}
+        try{ panel.querySelector('.detail-category').textContent = (category||'').toUpperCase(); }catch(e){}
+        try{ panel.querySelector('.detail-title').textContent = title; }catch(e){}
+        try{ panel.querySelector('.detail-desc').textContent = desc; }catch(e){}
+        try{ const badges = panel.querySelector('.detail-badges'); badges.innerHTML = `<span class="badge">${badge}</span><span class="badge meta">${meta}</span>`; }catch(e){}
+        panel.classList.remove('hidden'); panel.setAttribute('aria-hidden','false');
+        try{ panel.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+      });
+
+      // Close and CTA buttons inside the panel
+      projectPanesEl.addEventListener('click', (e)=>{
+        const close = e.target.closest('.detail-close');
+        if(close){
+          const panel = projectPanesEl.querySelector('#project-detail-panel');
+          if(panel){ panel.classList.add('hidden'); panel.setAttribute('aria-hidden','true'); }
+          currentDetailSource = null;
+        }
+        const cta = e.target.closest('.detail-cta');
+        if(cta){
+          // open repository or asset from the source link
+          if(currentDetailSource){
+            const repo = currentDetailSource.dataset.repo || currentDetailSource.getAttribute('data-asset') || null;
+            if(repo && repo !== '#') window.open(repo, '_blank');
+          }
+        }
+      });
+    }
+  }catch(e){}
+
 
   function finishLoadingScreen(){
     const loadingOverlay = document.querySelector('.loading-overlay');
@@ -212,6 +260,28 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   `;
   document.head.appendChild(taskbarFixStyle);
+
+  // Highest-priority window stacking CSS.
+  // Inline JS still controls the state, but these rules prevent stylesheet conflicts.
+  const windowStackFixStyle = document.createElement('style');
+  windowStackFixStyle.textContent = `
+    #er-window.active-window,
+    #project-window.active-window,
+    #wordpad-window.active-window,
+    #music-player-window.active-window {
+      z-index: 2147483000 !important;
+      position: absolute !important;
+    }
+
+    #er-window.inactive-window,
+    #project-window.inactive-window,
+    #wordpad-window.inactive-window,
+    #music-player-window.inactive-window {
+      z-index: 2000 !important;
+    }
+  `;
+  document.head.appendChild(windowStackFixStyle);
+
 
 
 
@@ -600,6 +670,8 @@ document.addEventListener('DOMContentLoaded',()=>{
           if(!erWindow.classList.contains('hidden')){
             if(erIsMinimized) restoreERWindow();
             bringWindowToFront(erWindow);
+            setTimeout(()=>bringWindowToFront(erWindow), 0);
+            setTimeout(()=>bringWindowToFront(erWindow), 80);
             erWindow.focus && erWindow.focus();
             return;
           }
@@ -671,17 +743,29 @@ document.addEventListener('DOMContentLoaded',()=>{
   function bringWindowToFront(winEl){
     if(!winEl) return;
 
-    let highestExistingZ = zIndexCounter || 5000;
+    // HARD FRONT FIX:
+    // The selected window gets a maximum z-index and every other window is lowered.
+    // This makes About Me and My Projects switch front/back correctly when clicked.
+    const allWindows = document.querySelectorAll('#er-window, #project-window, #wordpad-window, #music-player-window, .window');
 
-    document.querySelectorAll('.window').forEach(w=>{
+    allWindows.forEach(w=>{
       try{
-        const zi = parseInt(getComputedStyle(w).zIndex, 10);
-        if(!Number.isNaN(zi)) highestExistingZ = Math.max(highestExistingZ, zi);
+        if(!w || w.classList.contains('hidden')) return;
+
+        if(w === winEl){
+          w.classList.add('active-window');
+          w.classList.remove('inactive-window');
+          w.style.setProperty('z-index', '2147483000', 'important');
+          w.style.setProperty('position', 'absolute', 'important');
+        } else {
+          w.classList.remove('active-window');
+          w.classList.add('inactive-window');
+          w.style.setProperty('z-index', '2000', 'important');
+        }
       }catch(e){}
     });
 
-    zIndexCounter = highestExistingZ + 1;
-    winEl.style.setProperty('z-index', String(zIndexCounter), 'important');
+    zIndexCounter = 2147483000;
   }
 
   function syncWordpadMaxButton(){
@@ -1119,6 +1203,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     erWindow.focus();
     bringWindowToFront(erWindow);
     setTimeout(()=>bringWindowToFront(erWindow), 0);
+    setTimeout(()=>bringWindowToFront(erWindow), 80);
     // update taskbar state
     addToTaskOrder('task-er');
     if(typeof reflectTaskbar === 'function') reflectTaskbar();
@@ -1139,6 +1224,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(erTitlebar){
     erTitlebar.addEventListener('dblclick', (e)=>{
       if(e.target.closest('.win-btn')) return;
+      bringWindowToFront(erWindow);
       toggleERMaximize();
     });
   }
@@ -1180,6 +1266,45 @@ document.addEventListener('DOMContentLoaded',()=>{
   const projectIcon = document.getElementById('project');
   const projectWin = document.getElementById('project-window');
   const taskProject = document.getElementById('task-project');
+
+  // Direct titlebar/window click front handler.
+  // This makes the clicked window front immediately, even if both windows overlap.
+  function installDirectWindowFrontHandlers(){
+    const targetSelectors = '#er-window, #project-window, #wordpad-window, #music-player-window';
+
+    function activateFromEvent(e){
+      const clickedWindow = e.target.closest && e.target.closest(targetSelectors);
+      if(!clickedWindow || clickedWindow.classList.contains('hidden')) return;
+      bringWindowToFront(clickedWindow);
+    }
+
+    document.addEventListener('pointerdown', activateFromEvent, true);
+    document.addEventListener('mousedown', activateFromEvent, true);
+    document.addEventListener('click', activateFromEvent, true);
+
+    ['#er-window', '#project-window', '#wordpad-window', '#music-player-window'].forEach(selector=>{
+      const win = document.querySelector(selector);
+      if(!win || win.dataset.directFrontHandler === 'true') return;
+      win.dataset.directFrontHandler = 'true';
+
+      const activate = ()=>{
+        if(!win.classList.contains('hidden')) bringWindowToFront(win);
+      };
+
+      win.addEventListener('pointerdown', activate, true);
+      win.addEventListener('mousedown', activate, true);
+      win.addEventListener('click', activate, true);
+
+      const titlebar = win.querySelector('.titlebar, .title-bar');
+      if(titlebar){
+        titlebar.addEventListener('pointerdown', activate, true);
+        titlebar.addEventListener('mousedown', activate, true);
+        titlebar.addEventListener('click', activate, true);
+      }
+    });
+  }
+
+
   function openProjectWindow(){
     if(!projectWin) return;
     try{
@@ -1188,6 +1313,8 @@ document.addEventListener('DOMContentLoaded',()=>{
           if(projectIsMinimized) restoreProjectWindow();
           resetProjectContent();
           bringWindowToFront(projectWin);
+          setTimeout(()=>bringWindowToFront(projectWin), 0);
+          setTimeout(()=>bringWindowToFront(projectWin), 80);
           projectWin.focus && projectWin.focus();
           return;
         }
@@ -1204,6 +1331,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     resetProjectContent();
     bringWindowToFront(projectWin);
     setTimeout(()=>bringWindowToFront(projectWin), 0);
+    setTimeout(()=>bringWindowToFront(projectWin), 80);
     projectWin.focus && projectWin.focus();
     addToTaskOrder('task-project');
     if(typeof reflectTaskbar === 'function') reflectTaskbar();
@@ -1300,7 +1428,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   makeDraggable(projectWin, '.titlebar');
   makeDraggable(projectWin, '.title-bar');
   const projTitlebar = document.querySelector('#project-window .titlebar');
-  if(projTitlebar){ projTitlebar.addEventListener('dblclick', (e)=>{ if(e.target.closest('.win-btn')) return; toggleProjectMaximize(); }); }
+  if(projTitlebar){ projTitlebar.addEventListener('dblclick', (e)=>{ if(e.target.closest('.win-btn')) return; bringWindowToFront(projectWin); toggleProjectMaximize(); }); }
+
+  try{ installDirectWindowFrontHandlers(); }catch(e){}
 
   // Close on Escape
   document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ closeERWindow(); } });
