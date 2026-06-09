@@ -31,15 +31,15 @@
 			}
 
 			/* Projects sidebar styles */
-			.project-sidebar{ width:320px; background:var(--xp-blue-dark); padding:18px; box-sizing:border-box; border-radius:8px; }
-			#project-window .project-browser-content { display:flex; gap:0; align-items:flex-start; height: calc(100vh - 180px); }
+			.project-sidebar{ width:320px; background:var(--xp-blue-dark); padding:18px; box-sizing:border-box; border-radius:0; margin-top:0; margin-left:0; margin-bottom:0; }
+			#project-window .project-browser-content { display:flex; gap:0; align-items:flex-start; height: calc(100vh - 180px); padding:0; }
 			.project-sidebar{ height:100%; overflow:auto; }
 			/* hide native scrollbar on sidebar (we will show main scrollbar on right) */
 			.project-sidebar.hide-scrollbar{ scrollbar-width: none; -ms-overflow-style: none; }
 			.project-sidebar.hide-scrollbar::-webkit-scrollbar{ width:0; height:0; }
 
 			/* custom main scrollbar on the right side for project content (XP-like) */
-			#project-window .project-browser-content { scrollbar-width: thin; scrollbar-color: var(--xp-blue) #eaf3ff; }
+			#project-window .project-browser-content { scrollbar-width: thin; scrollbar-color: var(--xp-blue) #eaf3ff; padding:0; }
 			#project-window .project-browser-content::-webkit-scrollbar{ width:16px; }
 			#project-window .project-browser-content::-webkit-scrollbar-track{ background: linear-gradient(#eaf3ff,#e6f3ff); border-radius:8px; padding:4px 0; }
 			#project-window .project-browser-content::-webkit-scrollbar-thumb{ background: linear-gradient(#225fcf,#1748b3); border-radius:10px; border:3px solid #d7e8ff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); }
@@ -48,8 +48,8 @@
 			#project-window .project-browser-content::-webkit-scrollbar-button:vertical:decrement{ border-radius:6px 6px 0 0; }
 			#project-window .project-browser-content::-webkit-scrollbar-button:vertical:increment{ border-radius:0 0 6px 6px; }
 			#project-window .page#page-projects { height:100%; overflow:auto; }
-			.sidebar-box{ background:#eaf3ff; border:1px solid rgba(255,255,255,0.35); border-radius:8px; padding:0; margin-bottom:16px; overflow:visible; }
-			.sidebar-title{ display:block; margin:0 0 12px 0; font-size:15px; font-weight:700; color:#fff; padding:10px 12px; background:linear-gradient(var(--xp-blue),var(--xp-blue-dark)); border-radius:8px 8px 0 0; }
+			.sidebar-box{ background:#eaf3ff; border:1px solid rgba(255,255,255,0.35); border-radius:0; padding:0; margin-bottom:16px; overflow:visible; }
+			.sidebar-title{ display:block; margin:0 0 12px 0; font-size:15px; font-weight:700; color:#fff; padding:10px 12px; background:linear-gradient(var(--xp-blue),var(--xp-blue-dark)); border-radius:0; }
 			.sidebar-list{ list-style:none; padding:10px; margin:0; font-size:13px; color:#0b2740; }
 			.sidebar-item{ padding:0; margin:0 0 8px 0 }
 			.sidebar-btn{ background:transparent; border:0; width:100%; text-align:left; padding:10px 12px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; color:inherit; font:inherit }
@@ -58,14 +58,20 @@
 			.sidebar-btn:hover{ background:rgba(11,39,64,0.04) }
 			.sidebar-btn:focus{ outline:2px solid rgba(42,102,201,0.6); outline-offset:2px; border-radius:4px }
 
-			/* Make the Projects detail box purple to match request */
+			/* Use the standard white container/panel design for Projects (match About window panels) */
+			#project-window .project-browser-content { background: #ffffff; }
 			#project-window .xp-background-details{
-				background: linear-gradient(180deg,#8f66ff,#6c3ef0);
-				border-color: rgba(123,86,255,0.35);
-				box-shadow: 0 6px 18px rgba(96,40,255,0.12);
+				margin-top: 12px;
+				border: 1px solid #dfe9f7;
+				background: #ffffff;
+				padding: 14px;
+				border-radius: 6px;
+				box-shadow: 0 6px 18px rgba(12,38,63,0.04);
+				display: grid;
+				gap: 12px;
 			}
-			#project-window .xp-bg-heading{ color:#ffffff }
-			#project-window .xp-bg-subtext{ color:rgba(255,255,255,0.95) }
+			#project-window .xp-bg-heading{ color:#0b2b3a }
+			#project-window .xp-bg-subtext{ color:#23383f }
 		</style>
 
 	</head>
