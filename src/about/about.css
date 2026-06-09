@@ -33,10 +33,10 @@
   margin-top: 18px;
 }
 
-.detail-inner{display:flex;gap:16px;align-items:flex-start}
-.detail-left{flex:0 0 110px}
-.detail-img{width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 6px 18px rgba(12,38,63,0.06);display:block}
-.detail-right{flex:1}
+.detail-inner{display:flex;gap:16px;align-items:stretch}
+.detail-left{flex:0 0 140px;display:flex;align-items:stretch}
+.detail-img{width:100%;height:100%;object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 6px 18px rgba(12,38,63,0.06);display:block}
+.detail-right{flex:1;display:flex;flex-direction:column}
 .detail-category{font-size:12px;color:#6f8793;font-weight:700;letter-spacing:0.6px;margin-bottom:6px}
 .detail-title{
   font-family: Tahoma, "Segoe UI", sans-serif;
@@ -55,7 +55,7 @@
   line-height:1.6;
   margin-bottom:14px;
 }
-.detail-actions{display:flex;gap:12px}
+.detail-actions{display:flex;gap:12px;margin-top:auto}
 .detail-cta{padding:10px 14px;border-radius:8px;background:linear-gradient(180deg,#ffffff,#eaf4ff);border:1px solid #c6daf0;color:#0b2b3a;font-weight:700;cursor:pointer}
 .detail-close{padding:8px 12px;border-radius:6px;background:transparent;border:1px solid #e6eef8;cursor:pointer}
 .detail-panel{
@@ -71,6 +71,10 @@
   display:block;
   pointer-events:auto;
 }
+
+/* Modifier: hide image container when not needed (e.g., Application Development items) */
+.detail-panel.no-image .detail-left{display:none}
+.detail-panel.no-image .detail-right{flex:1 1 100%}
 #page-about .xp-system-tabs {
   display: flex;
   gap: 8px;

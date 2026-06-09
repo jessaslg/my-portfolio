@@ -184,6 +184,8 @@ document.addEventListener('DOMContentLoaded',()=>{
             panel.addEventListener('transitionend', onEnd);
           });
         }catch(e){}
+        // ensure any layout modifiers are cleared when closing
+        try{ panel.classList.remove('no-image'); }catch(e){}
         currentDetailSource = null;
       }
 
@@ -229,6 +231,17 @@ document.addEventListener('DOMContentLoaded',()=>{
         try{ panel.querySelector('.detail-title').textContent = title; }catch(e){}
         try{ panel.querySelector('.detail-desc').textContent = desc; }catch(e){}
         try{ const badges = panel.querySelector('.detail-badges'); badges.innerHTML = `<span class="badge">${badge}</span><span class="badge meta">${meta}</span>`; }catch(e){}
+        // If this item belongs to the Application Development pane (data-pane="general"),
+        // hide the image container so projects display without the image detail box.
+        try{
+          const paneAncestor = item.closest('[data-pane]');
+          if(paneAncestor && paneAncestor.getAttribute('data-pane') === 'general'){
+            panel.classList.add('no-image');
+          } else {
+            panel.classList.remove('no-image');
+          }
+        }catch(e){}
+
         // open dropdown after the item
         openPanelAfter(item);
       });
@@ -1515,6 +1528,31 @@ document.addEventListener('DOMContentLoaded',()=>{
       clockEl.textContent = `${h}:${m}`;
     }
   }
+
+  // Sync scrolling: show single scrollbar on the right (project-browser-content)
+  try{
+    const projectBrowser = document.querySelector('#project-window .project-browser-content');
+    const projectSidebar = document.querySelector('#project-window .project-sidebar');
+    if(projectBrowser && projectSidebar){
+      // hide sidebar native scrollbar while preserving scroll behavior
+      projectSidebar.classList.add('hide-scrollbar');
+
+      // Sync scroll positions between container and sidebar
+      let syncing = false;
+      projectBrowser.addEventListener('scroll', ()=>{
+        if(syncing) return;
+        syncing = true;
+        projectSidebar.scrollTop = projectBrowser.scrollTop;
+        requestAnimationFrame(()=>{ syncing = false; });
+      });
+      projectSidebar.addEventListener('scroll', ()=>{
+        if(syncing) return;
+        syncing = true;
+        projectBrowser.scrollTop = projectSidebar.scrollTop;
+        requestAnimationFrame(()=>{ syncing = false; });
+      });
+    }
+  }catch(e){/* ignore */}
   updateClock();setInterval(updateClock,60000);
 
   startBtn.addEventListener('click',(e)=>{

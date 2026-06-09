@@ -12,6 +12,11 @@
 		<link rel="stylesheet" href="src/about/about.css">
 	
 		<style>
+			:root{
+				--xp-blue: #2a66c9;
+				--xp-blue-dark: #1d4fb2;
+			}
+
 			body.loading-fullscreen .taskbar,
 			body.loading-fullscreen #start-menu {
 				display: none !important;
@@ -24,6 +29,43 @@
 				visibility: visible !important;
 				opacity: 1 !important;
 			}
+
+			/* Projects sidebar styles */
+			.project-sidebar{ width:320px; background:var(--xp-blue-dark); padding:18px; box-sizing:border-box; border-radius:8px; }
+			#project-window .project-browser-content { display:flex; gap:0; align-items:flex-start; height: calc(100vh - 180px); }
+			.project-sidebar{ height:100%; overflow:auto; }
+			/* hide native scrollbar on sidebar (we will show main scrollbar on right) */
+			.project-sidebar.hide-scrollbar{ scrollbar-width: none; -ms-overflow-style: none; }
+			.project-sidebar.hide-scrollbar::-webkit-scrollbar{ width:0; height:0; }
+
+			/* custom main scrollbar on the right side for project content (XP-like) */
+			#project-window .project-browser-content { scrollbar-width: thin; scrollbar-color: var(--xp-blue) #eaf3ff; }
+			#project-window .project-browser-content::-webkit-scrollbar{ width:16px; }
+			#project-window .project-browser-content::-webkit-scrollbar-track{ background: linear-gradient(#eaf3ff,#e6f3ff); border-radius:8px; padding:4px 0; }
+			#project-window .project-browser-content::-webkit-scrollbar-thumb{ background: linear-gradient(#225fcf,#1748b3); border-radius:10px; border:3px solid #d7e8ff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); }
+			#project-window .project-browser-content::-webkit-scrollbar-thumb:hover{ background: linear-gradient(#2c6fe6,#1f57d1); }
+			#project-window .project-browser-content::-webkit-scrollbar-button{ display:block; height:14px; background:linear-gradient(var(--xp-blue),var(--xp-blue-dark)); border-radius:4px; }
+			#project-window .project-browser-content::-webkit-scrollbar-button:vertical:decrement{ border-radius:6px 6px 0 0; }
+			#project-window .project-browser-content::-webkit-scrollbar-button:vertical:increment{ border-radius:0 0 6px 6px; }
+			#project-window .page#page-projects { height:100%; overflow:auto; }
+			.sidebar-box{ background:#eaf3ff; border:1px solid rgba(255,255,255,0.35); border-radius:8px; padding:0; margin-bottom:16px; overflow:visible; }
+			.sidebar-title{ display:block; margin:0 0 12px 0; font-size:15px; font-weight:700; color:#fff; padding:10px 12px; background:linear-gradient(var(--xp-blue),var(--xp-blue-dark)); border-radius:8px 8px 0 0; }
+			.sidebar-list{ list-style:none; padding:10px; margin:0; font-size:13px; color:#0b2740; }
+			.sidebar-item{ padding:0; margin:0 0 8px 0 }
+			.sidebar-btn{ background:transparent; border:0; width:100%; text-align:left; padding:10px 12px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; color:inherit; font:inherit }
+			.sidebar-btn img{ width:18px; height:18px; margin-top:3px }
+			.sidebar-btn .item-title{ line-height:1.35; color:#0b2740 }
+			.sidebar-btn:hover{ background:rgba(11,39,64,0.04) }
+			.sidebar-btn:focus{ outline:2px solid rgba(42,102,201,0.6); outline-offset:2px; border-radius:4px }
+
+			/* Make the Projects detail box purple to match request */
+			#project-window .xp-background-details{
+				background: linear-gradient(180deg,#8f66ff,#6c3ef0);
+				border-color: rgba(123,86,255,0.35);
+				box-shadow: 0 6px 18px rgba(96,40,255,0.12);
+			}
+			#project-window .xp-bg-heading{ color:#ffffff }
+			#project-window .xp-bg-subtext{ color:rgba(255,255,255,0.95) }
 		</style>
 
 	</head>
@@ -267,11 +309,11 @@
 											<div class="xp-bg-heading">Extracurricular</div>
 											<div class="xp-bg-subtext">
 												<div class="cert-list">
-													<div class="cert-item">
-														<span class="cert-icon">📜</span>
-														<div class="cert-title">Introduction to Machine Learning for State Universities and Colleges</div>
-														<div class="cert-link"><a href="assets/certifications/INTRO-MACHINE-LEARNING.png" data-cert="assets/certifications/INTRO-MACHINE-LEARNING.png">Details</a></div>
-													</div>
+												<div class="cert-item">
+													<span class="cert-icon">🎨</span>
+														<div class="cert-title">MIQUESI</div>
+														<div class="cert-link"><a href="#" data-asset="https://github.com/jessaslg/MIQUESI" data-repo="https://github.com/jessaslg/MIQUESI" data-title="MIQUESI" data-category="Portfolio" data-badge="UI / Game Design" data-meta="2025 · Project" data-desc="MIQUESI repository — UI assets and demo." data-img="assets/img/MIQESI.jpg">Details</a></div>
+												</div>
 													<div class="cert-item">
 														<span class="cert-icon">📜</span>
 														<div class="cert-title">Digital Tools for Cooperative Efficiency</div>
@@ -318,154 +360,78 @@
 			</div>
 
 			<!-- Projects Window -->
-<div id="project-window" class="window hidden firefox-window" role="dialog" aria-label="Mozilla Firefox">
+			<div id="project-window" class="window hidden firefox-window" role="dialog" aria-label="Projects">
 
-	<!-- TITLEBAR -->
-	<div class="titlebar">
-		<img src="assets/img/projects.svg" class="wmp-icon-svg ff-icon" alt="Jessa Saligao" width="28" height="28">
-		<span>My Projects</span>
-
-		<div class="window-controls win-controls">
-			<div class="win-btn" id="proj-minimize">_</div>
-			<div class="win-btn" id="proj-maximize">□</div>
-			<div class="win-btn close" id="proj-close">×</div>
-		</div>
-	</div>
-
-	<!-- MENU BAR -->
-	<div class="menu-bar">
-		<span>File</span>
-		<span>Edit</span>
-		<span>View</span>
-		<span>History</span>
-		<span>Bookmarks</span>
-		<span>Tools</span>
-		<span>Help</span>
-	</div>
-
-	<!-- FIREFOX TABS -->
-	<nav id="proj-nav-tabs" class="tab-bar" role="tablist">
-
-		<div class="tab active disabled-tab" data-tab="portfolio" role="tab" aria-selected="true">
-			<img src="assets/img/projects.svg" style="width:12px;" alt="">
-			Projects
-		</div>
-
-		<div class="tab" data-tab="home" role="tab">
-			<img src="assets/img/browser.svg" style="width:12px;" alt="">
-			Jessa Portfolio
-		</div>
-
-		<div class="tab" data-tab="resume" role="tab">
-			<img src="assets/img/wordpad.svg" style="width:12px;" alt="">
-			Resume
-		</div>
-
-		<div class="plus-tab">+</div>
-	</nav>
-
-	<!-- NAVBAR -->
-	<div class="navbar">
-		<div class="nav-btn">←</div>
-		<div class="nav-btn">→</div>
-
-		<div class="url-bar">about:projects</div>
-
-		<div class="search-bar">
-			<span style="font-size:11px; color:#666;">Google</span>
-			<span style="margin-left:auto; color:#999;">🔍</span>
-		</div>
-
-		<div class="nav-btn" style="border-radius:3px; width:22px; height:22px; font-size:12px;">
-			🏠
-		</div>
-	</div>
-
-	<div class="browser-content project-browser-content">
-		<div class="page" id="page-projects">
-			<section class="xp-content xp-project-system">
-				<div class="xp-system-tabs" role="tablist" aria-label="Project tabs" id="project-tabs">
-					<button type="button" data-tab="general" class="is-active">Application Development</button>
-					<button type="button" data-tab="certification">Graphic Design</button>
-				</div>
-
-				<!-- Project panes: Application Development & Graphic Design -->
-				<div class="xp-pane xp-system-panel" id="project-panes">
-					<div data-pane="general" class="active">
-						<div class="xp-system-note">
-							<strong>Application Development</strong>
-						</div>
-
-						<div class="xp-background-details">
-							<div class="xp-bg-section">
-								<div class="xp-bg-heading">Applications</div>
-								<div class="xp-bg-subtext">
-									<p>Projects and apps focused on backend and full-stack development.</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div data-pane="certification" class="hidden">
-						<div class="xp-system-note">
-							<strong>Graphic Design</strong>
-						</div>
-
-						<div class="xp-background-details">
-							<div class="xp-bg-section">
-								<div class="xp-bg-heading">Portfolio</div>
-								<div class="xp-bg-subtext">
-									<div class="cert-list">
-										<div class="cert-item">
-											<span class="cert-icon">🎨</span>
-												<div class="cert-title">Branding Poster — Project A</div>
-												<div class="cert-link"><a href="#" data-asset="#" data-title="Branding Poster — Project A" data-category="Portfolio" data-badge="Branding Poster" data-meta="2025 · Concept" data-desc="First-author design for brand identity and promotional posters. Clean typography and hierarchy." data-img="assets/img/placeholder.png">Details</a></div>
-										</div>
-
-										<div class="cert-item">
-											<span class="cert-icon">🎨</span>
-											<div class="cert-title">Social Media Kit — Campaign B</div>
-											<div class="cert-link"><a href="#" data-asset="#" data-title="Social Media Kit — Campaign B" data-category="Portfolio" data-badge="Social Kit" data-meta="2024 · Campaign" data-desc="A set of social media graphics tailored for campaign rollouts across platforms." data-img="assets/img/placeholder.png">Details</a></div>
-										</div>
-
-										<div class="cert-item">
-											<span class="cert-icon">🎨</span>
-											<div class="cert-title">Event Poster — Design C</div>
-											<div class="cert-link"><a href="#" data-asset="#" data-title="Event Poster — Design C" data-category="Portfolio" data-badge="Event Poster" data-meta="2023 · Print" data-desc="Large-format event poster designed for conferences and campus events." data-img="assets/img/placeholder.png">Details</a></div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<!-- Detail panel: populated when a Details button is clicked -->
-							<div id="project-detail-panel" class="detail-panel hidden" aria-hidden="true">
-								<div class="detail-inner">
-									<div class="detail-left">
-										<img src="assets/img/placeholder.png" alt="detail image" class="detail-img">
-									</div>
-									<div class="detail-right">
-										<div class="detail-category">DESIGN</div>
-										<h3 class="detail-title">Title goes here</h3>
-										<div class="detail-badges">
-											<span class="badge">Badge</span>
-											<span class="badge meta">Meta info</span>
-										</div>
-										<p class="detail-desc">Longer description about the design item. Explains the purpose, tools, and context.</p>
-										<div class="detail-actions">
-											<button class="detail-cta">Open Repository</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+				<div class="titlebar">
+					<img src="assets/img/projects.svg" class="wmp-icon-svg ff-icon" alt="Projects" width="28" height="28">
+					<span>Projects</span>
+					<div class="window-controls win-controls">
+						<div class="win-btn" id="proj-minimize">_</div>
+						<div class="win-btn" id="proj-maximize">□</div>
+						<div class="win-btn close" id="proj-close">×</div>
 					</div>
 				</div>
-			</section>
-		</div>
-	</div>
 
-</div>
-<!-- End Projects Window -->
+				<div class="menu-bar">
+					<span>File</span>
+					<span>Edit</span>
+					<span>View</span>
+					<span>History</span>
+					<span>Bookmarks</span>
+					<span>Tools</span>
+					<span>Help</span>
+				</div>
+
+				<div class="navbar">
+					<div class="nav-btn">←</div>
+					<div class="nav-btn">→</div>
+					<div class="url-bar">about:projects</div>
+					<div class="search-bar">
+						<span style="font-size:11px; color:#666;">Google</span>
+						<span style="margin-left:auto; color:#4304a0;">🔍</span>
+					</div>
+					<div class="nav-btn" style="border-radius:3px; width:22px; height:22px; font-size:12px;">🏠</div>
+				</div>
+
+				<div class="browser-content project-browser-content" style="display:flex; gap:0;">
+					<aside class="project-sidebar" style="background-color:#823cec;">
+						<div class="sidebar-box">
+							<div class="sidebar-title">Application Development</div>
+							<ul class="sidebar-list">
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: A Web Management Platform for Kitch using Artificial Intelligence</span></button></li>
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: Mobile Commerce Application</span></button></li>
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Pro/ductive: Personal Diary Application</span></button></li>
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Bossing Payroll Management System</span></button></li>
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Guidance E-Counselling System</span></button></li>
+							</ul>
+						</div>
+
+						<div class="sidebar-box">
+							<div class="sidebar-title">Graphic Design</div>
+							<ul class="sidebar-list">
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/picture-logo.svg" alt="pic"><span class="item-title">Social Media Marketing</span></button></li>
+								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/picture-logo.svg" alt="pic"><span class="item-title">Thumbnails</span></button></li>
+							</ul>
+						</div>
+					</aside>
+
+					<div class="page" id="page-projects" style="flex:1; padding:20px; box-sizing:border-box;">
+						<section class="xp-content xp-project-system">
+							<div class="xp-system-note"><strong>Projects</strong></div>
+							<div class="xp-background-details">
+								<div class="xp-bg-section">
+									<div class="xp-bg-heading">Projects</div>
+									<div class="xp-bg-subtext">
+										<!-- Main content area for project details (left sidebar controls selection) -->
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+
+			</div>
+			<!-- End Projects Window -->
 
 		<script src="assets/loadingScreen.js"></script>
 
