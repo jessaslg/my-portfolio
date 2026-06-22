@@ -18,7 +18,7 @@
 }
 /* Responsive Resume Container Styles */
 .resume-container {
-  max-width: 1000px; /* matched to Mitch Ivin screenshot */
+  max-width: 1000px; /* matched to Jessa Saligao screenshot */
   width: 1000px;
   margin: 18px auto; /* slightly larger top gap like example */
   background: #fff;
@@ -99,6 +99,9 @@
   --window-bg:#c0c0c0;
   --titlebar:#000080;
   --text:#0a0a0a;
+  --desktop-icon-size: 80px;
+  --desktop-icon-gap: 28px;
+  --desktop-icon-container-width: 120px;
   --accent:#00ff00;
   --xp-blue:#3a76ff;
   --xp-grey:#cfcfcf;
@@ -191,10 +194,25 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 /* Desktop */
 .desktop{position:fixed;inset:0;overflow:hidden}
 .wallpaper{position:absolute;inset:0;background-color:#6dbb2f;background-image: url('/assets/img/wallpaper.webp'), url('../assets/img/wallpaper.webp'), url('assets/img/wallpaper.webp');background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0.98}
-.icons{position:relative;padding:20px;display:flex;flex-direction:column;gap:18px}
-.icon{width:96px;cursor:pointer;user-select:none}
-.icon{width:96px;cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform .16s ease;will-change:transform}
-.icon-art{width:64px;height:64px;display:block;object-fit:contain;margin-bottom:6px;background:transparent;border:0;box-shadow:none;filter:none;transition:all .2s ease-in-out}
+.icons{position:relative;padding:30px 20px;display:flex;flex-direction:column;gap:var(--desktop-icon-gap)}
+.icon{width:var(--desktop-icon-container-width);cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform .16s ease;will-change:transform}
+
+/* Unified icon artwork sizing to match reference */
+.icon-art{width:var(--desktop-icon-size) !important;height:var(--desktop-icon-size) !important;display:block;object-fit:contain;margin-bottom:6px;background:transparent;border:0;box-shadow:none;filter:none;transition:all .2s ease-in-out}
+
+/* Make buttons with the .icon class visually match the .icon divs */
+button.icon{
+  background:transparent;
+  border:0;
+  padding:0;
+  margin:0;
+  font:inherit;
+  color:inherit;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  cursor:pointer;
+}
 
 
 /* Make WordPad SVG fill the icon slot (96×96) so it matches other desktop icons */
@@ -221,6 +239,17 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   margin-bottom:6px;
 }
 
+/* Make xp-mail image match unified desktop icon size */
+.icon-art[src$="xp-mail.png"],
+.icon-art[src*="/xp-mail.png"],
+.xp-mail-art{
+  width: var(--desktop-icon-size) !important;
+  height: var(--desktop-icon-size) !important;
+  display:block;
+  object-fit:contain !important;
+  margin-bottom:6px;
+}
+
 
 
 
@@ -234,9 +263,26 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   filter: brightness(.94);
   box-shadow: 0 8px 18px rgba(0,0,0,0.28);
 }
+.icon:hover > .icon-art[src$="xp-mail.png"],
+.icon:hover > .icon-art[src*="/xp-mail.png"] {
+  filter: brightness(.94);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+}
+.icon:hover > .xp-mail-art{
+  filter: brightness(.94);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+}
 .icon:active > .icon-art[src$="bin.svg"],
 .icon:active > .icon-art[src$="browser.svg"],
 .icon:active > .icon-art[src$="wordpad.svg"] {
+  transform: scale(.98);
+  filter: brightness(.9);
+}
+.icon:active > .icon-art[src$="xp-mail.png"]{
+  transform: scale(.98);
+  filter: brightness(.9);
+}
+.icon:active > .xp-mail-art{
   transform: scale(.98);
   filter: brightness(.9);
 }
@@ -247,8 +293,19 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
   box-shadow: none !important;
   filter: none !important;
 }
-.icon-label{text-align:center;font-size:8px;font-family: Tahoma, "Segoe UI", sans-serif}
-.icon-label{width:100%;text-align:center;font-size:11px;font-family: Tahoma, "Segoe UI", sans-serif;color:#000000;text-shadow:0 1px 0 rgba(0,0,0,0.8);line-height:1.1;white-space:normal;word-break:break-word;margin-top:2px}
+.icon-label{
+  width:100%;
+  text-align:center;
+  font-size:14px;
+  font-family: Tahoma, "Segoe UI", sans-serif;
+  color:#ffffff;
+  font-weight:700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.75);
+  line-height:1.1;
+  white-space:normal;
+  word-break:break-word;
+  margin-top:6px;
+}
 .icon .folder{background:linear-gradient(#ffd27f,#ffb84d);position:relative}
 .icon .recycle-bin{background:linear-gradient(#e6f7ff,#cfeeff);display:flex;align-items:center;justify-content:center}
 .icon .recycle-bin::after{content:"🗑️";font-size:24px}
@@ -479,6 +536,48 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 @media (max-width:1100px){
   #wordpad-window .resume-container object, #wordpad-window .resume-container iframe{ width:calc(100% - 120px); height:calc(100% - 220px); }
 }
+
+/* Mail compose form styles (XP-like) */
+.mail-form{ padding:12px; font-family: Tahoma, "Segoe UI", sans-serif; color:#062a4a; }
+.mail-row{ display:flex; gap:8px; align-items:flex-start; margin-bottom:8px }
+.mail-label{ width:72px; font-weight:700; padding-top:6px }
+.mail-input{ flex:1; box-sizing:border-box; font-size:13px; padding:8px; border:1px solid #999; background:#fff; border-radius:2px }
+.mail-input[readonly]{ background:#efefef; color:#222 }
+.mail-body-row .mail-body{ min-height:180px; resize:vertical }
+.mail-actions{ display:flex; gap:8px; margin-top:8px }
+.mail-status{ margin-top:10px; padding:6px 8px; border-top:1px solid #999; background:#efefef; font-size:12px; color:#062a4a }
+
+/* Make the mail window chrome slightly narrower like classic XP */
+#mail-window .titlebar{ height:34px; padding:4px 10px }
+#mail-window .titlebar img.wmp-icon-svg{ width:18px; height:18px }
+
+/* Compact toolbar styling to match reference (icons + small labels) */
+.mail-toolbar{ display:flex; gap:8px; align-items:center; justify-content:flex-start; padding:6px 10px; background: linear-gradient(#f1f7ff,#e8f1ff); border-bottom:1px solid #b8cbe6 }
+.mail-toolbar .toolbar-btn{ display:inline-flex; align-items:center; gap:8px; background:transparent; border:0; padding:6px 8px; cursor:pointer; font-family: Tahoma, "Segoe UI", sans-serif; color:#062a4a; font-size:13px }
+.mail-toolbar .toolbar-btn img{ width:18px; height:18px; display:block }
+.mail-toolbar .toolbar-btn span{ display:inline-block }
+
+/* Primary toolbar button style (blue rounded rectangle like reference) */
+.mail-toolbar .toolbar-btn.toolbar-primary{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  padding:8px 14px;
+  border-radius:8px;
+  background: linear-gradient(180deg,#f3f8fc,#e6f0fa);
+  border: 1px solid #c6daf0;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.03);
+  font-weight: 700;
+  color: #0b2b3a;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.mail-toolbar .toolbar-btn.toolbar-primary img{ width:18px; height:18px; display:block }
+.mail-toolbar .toolbar-btn.toolbar-primary:hover{ box-shadow: 0 4px 8px rgba(12,38,63,0.06); transform: translateY(-1px); }
+.mail-toolbar .toolbar-btn.toolbar-primary:active{ transform: translateY(0); }
+
+/* Slightly reduce navbar height so chrome stays compact */
+#mail-window .navbar{ padding:6px 10px }
 
 
 @media (max-width:1100px){

@@ -330,7 +330,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     #er-window.active-window,
     #project-window.active-window,
     #wordpad-window.active-window,
-    #music-player-window.active-window {
+    #music-player-window.active-window,
+    #mail-window.active-window {
       z-index: 2147483000 !important;
       position: absolute !important;
     }
@@ -338,7 +339,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     #er-window.inactive-window,
     #project-window.inactive-window,
     #wordpad-window.inactive-window,
-    #music-player-window.inactive-window {
+    #music-player-window.inactive-window,
+    #mail-window.inactive-window {
       z-index: 2000 !important;
     }
   `;
@@ -1341,10 +1343,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   const projectWin = document.getElementById('project-window');
   const taskProject = document.getElementById('task-project');
 
+  // Mail icon/window wiring
+  const mailIcon = document.getElementById('xp-mail');
+  const mailWin = document.getElementById('mail-window');
+
   // Direct titlebar/window click front handler.
   // This makes the clicked window front immediately, even if both windows overlap.
   function installDirectWindowFrontHandlers(){
-    const targetSelectors = '#er-window, #project-window, #wordpad-window, #music-player-window';
+    const targetSelectors = '#er-window, #project-window, #wordpad-window, #music-player-window, #mail-window';
 
     function activateFromEvent(e){
       const clickedWindow = e.target.closest && e.target.closest(targetSelectors);
@@ -1356,7 +1362,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.addEventListener('mousedown', activateFromEvent, true);
     document.addEventListener('click', activateFromEvent, true);
 
-    ['#er-window', '#project-window', '#wordpad-window', '#music-player-window'].forEach(selector=>{
+    ['#er-window', '#project-window', '#wordpad-window', '#music-player-window', '#mail-window'].forEach(selector=>{
       const win = document.querySelector(selector);
       if(!win || win.dataset.directFrontHandler === 'true') return;
       win.dataset.directFrontHandler = 'true';
@@ -1419,6 +1425,88 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(projectIcon){ projectIcon.addEventListener('click', openProjectWindow); projectIcon.addEventListener('dblclick', openProjectWindow); }
   const projectClose = document.querySelector('#project-window .win-btn.close');
   if(projectClose) projectClose.addEventListener('click', closeProjectWindow);
+
+  // Mail icon behavior: open mail window (bring to front) and wire close/cancel
+  function openMailWindow(){
+    if(!mailWin) return;
+    if(!mailWin.classList.contains('hidden')){ bringWindowToFront(mailWin); mailWin.focus && mailWin.focus(); return; }
+    mailWin.classList.remove('hidden');
+    bringWindowToFront(mailWin);
+    mailWin.focus && mailWin.focus();
+  }
+  function closeMailWindow(){ if(!mailWin) return; mailWin.classList.add('hidden'); }
+  if(mailIcon){ mailIcon.addEventListener('click', openMailWindow); mailIcon.addEventListener('dblclick', openMailWindow); }
+  const mailClose = document.querySelector('#mail-window .win-btn.close');
+  if(mailClose) mailClose.addEventListener('click', closeMailWindow);
+  const mailCancel = document.getElementById('mail-cancel'); if(mailCancel) mailCancel.addEventListener('click', closeMailWindow);
+
+  // Mail form submit: open default mail client with prefilled fields (mailto)
+  try{
+    const contactFormEl = document.getElementById('contact-form');
+    const mailStatusEl = document.getElementById('mail-status');
+
+    // EmailJS configuration - replace these with your EmailJS account values
+    const EMAILJS_CONFIG = {
+      userId: 'kceBnZMauOBTBoCVU',
+      serviceId: 'service_r159rrt',
+      templateId: 'template_3wmp8ni'
+    };
+
+    // Initialize EmailJS if SDK is loaded
+    try{ if(window.emailjs){ emailjs.init(EMAILJS_CONFIG.userId); } }catch(e){ console.warn('EmailJS init failed', e); }
+
+    if(contactFormEl){
+      contactFormEl.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const to = 'santiago.saligaojessa@gmail.com';
+        const from = (contactFormEl.querySelector('.mail-from') || {}).value || '';
+        const subjectRaw = (contactFormEl.querySelector('.mail-subject') || {}).value || '';
+        const bodyRaw = (contactFormEl.querySelector('.mail-body') || {}).value || '';
+        const subject = encodeURIComponent(subjectRaw || '');
+        const body = encodeURIComponent((from?('From: ' + from + '\n\n') : '') + bodyRaw);
+        const mailto = `mailto:${to}?subject=${subject}&body=${body}`;
+
+        // If EmailJS is configured, attempt to send via EmailJS first
+        if(window.emailjs && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId && EMAILJS_CONFIG.userId && EMAILJS_CONFIG.userId !== 'YOUR_EMAILJS_USER_ID'){
+          try{
+            if(mailStatusEl) mailStatusEl.textContent = 'Sending via EmailJS...';
+            const templateParams = {
+              to_email: to,
+              from_email: from,
+              subject: subjectRaw,
+              message: bodyRaw
+            };
+            await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams);
+            if(mailStatusEl) mailStatusEl.textContent = 'Message sent — thank you!';
+            contactFormEl.reset();
+            return;
+          }catch(err){
+            console.error('EmailJS send error:', err);
+            if(mailStatusEl) mailStatusEl.textContent = 'EmailJS failed — opening mail client as fallback...';
+            // fallthrough to open mail client fallback
+          }
+        }
+
+        // Fallback: open default mail client with mailto
+        try{ if(mailStatusEl) mailStatusEl.textContent = 'Opening mail client...'; }catch(e){}
+        window.location.href = mailto;
+      });
+    }
+  }catch(e){}
+
+  // Toolbar buttons: Send triggers submit, New clears form and resets status
+  try{
+    const mailSendBtn = document.getElementById('mail-send-btn');
+    const mailNewBtn = document.getElementById('mail-new-btn');
+    if(mailSendBtn){ mailSendBtn.addEventListener('click', ()=>{ const form = document.getElementById('contact-form'); if(form) form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit',{cancelable:true, bubbles:true})); }); }
+    if(mailNewBtn){ mailNewBtn.addEventListener('click', ()=>{
+      const form = document.getElementById('contact-form'); if(!form) return;
+      form.reset();
+      const status = document.getElementById('mail-status'); if(status) status.textContent = 'Compose a new message';
+      // focus the From field
+      const fromInput = form.querySelector('.mail-from'); if(fromInput) fromInput.focus();
+    }); }
+  }catch(e){}
 
   // Project window controls and scoped tab handling (namespaced with proj-)
   const projMinBtn = document.getElementById('proj-minimize');
@@ -1501,6 +1589,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   // allow dragging the Projects window like ER/WordPad
   makeDraggable(projectWin, '.titlebar');
   makeDraggable(projectWin, '.title-bar');
+  // make mail window draggable
+  makeDraggable(mailWin, '.titlebar');
+  makeDraggable(mailWin, '.title-bar');
   const projTitlebar = document.querySelector('#project-window .titlebar');
   if(projTitlebar){ projTitlebar.addEventListener('dblclick', (e)=>{ if(e.target.closest('.win-btn')) return; bringWindowToFront(projectWin); toggleProjectMaximize(); }); }
 

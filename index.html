@@ -126,15 +126,19 @@
 				</div>
 
 				<div class="icon" id="project" data-click-anim="float">
-					<img src="assets/img/projects.svg" alt="My Projects" class="icon-art">
+					<img src="assets/img/xp-projects.png" alt="My Projects" class="icon-art">
 					<div class="icon-label">My Projects</div>
 				</div>
 
 								<div class="icon" id="wordpad" data-click-anim="float">
-									<img src="assets/img/wordpad.svg" alt="WordPad" class="icon-art">
+									<img src="assets/img/xp-wordpad.png" alt="WordPad" class="icon-art">
 									<div class="icon-label">Resume</div>
 								</div>
-								
+				
+								<button class="icon" id="xp-mail" aria-label="XP Mail" title="Mail" data-click-anim="float">
+									<img src="assets/img/xp-mail.png" alt="XP Mail" class="icon-art xp-mail-art">
+									<div class="icon-label">Mail</div>
+								</button>
 			</div>
 
 			<div id="er-window" class="window hidden firefox-window" role="dialog" aria-label="Jessa Portfolio">
@@ -160,7 +164,7 @@
 						Projects
 					</div>
 					<div class="tab" data-tab="resume" role="tab" aria-selected="false">
-						<img src="assets/img/wordpad.svg" style="width:12px;" alt="">
+						<img src="assets/img/xp-wordpad.png" style="width:12px;" alt="">
 						Resume
 					</div>
 					<div class="plus-tab">+</div>
@@ -400,7 +404,7 @@
 				</div>
 
 				<div class="browser-content project-browser-content" style="display:flex; gap:0;">
-					<aside class="project-sidebar" style="background-color:#823cec;">
+					<aside class="project-sidebar" style="background-color:#e7f1dc;">
 						<div class="sidebar-box">
 							<div class="sidebar-title">Application Development</div>
 							<ul class="sidebar-list">
@@ -417,6 +421,7 @@
 							<ul class="sidebar-list">
 								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Social Media Marketing</span></button></li>
 								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Thumbnails</span></button></li>
+							    <li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Posters</span></button></li>
 							</ul>
 						</div>
 					</aside>
@@ -467,6 +472,65 @@
 			</div>
 		</div>
 
+		<!-- Mail Window (opens when clicking the Mail desktop icon) -->
+		<div id="mail-window" class="window hidden firefox-window" role="dialog" aria-label="Mail">
+
+			<div class="titlebar">
+				<img src="assets/img/xp-mail.png" class="wmp-icon-svg ff-icon" alt="Mail" width="28" height="28">
+				<span>Contact Me</span>
+				<div class="window-controls win-controls">
+					<div class="win-btn" id="mail-minimize">_</div>
+					<div class="win-btn" id="mail-maximize">□</div>
+					<div class="win-btn close" id="mail-close">×</div>
+				</div>
+			</div>
+
+			<div class="menu-bar">
+				<span>File</span>
+				<span>Edit</span>
+				<span>View</span>
+				<span>Tools</span>
+				<span>Help</span>
+			</div>
+
+				<!-- Compact toolbar (Send/New/LinkedIn) - keep navbar below unchanged -->
+				<div class="mail-toolbar" role="toolbar" aria-label="Mail toolbar">
+					<button type="button" id="mail-send-btn" class="toolbar-btn toolbar-primary"><img src="assets/img/xp-sendmessage.png" alt="Send"/><span>Send Message</span></button>
+					<button type="button" id="mail-new-btn" class="toolbar-btn toolbar-primary"><img src="assets/img/xp-newmessage.png" alt="New"/><span>New Message</span></button>
+				</div>
+
+			<div class="navbar">
+				<div class="nav-btn">←</div>
+				<div class="nav-btn">→</div>
+				<div class="url-bar">about:mail</div>
+				<div class="search-bar"><span style="font-size:11px;color:#666;">Search</span></div>
+			</div>
+
+			<div class="browser-content">
+				<div class="page" id="page-mail">
+					<form id="contact-form" class="mail-form" autocomplete="off">
+						<div class="mail-row">
+							<label class="mail-label">To:</label>
+							<input class="mail-input mail-to" type="text" value="Jessa Saligao <santiago.saligaojessa@gmail.com>" readonly>
+						</div>
+						<div class="mail-row">
+							<label class="mail-label">From:</label>
+							<input class="mail-input mail-from" name="from" type="email" placeholder="Your email address">
+						</div>
+						<div class="mail-row">
+							<label class="mail-label">Subject:</label>
+							<input class="mail-input mail-subject" name="subject" type="text" placeholder="Subject of your message">
+						</div>
+						<div class="mail-row mail-body-row">
+							<label class="mail-label" style="vertical-align:top">Message:</label>
+							<textarea class="mail-input mail-body" name="message" rows="10" placeholder="Write your message here"></textarea>
+						</div>
+						<div class="mail-status" id="mail-status">Compose a message to Jessa Saligao</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<!-- Start menu -->
 		<div id="start-menu" class="start-menu hidden" role="menu" aria-hidden="true">
 			<ul>
@@ -488,6 +552,8 @@
 					<div class="cert-body" id="cert-body" aria-live="polite"></div>
 				</div>
 			</div>
+<!-- EmailJS SDK (client-side) - replace USER/SERVICE/TEMPLATE IDs in src/script.js -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="src/script.js"></script>
 	</body>
 </html>
