@@ -1456,11 +1456,38 @@ document.addEventListener('DOMContentLoaded',()=>{
     try{ if(window.emailjs){ emailjs.init(EMAILJS_CONFIG.userId); } }catch(e){ console.warn('EmailJS init failed', e); }
 
     if(contactFormEl){
+      // show/hide custom subject input when user selects "Other"
+      const subjectSelectEl = contactFormEl.querySelector('.mail-subject-select');
+      const subjectCustomEl = contactFormEl.querySelector('.mail-subject-custom');
+      if(subjectSelectEl && subjectCustomEl){
+        subjectSelectEl.addEventListener('change', ()=>{
+          try{
+            if(subjectSelectEl.value === 'Other'){
+              subjectCustomEl.style.display = '';
+              subjectCustomEl.focus && subjectCustomEl.focus();
+            } else {
+              subjectCustomEl.style.display = 'none';
+            }
+          }catch(e){}
+        });
+      }
+
       contactFormEl.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const to = 'santiago.saligaojessa@gmail.com';
         const from = (contactFormEl.querySelector('.mail-from') || {}).value || '';
-        const subjectRaw = (contactFormEl.querySelector('.mail-subject') || {}).value || '';
+        // Determine subject: prefer the dropdown selection, use custom input when 'Other' is chosen, fallback to any legacy subject input
+        let subjectRaw = '';
+        const sel = (contactFormEl.querySelector('.mail-subject-select') || {}).value || '';
+        if(sel){
+          if(sel === 'Other'){
+            subjectRaw = (contactFormEl.querySelector('.mail-subject-custom') || {}).value || '';
+          } else {
+            subjectRaw = sel;
+          }
+        } else {
+          subjectRaw = (contactFormEl.querySelector('.mail-subject') || {}).value || '';
+        }
         const bodyRaw = (contactFormEl.querySelector('.mail-body') || {}).value || '';
         const subject = encodeURIComponent(subjectRaw || '');
         const body = encodeURIComponent((from?('From: ' + from + '\n\n') : '') + bodyRaw);

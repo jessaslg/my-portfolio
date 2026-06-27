@@ -479,8 +479,8 @@
 				<img src="assets/img/xp-mail.png" class="wmp-icon-svg ff-icon" alt="Mail" width="28" height="28">
 				<span>Contact Me</span>
 				<div class="window-controls win-controls">
-					<div class="win-btn" id="mail-minimize">_</div>
-					<div class="win-btn" id="mail-maximize">□</div>
+					<div class="win-btn mail-control-disabled" id="mail-minimize" aria-disabled="true">_</div>
+					<div class="win-btn mail-control-disabled" id="mail-maximize" aria-disabled="true">□</div>
 					<div class="win-btn close" id="mail-close">×</div>
 				</div>
 			</div>
@@ -519,7 +519,13 @@
 						</div>
 						<div class="mail-row">
 							<label class="mail-label">Subject:</label>
-							<input class="mail-input mail-subject" name="subject" type="text" placeholder="Subject of your message">
+							<select class="mail-input mail-subject-select" name="subject-select" aria-label="Subject category">
+								<option value="">Select an option</option>
+								<option value="General note">General note</option>
+								<option value="Recruiting">Recruiting</option>
+								<option value="Other">Other</option>
+							</select>
+							<input class="mail-input mail-subject-custom" name="subject" type="text" placeholder="Subject of your message (optional)" style="display:none;margin-left:8px;">
 						</div>
 						<div class="mail-row mail-body-row">
 							<label class="mail-label" style="vertical-align:top">Message:</label>
