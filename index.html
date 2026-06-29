@@ -31,15 +31,18 @@
 			}
 
 			/* Projects sidebar styles */
-			.project-sidebar{ width:320px; background:var(--xp-blue-dark); padding:18px; box-sizing:border-box; border-radius:0; margin-top:0; margin-left:0; margin-bottom:0; }
-			#project-window .project-browser-content { display:flex; gap:0; align-items:flex-start; height: calc(100vh - 180px); padding:0; }
-			.project-sidebar{ height:100%; overflow:auto; }
-			/* hide native scrollbar on sidebar (we will show main scrollbar on right) */
-			.project-sidebar.hide-scrollbar{ scrollbar-width: none; -ms-overflow-style: none; }
-			.project-sidebar.hide-scrollbar::-webkit-scrollbar{ width:0; height:0; }
-
-			/* custom main scrollbar on the right side for project content (XP-like) */
-			#project-window .project-browser-content { scrollbar-width: thin; scrollbar-color: var(--xp-blue) #eaf3ff; padding:0; }
+			#project-window .project-browser-content {
+				display:grid;
+				grid-template-columns: 320px minmax(0, 1fr);
+				gap:0;
+				align-items:stretch;
+				height: calc(100vh - 180px);
+				padding:0;
+				background:#f6fbff;
+				overflow:auto;
+				scrollbar-width: thin;
+				scrollbar-color: var(--xp-blue) #eaf3ff;
+			}
 			#project-window .project-browser-content::-webkit-scrollbar{ width:16px; }
 			#project-window .project-browser-content::-webkit-scrollbar-track{ background: linear-gradient(#eaf3ff,#e6f3ff); border-radius:8px; padding:4px 0; }
 			#project-window .project-browser-content::-webkit-scrollbar-thumb{ background: linear-gradient(#225fcf,#1748b3); border-radius:10px; border:3px solid #d7e8ff; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); }
@@ -47,31 +50,139 @@
 			#project-window .project-browser-content::-webkit-scrollbar-button{ display:block; height:14px; background:linear-gradient(var(--xp-blue),var(--xp-blue-dark)); border-radius:4px; }
 			#project-window .project-browser-content::-webkit-scrollbar-button:vertical:decrement{ border-radius:6px 6px 0 0; }
 			#project-window .project-browser-content::-webkit-scrollbar-button:vertical:increment{ border-radius:0 0 6px 6px; }
-			#project-window .page#page-projects { height:100%; overflow:auto; }
+			#project-window .page#page-projects { height:100%; overflow:auto; padding:0; }
+			.project-sidebar{ width:320px; background:var(--xp-blue-dark); padding:18px; box-sizing:border-box; border-radius:0; margin:0; height:100%; overflow:auto; }
+			.project-sidebar.hide-scrollbar{ scrollbar-width: none; -ms-overflow-style: none; }
+			.project-sidebar.hide-scrollbar::-webkit-scrollbar{ width:0; height:0; }
+			.project-sidebar .sidebar-box{ border-radius:6px; overflow:hidden; }
 			.sidebar-box{ background:#eaf3ff; border:1px solid rgba(255,255,255,0.35); border-radius:0; padding:0; margin-bottom:16px; overflow:visible; }
 			.sidebar-title{ display:block; margin:0 0 12px 0; font-size:15px; font-weight:700; color:#fff; padding:10px 12px; background:linear-gradient(var(--xp-blue),var(--xp-blue-dark)); border-radius:0; }
 			.sidebar-list{ list-style:none; padding:10px; margin:0; font-size:13px; color:#0b2740; }
 			.sidebar-item{ padding:0; margin:0 0 8px 0 }
-			.sidebar-btn{ background:transparent; border:0; width:100%; text-align:left; padding:10px 12px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; color:inherit; font:inherit }
+			.sidebar-btn{ background:transparent; border:0; width:100%; text-align:left; padding:10px 12px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; color:inherit; font:inherit; border-radius:6px; transition:background 120ms ease, box-shadow 120ms ease, transform 120ms ease }
 			.sidebar-btn img{ width:18px; height:18px; margin-top:3px }
 			.sidebar-btn .item-title{ line-height:1.35; color:#0b2740 }
 			.sidebar-btn:hover{ background:rgba(11,39,64,0.04) }
 			.sidebar-btn:focus{ outline:2px solid rgba(42,102,201,0.6); outline-offset:2px; border-radius:4px }
+			.sidebar-btn.is-active{ background:rgba(42,102,201,0.12); box-shadow: inset 0 0 0 1px rgba(42,102,201,0.24) }
 
-			/* Use the standard white container/panel design for Projects (match About window panels) */
-			#project-window .project-browser-content { background: #ffffff; }
-			#project-window .xp-background-details{
-				margin-top: 12px;
-				border: 1px solid #dfe9f7;
-				background: #ffffff;
-				padding: 14px;
-				border-radius: 6px;
-				box-shadow: 0 6px 18px rgba(12,38,63,0.04);
-				display: grid;
-				gap: 12px;
+			#project-window .project-detail-view{
+				min-width:0;
+				padding:16px;
+				box-sizing:border-box;
+				height:100%;
+				overflow-y:auto;
+				overflow-x:hidden;
 			}
-			#project-window .xp-bg-heading{ color:#0b2b3a }
-			#project-window .xp-bg-subtext{ color:#23383f }
+			#project-window .project-detail-card{
+				background:transparent;
+				border:0;
+				border-radius:0;
+				box-shadow:none;
+				padding:0;
+				display:flex;
+				flex-direction:column;
+				gap:12px;
+				min-height:0;
+				box-sizing:border-box;
+			}
+			#project-window .project-section-card{
+				background:#f1f1f1;
+				border:1px solid #d6d6d6;
+				border-radius:10px;
+				padding:14px;
+				box-shadow:0 4px 10px rgba(12,38,63,0.05);
+				box-sizing:border-box;
+			}
+			#project-window .project-detail-header{ display:flex; flex-direction:column; gap:8px }
+			#project-window .project-kicker{ font-size:12px; letter-spacing:0.6px; text-transform:uppercase; color:#4a5963; font-weight:700 }
+			#project-window .project-detail-title{ margin:0; color:#16252f; font-size:24px; line-height:1.2 }
+			#project-window .project-gallery-section{ display:flex; flex-direction:column; gap:12px }
+			#project-window .project-section-title{ margin:0; color:#16252f; font-size:18px; line-height:1.2 }
+			#project-window .project-gallery-frame{
+				position:relative;
+				min-height:340px;
+				display:flex;
+				align-items:center;
+				justify-content:center;
+				padding:18px 78px;
+				border-radius:10px;
+				border:1px solid #dfe9f7;
+				background:linear-gradient(180deg,#f8fbff 0%, #eef6ff 100%);
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+				box-sizing:border-box;
+			}
+			#project-window .project-gallery-image{
+				width:min(100%, 820px);
+				max-height:300px;
+				object-fit:cover;
+				border-radius:8px;
+				border:1px solid rgba(0,0,0,0.06);
+				box-shadow:0 6px 18px rgba(12,38,63,0.08);
+				display:block;
+			}
+			#project-window .project-gallery-arrow{
+				position:absolute;
+				top:50%;
+				transform:translateY(-50%);
+				width:42px;
+				height:60px;
+				border:0;
+				border-radius:12px;
+				background:linear-gradient(180deg,#6f7a88,#5d6672);
+				color:#fff;
+				font-size:34px;
+				line-height:1;
+				cursor:pointer;
+				box-shadow:0 4px 12px rgba(0,0,0,0.18);
+			}
+			#project-window .project-gallery-arrow:hover{ filter:brightness(1.06) }
+			#project-window .project-gallery-arrow.prev{ left:14px }
+			#project-window .project-gallery-arrow.next{ right:14px }
+			#project-window .project-gallery-dots{ display:flex; justify-content:center; gap:10px; margin-top:4px }
+			#project-window .project-gallery-dot{ width:12px; height:12px; padding:0; border:0; border-radius:999px; background:#b5bcc6; cursor:pointer }
+			#project-window .project-gallery-dot.is-active{ background:#fff; box-shadow:0 0 0 2px rgba(42,102,201,0.35) }
+			#project-window .project-info-panel{ background:#f1f1f1; border:1px solid #d6d6d6; padding:16px; border-radius:10px; box-shadow:0 4px 10px rgba(12,38,63,0.05); box-sizing:border-box; }
+			#project-window .project-section-card,
+			#project-window .project-section-card *{ color:#16252f; }
+			#project-window .project-info-panel h3{ margin:0 0 10px 0; color:#16252f; font-size:17px }
+			#project-window .project-info-copy{ margin:0; color:#1f2d36; font-size:15px; line-height:1.65 }
+			#project-window .project-techstack{ display:flex; flex-wrap:wrap; gap:10px }
+			#project-window .project-tech-pill{
+				display:inline-flex;
+				align-items:center;
+				padding:8px 12px;
+				border-radius:999px;
+				background:linear-gradient(180deg,#f3f8fc,#e6f0fa);
+				border:1px solid #c6daf0;
+				color:#16252f;
+				font-weight:700;
+				font-size:13px;
+				letter-spacing:0.2px;
+			}
+			#project-window .project-links-row{ display:flex; justify-content:flex-start; gap:12px; flex-wrap:wrap }
+			#project-window .project-link-button{
+				display:inline-flex;
+				align-items:center;
+				justify-content:center;
+				padding:12px 16px;
+				border-radius:10px;
+				background:linear-gradient(180deg,#ffffff,#eaf4ff);
+				border:1px solid #c6daf0;
+				color:#16252f;
+				font-weight:800;
+				text-decoration:none;
+				box-shadow:0 4px 12px rgba(12,38,63,0.08);
+			}
+			#project-window .project-link-button:hover{ transform:translateY(-1px) }
+			#project-window .project-role-value{ margin:0; color:#1f2d36; font-size:15px; line-height:1.65 }
+			@media (max-width: 1100px){
+				#project-window .project-browser-content{ grid-template-columns:1fr; height:auto; }
+				.project-sidebar{ width:100%; height:auto; }
+				#project-window .project-detail-view{ padding-top:0; }
+				#project-window .project-gallery-frame{ min-height:260px; padding:16px 54px; }
+				#project-window .project-gallery-image{ max-height:240px; }
+			}
 		</style>
 
 	</head>
@@ -320,9 +431,6 @@
 											<div class="xp-bg-subtext">
 												<div class="cert-list">
 												<div class="cert-item">
-													<span class="cert-icon">🎨</span>
-														<div class="cert-title">MIQUESI</div>
-														<div class="cert-link"><a href="#" data-asset="https://github.com/jessaslg/MIQUESI" data-repo="https://github.com/jessaslg/MIQUESI" data-title="MIQUESI" data-category="Portfolio" data-badge="UI / Game Design" data-meta="2025 · Project" data-desc="MIQUESI repository — UI assets and demo." data-img="assets/img/MIQESI.jpg">Details</a></div>
 												</div>
 													<div class="cert-item">
 														<span class="cert-icon">📜</span>
@@ -403,41 +511,71 @@
 					<div class="nav-btn" style="border-radius:3px; width:22px; height:22px; font-size:12px;">🏠</div>
 				</div>
 
-				<div class="browser-content project-browser-content" style="display:flex; gap:0;">
-					<aside class="project-sidebar" style="background-color:#e7f1dc;">
+				<div class="browser-content project-browser-content">
+					<aside class="project-sidebar hide-scrollbar" style="background-color:#e7f1dc;">
 						<div class="sidebar-box">
 							<div class="sidebar-title">Application Development</div>
 							<ul class="sidebar-list">
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: A Web Management Platform for Kitch using Artificial Intelligence</span></button></li>
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: Mobile Commerce Application</span></button></li>
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Pro/ductive: Personal Diary Application</span></button></li>
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Bossing Payroll Management System</span></button></li>
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Guidance E-Counselling System</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="studio360-web"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: A Web Management Platform for Kitch using Artificial Intelligence</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="studio360-mobile"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: Mobile Commerce Application</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="productive"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Pro/ductive: Personal Diary Application</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="bossing"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Bossing Payroll Management System</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="guidance"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Guidance E-Counselling System</span></button></li>
 							</ul>
 						</div>
 
 						<div class="sidebar-box">
 							<div class="sidebar-title">Graphic Design</div>
 							<ul class="sidebar-list">
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Social Media Marketing</span></button></li>
-								<li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Thumbnails</span></button></li>
-							    <li class="sidebar-item"><button class="sidebar-btn"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Posters</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="social-media"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Social Media Marketing</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="thumbnails"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Thumbnails</span></button></li>
+							    <li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="posters"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Posters</span></button></li>
 							</ul>
 						</div>
 					</aside>
 
-					<div class="page" id="page-projects" style="flex:1; padding:20px; box-sizing:border-box;">
-						<section class="xp-content xp-project-system">
-							<div class="xp-system-note"><strong>Projects</strong></div>
-							<div class="xp-background-details">
-								<div class="xp-bg-section">
-									<div class="xp-bg-heading">Projects</div>
-									<div class="xp-bg-subtext">
-										<!-- Main content area for project details (left sidebar controls selection) -->
+					<div class="page" id="page-projects" style="flex:1; padding:18px; box-sizing:border-box;">
+						<main class="project-detail-view" aria-live="polite">
+							<article class="project-detail-card">
+								<section class="project-section-card project-detail-header">
+									<h1 class="project-detail-title" id="project-detail-title">Studio360: Mobile Commerce Application</h1>
+								</section>
+
+								<section class="project-section-card project-gallery-section" aria-label="Project gallery">
+									<div class="project-gallery-frame">
+										<button type="button" class="project-gallery-arrow prev" id="project-gallery-prev" aria-label="Previous image">‹</button>
+										<img id="project-gallery-image" class="project-gallery-image" src="assets/web app screenshots/mobile1.png" alt="Studio360 mobile commerce preview">
+										<button type="button" class="project-gallery-arrow next" id="project-gallery-next" aria-label="Next image">›</button>
 									</div>
-								</div>
-							</div>
-						</section>
+									<div class="project-gallery-dots" id="project-gallery-dots" aria-label="Project gallery pagination"></div>
+								</section>
+
+								<section class="project-section-card">
+									<h3>Overview</h3>
+									<p class="project-info-copy" id="project-overview">Studio360 Mobile Application is a front-end mobile application designed to showcase the core features of an online retail platform. Built without a backend or database integration, the application demonstrates a complete user interface and user experience flow, including user authentication, product browsing, coupon claiming, shopping cart management, checkout process, and user profile management. It serves as a functional prototype that highlights the design and navigation of a modern e-commerce mobile application.</p>
+								</section>
+
+								<section class="project-section-card">
+									<h3>GitHub Repo</h3>
+									<div class="project-links-row">
+										<a class="project-link-button" id="project-github-link" href="https://github.com/jessaslg" target="_blank" rel="noreferrer">View On GitHub</a>
+									</div>
+								</section>
+
+								<section class="project-section-card">
+									<h3>Tech Stack</h3>
+									<div class="project-techstack" id="project-techstack">
+										<span class="project-tech-pill">Flutter</span>
+										<span class="project-tech-pill">Dart</span>
+									</div>
+								</section>
+
+								<section class="project-section-card">
+									<h3>Role</h3>
+									<p class="project-role-value" id="project-role">Team lead and Developer</p>
+								</section>
+							</article>
+						</main>
 					</div>
 				</div>
 

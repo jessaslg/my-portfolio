@@ -57,207 +57,212 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(clock) clock.style.setProperty('display', 'inline-flex', 'important');
   }
 
-  // Initialize Project tabs (simple show/hide behavior)
+  let activeProjectId = 'studio360-mobile';
+  let activeProjectIndex = 0;
+  let renderProjectContent = null;
+
+  // Initialize the Projects window so sidebar clicks render the matching project detail layout.
   function initProjectTabs(){
-    const tabsEl = document.getElementById('project-tabs');
-    const panes = document.querySelectorAll('#project-panes > [data-pane]');
-    if(!tabsEl) return;
-    // helper to force-reveal nodes inside a pane (remove hidden/visibility and fix display)
-    function revealPane(pane){
-      try{
-        pane.classList.remove('hidden'); pane.style.display = 'block'; pane.style.visibility = 'visible'; pane.style.opacity = '1';
-        const descendants = pane.querySelectorAll('*');
-        descendants.forEach(el=>{
-          try{
-            // Do not force-visible the project detail panel; its visibility
-            // should be controlled by its own logic when a Details button is clicked.
-            if(el.matches && el.matches('.detail-panel')) return;
-            el.classList.remove('hidden'); el.style.visibility = 'visible'; el.style.opacity = '1'; el.style.transform = 'none';
-            el.style.removeProperty('clip'); el.style.removeProperty('clip-path');
-            const cs = getComputedStyle(el);
-            if(cs.display === 'none') el.style.display = 'block';
-          }catch(e){}
-        });
-        try{ pane.setAttribute('aria-hidden','false'); }catch(e){}
-      }catch(e){}
-    }
-
-    tabsEl.querySelectorAll('button[data-tab]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const t = btn.getAttribute('data-tab');
-        console.log('project-tab-clicked:', t);
-        tabsEl.querySelectorAll('button[data-tab]').forEach(b=>b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        panes.forEach(p=>{
-          if(p.getAttribute('data-pane')===t){
-            revealPane(p);
-          } else {
-            p.classList.add('hidden'); p.classList.remove('active'); p.style.display='none'; try{ p.setAttribute('aria-hidden','true'); }catch(e){}
-          }
-        });
-      });
-    });
-    const activeBtn = tabsEl.querySelector('button[data-tab].is-active') || tabsEl.querySelector('button[data-tab]');
-    if(activeBtn){ const defaultTab = activeBtn.getAttribute('data-tab'); panes.forEach(p=>{ if(p.getAttribute('data-pane')===defaultTab){ p.classList.add('active'); revealPane(p); } else { p.classList.remove('active'); p.classList.add('hidden'); p.style.display='none'; try{ p.setAttribute('aria-hidden','true'); }catch(e){} } }); }
-  }
-
-
-  // Keep Projects content visible after About Me or other global page switches.
-  // The About window uses document.querySelectorAll('.page'), which can accidentally
-  // add .hidden to #page-projects because the Projects page also uses class="page".
-  function resetProjectContent(){
-    const projectPage = projectWin ? projectWin.querySelector('#page-projects') : document.getElementById('page-projects');
-    const tabsEl = document.getElementById('project-tabs');
-    const panes = document.querySelectorAll('#project-panes > [data-pane]');
-
-    if(projectPage){
-      projectPage.classList.remove('hidden');
-      projectPage.style.display = '';
-      projectPage.style.visibility = 'visible';
-      projectPage.style.opacity = '1';
-      projectPage.setAttribute('aria-hidden', 'false');
-    }
-
-    // If no project tab is currently active, default back to Application Development.
-    let activeTab = tabsEl ? tabsEl.querySelector('button[data-tab].is-active') : null;
-    if(!activeTab && tabsEl){
-      activeTab = tabsEl.querySelector('button[data-tab="general"]') || tabsEl.querySelector('button[data-tab]');
-      if(activeTab) activeTab.classList.add('is-active');
-    }
-
-    const activePaneName = activeTab ? activeTab.getAttribute('data-tab') : 'general';
-
-    panes.forEach(pane=>{
-      const isTarget = pane.getAttribute('data-pane') === activePaneName;
-      if(isTarget){
-        pane.classList.add('active');
-        pane.classList.remove('hidden');
-        pane.style.display = 'block';
-        pane.style.visibility = 'visible';
-        pane.style.opacity = '1';
-        pane.setAttribute('aria-hidden', 'false');
-
-        pane.querySelectorAll('*').forEach(el=>{
-          try{
-            el.style.visibility = 'visible';
-            el.style.opacity = '1';
-          }catch(e){}
-        });
-      } else {
-        pane.classList.remove('active');
-        pane.classList.add('hidden');
-        pane.style.display = 'none';
-        pane.setAttribute('aria-hidden', 'true');
-      }
-    });
-  }
-
-  // Project detail panel handling: dropdown-style under each item
-  try{
     const projectWin = document.getElementById('project-window');
-    const projectPanesEl = projectWin ? projectWin.querySelector('#project-panes') : document.getElementById('project-panes');
-    const panel = projectWin ? projectWin.querySelector('#project-detail-panel') : document.getElementById('project-detail-panel');
-    let currentDetailSource = null;
-    if(projectPanesEl && panel){
-      // ensure panel starts hidden via aria attribute and removed from layout
-      panel.setAttribute('aria-hidden','true');
-      panel.style.maxHeight = '0px';
-      panel.style.visibility = 'hidden';
-      panel.style.transition = 'none';
-      panel.style.display = 'none';
+    if(!projectWin) return;
 
-      function closePanel(){
-        try{
-          // animate to 0 then remove from layout when transition ends
-          panel.style.maxHeight = panel.scrollHeight + 'px';
-          // force a paint so the starting maxHeight is applied
-          requestAnimationFrame(()=>{
-            panel.style.transition = 'max-height 260ms ease';
-            panel.style.maxHeight = '0px';
-            panel.setAttribute('aria-hidden','true');
-            panel.style.visibility = 'hidden';
-            // after transition, hide from layout to avoid any sliver
-            const onEnd = function(){
-              panel.style.display = 'none';
-              panel.removeEventListener('transitionend', onEnd);
-            };
-            panel.addEventListener('transitionend', onEnd);
-          });
-        }catch(e){}
-        // ensure any layout modifiers are cleared when closing
-        try{ panel.classList.remove('no-image'); }catch(e){}
-        currentDetailSource = null;
+    const sidebarButtons = Array.from(projectWin.querySelectorAll('.sidebar-btn[data-project]'));
+    const titleEl = projectWin.querySelector('#project-detail-title');
+    const summaryEl = projectWin.querySelector('#project-detail-summary');
+    const overviewEl = projectWin.querySelector('#project-overview');
+    const roleEl = projectWin.querySelector('#project-role');
+    const techstackEl = projectWin.querySelector('#project-techstack');
+    const galleryImageEl = projectWin.querySelector('#project-gallery-image');
+    const galleryDotsEl = projectWin.querySelector('#project-gallery-dots');
+    const githubLinkEl = projectWin.querySelector('#project-github-link');
+    const prevButton = projectWin.querySelector('#project-gallery-prev');
+    const nextButton = projectWin.querySelector('#project-gallery-next');
+
+    const projectData = {
+      'studio360-web': {
+        title: 'Studio360: A Web Management Platform for Kitch using Artificial Intelligence',
+        summary: 'An AI-powered web-based business management system for creative micro-enterprises.',
+        overview: 'Studio360 is an AI-powered web-based business management system designed for creative micro-enterprises, with its core focus on automating the bookkeeping process and providing intelligent business insights. The system utilizes artificial intelligence to read and process invoice data, automatically classify transactions, and transfer them to the appropriate books of accounts, including the General Journal, General Ledger, Cash Receipts Journal, and Cash Disbursements Journal, based on the transaction type. By eliminating manual bookkeeping, Studio360 reduces human error, saves time, and improves the accuracy of financial records. In addition to financial automation, the system analyzes historical sales data to identify seasonal trends and generate sales forecasts, providing business owners with an interactive dashboard that visualizes sales performance, including periods of low, consistent, and high sales. These AI-driven features enable data-informed decision-making, improve financial management, and help small businesses optimize inventory planning, monitor business performance, and support sustainable growth through intelligent automation.',
+        images: [
+          'assets/web app screenshots/studio1.png',
+          'assets/web app screenshots/studio2.png',
+          'assets/web app screenshots/studio3.png',
+          'assets/web app screenshots/studio4.png',
+          'assets/web app screenshots/studio5.png',
+          'assets/web app screenshots/studio6.png',
+          'assets/web app screenshots/studio7.png',
+          'assets/web app screenshots/studio8.png',
+          'assets/web app screenshots/studio9.png',
+          'assets/web app screenshots/studio10.png',
+          'assets/web app screenshots/studio11.png',
+          'assets/web app screenshots/studio12.png',
+          'assets/web app screenshots/studio13.png'
+        ],
+        techstack: ['Python', 'Tesseract', 'JavaScript', 'C++', 'Supabase'],
+        role: 'Backend developer, assistant team lead, documentation',
+        github: 'https://github.com/jessaslg'
+      },
+      'studio360-mobile': {
+        title: 'Studio360: Mobile Commerce Application',
+        summary: 'A front-end mobile commerce prototype built to showcase a complete retail user journey.',
+        overview: 'Studio360 Mobile Application is a front-end mobile application designed to showcase the core features of an online retail platform. Built without a backend or database integration, the application demonstrates a complete user interface and user experience flow, including user authentication, product browsing, coupon claiming, shopping cart management, checkout process, and user profile management. It serves as a functional prototype that highlights the design and navigation of a modern e-commerce mobile application.',
+        images: [
+          'assets/web app screenshots/mobile1.png',
+          'assets/web app screenshots/mobile2.png',
+          'assets/web app screenshots/mobile3.png',
+          'assets/web app screenshots/mobile4.png'
+        ],
+        techstack: ['Flutter', 'Dart'],
+        role: 'Team lead and Developer',
+        github: 'https://github.com/jessaslg'
+      },
+      productive: {
+        title: 'Pro/ductive: Personal Diary Application',
+        summary: 'A personal diary experience focused on organization, reflection, and daily productivity tracking.',
+        overview: 'Pro/ductive is a diary-style application concept centered on personal logging, routine tracking, and lightweight productivity features. The layout emphasizes clarity, quick entry, and calm navigation to keep the user focused on writing and reviewing their day.',
+        images: ['assets/img/project-logo.jpg'],
+        techstack: ['HTML', 'CSS', 'JavaScript'],
+        role: 'Developer',
+        github: 'https://github.com/jessaslg'
+      },
+      bossing: {
+        title: 'Bossing Payroll Management System',
+        summary: 'A payroll workflow prototype that presents a structured view of employee and salary management.',
+        overview: 'Bossing Payroll Management System presents a practical payroll interface for managing employee records, pay computations, and related administrative tasks. The project is organized to keep common HR and payroll actions easy to scan and simple to operate.',
+        images: ['assets/img/project-logo.jpg'],
+        techstack: ['HTML', 'CSS', 'JavaScript'],
+        role: 'Developer',
+        github: 'https://github.com/jessaslg'
+      },
+      guidance: {
+        title: 'Guidance E-Counselling System',
+        summary: 'An online guidance system concept for supporting student counselling and case management.',
+        overview: 'Guidance E-Counselling System is a digital counseling concept that focuses on appointment handling, communication flow, and structured student support. The interface is designed to present guidance services in a clear and approachable way.',
+        images: ['assets/img/project-logo.jpg'],
+        techstack: ['HTML', 'CSS', 'JavaScript'],
+        role: 'Developer',
+        github: 'https://github.com/jessaslg'
+      },
+      'social-media': {
+        title: 'Social Media Marketing',
+        summary: 'A set of marketing visuals created for social platform promotion and brand presence.',
+        overview: 'This graphic design project showcases social media marketing outputs built to support brand visibility and promotional campaigns. The visuals are arranged to communicate key messages quickly and with strong hierarchy.',
+        images: ['assets/img/project-logo.jpg'],
+        techstack: ['Canva', 'Photoshop'],
+        role: 'Designer',
+        github: 'https://github.com/jessaslg'
+      },
+      thumbnails: {
+        title: 'Thumbnails',
+        summary: 'Video thumbnail designs focused on attention, readability, and click-through appeal.',
+        overview: 'The thumbnail collection highlights compact visual layouts that balance subject emphasis, headline readability, and high-contrast composition for digital content.',
+        images: ['assets/img/project-logo.jpg'],
+        techstack: ['Photoshop', 'Canva'],
+        role: 'Designer',
+        github: 'https://github.com/jessaslg'
+      },
+      posters: {
+        title: 'Posters',
+        summary: 'A poster design collection built around strong composition and clear visual messaging.',
+        overview: 'The poster set focuses on layout balance, typography, and image treatment to communicate events and concepts in a visually engaging way.',
+        images: ['assets/img/project-logo.jpg'],
+        techstack: ['Photoshop', 'Canva'],
+        role: 'Designer',
+        github: 'https://github.com/jessaslg'
       }
+    };
 
-      function openPanelAfter(itemEl){
-        // move panel directly after the clicked .cert-item
-        itemEl.insertAdjacentElement('afterend', panel);
-        // ensure it's in the layout so we can measure it
-        panel.style.display = 'block';
-        panel.style.visibility = 'visible';
-        // prepare for animation
-        panel.style.transition = 'none';
-        panel.style.maxHeight = '0px';
-        panel.setAttribute('aria-hidden','false');
-        // allow paint then animate to its scrollHeight
-        requestAnimationFrame(()=>{
-          const h = panel.scrollHeight;
-          panel.style.transition = 'max-height 260ms ease';
-          panel.style.maxHeight = h + 'px';
-        });
-      }
+    function getProject(projectId){
+      return projectData[projectId] || projectData['studio360-mobile'];
+    }
 
-      projectPanesEl.addEventListener('click', (e)=>{
-        const a = e.target.closest('.cert-link a');
-        if(!a) return;
-        e.preventDefault();
-        const item = a.closest('.cert-item');
-        if(!item) return;
-        // toggle if panel is already open for this item
-        if(panel.parentElement === item.parentElement && item.nextElementSibling === panel){
-          closePanel();
-          return;
-        }
-        // populate panel with data
-        currentDetailSource = a;
-        const title = a.dataset.title || a.textContent.trim();
-        const category = a.dataset.category || '';
-        const badge = a.dataset.badge || '';
-        const meta = a.dataset.meta || '';
-        const desc = a.dataset.desc || '';
-        const img = a.dataset.img || (a.getAttribute('data-asset') || 'assets/img/placeholder.png');
-        try{ panel.querySelector('.detail-img').src = img; }catch(e){}
-        try{ panel.querySelector('.detail-category').textContent = (category||'').toUpperCase(); }catch(e){}
-        try{ panel.querySelector('.detail-title').textContent = title; }catch(e){}
-        try{ panel.querySelector('.detail-desc').textContent = desc; }catch(e){}
-        try{ const badges = panel.querySelector('.detail-badges'); badges.innerHTML = `<span class="badge">${badge}</span><span class="badge meta">${meta}</span>`; }catch(e){}
-        // If this item belongs to the Application Development pane (data-pane="general"),
-        // hide the image container so projects display without the image detail box.
-        try{
-          const paneAncestor = item.closest('[data-pane]');
-          if(paneAncestor && paneAncestor.getAttribute('data-pane') === 'general'){
-            panel.classList.add('no-image');
-          } else {
-            panel.classList.remove('no-image');
-          }
-        }catch(e){}
-
-        // open dropdown after the item
-        openPanelAfter(item);
-      });
-
-      // panel-level actions
-      projectPanesEl.addEventListener('click', (e)=>{
-        const closeBtn = e.target.closest('.detail-close');
-        if(closeBtn){ closePanel(); }
-        const cta = e.target.closest('.detail-cta');
-        if(cta && currentDetailSource){
-          const repo = currentDetailSource.dataset.repo || currentDetailSource.getAttribute('data-asset') || null;
-          if(repo && repo !== '#') window.open(repo, '_blank');
-        }
+    function setActiveSidebar(projectId){
+      sidebarButtons.forEach((button)=>{
+        button.classList.toggle('is-active', button.dataset.project === projectId);
       });
     }
-  }catch(e){}
+
+    function renderGallery(project){
+      const images = project.images && project.images.length ? project.images : ['assets/img/project-logo.jpg'];
+      if(activeProjectIndex < 0 || activeProjectIndex >= images.length){
+        activeProjectIndex = 0;
+      }
+      if(galleryImageEl){
+        galleryImageEl.src = images[activeProjectIndex];
+        galleryImageEl.alt = `${project.title} preview ${activeProjectIndex + 1}`;
+      }
+      if(galleryDotsEl){
+        galleryDotsEl.innerHTML = images.map((_, index)=>`<button type="button" class="project-gallery-dot${index === activeProjectIndex ? ' is-active' : ''}" data-index="${index}" aria-label="Show image ${index + 1}"></button>`).join('');
+      }
+    }
+
+    function renderProject(projectId, preferredIndex){
+      const project = getProject(projectId);
+      activeProjectId = projectData[projectId] ? projectId : 'studio360-mobile';
+      activeProjectIndex = typeof preferredIndex === 'number' && !Number.isNaN(preferredIndex) ? preferredIndex : 0;
+
+      setActiveSidebar(activeProjectId);
+
+      if(titleEl) titleEl.textContent = project.title;
+      if(summaryEl) summaryEl.textContent = project.summary;
+      if(overviewEl) overviewEl.textContent = project.overview;
+      if(roleEl) roleEl.textContent = project.role;
+      if(techstackEl) techstackEl.innerHTML = project.techstack.map((tech)=>`<span class="project-tech-pill">${tech}</span>`).join('');
+      if(githubLinkEl){
+        githubLinkEl.href = project.github || 'https://github.com/jessaslg';
+        githubLinkEl.textContent = 'View On GitHub';
+      }
+
+      renderGallery(project);
+    }
+
+    function stepGallery(step){
+      const project = getProject(activeProjectId);
+      const images = project.images && project.images.length ? project.images : ['assets/img/project-logo.jpg'];
+      activeProjectIndex = (activeProjectIndex + step + images.length) % images.length;
+      renderProject(activeProjectId, activeProjectIndex);
+    }
+
+    sidebarButtons.forEach((button)=>{
+      button.addEventListener('click', ()=>{
+        renderProject(button.dataset.project);
+      });
+    });
+
+    if(prevButton){ prevButton.addEventListener('click', ()=>stepGallery(-1)); }
+    if(nextButton){ nextButton.addEventListener('click', ()=>stepGallery(1)); }
+    if(galleryDotsEl){
+      galleryDotsEl.addEventListener('click', (event)=>{
+        const dot = event.target.closest('[data-index]');
+        if(!dot) return;
+        renderProject(activeProjectId, Number(dot.dataset.index));
+      });
+    }
+
+    renderProjectContent = renderProject;
+    renderProject(activeProjectId);
+  }
+
+
+  // Keep the Projects content visible after About Me or other global page switches.
+  function resetProjectContent(){
+    const projectWin = document.getElementById('project-window');
+    if(projectWin){
+      projectWin.classList.remove('hidden');
+      projectWin.style.visibility = 'visible';
+      projectWin.style.opacity = '1';
+      projectWin.setAttribute('aria-hidden', 'false');
+    }
+
+    if(typeof renderProjectContent === 'function'){
+      renderProjectContent(activeProjectId || 'studio360-mobile', activeProjectIndex || 0);
+      return;
+    }
+
+    initProjectTabs();
+  }
+
+  // Projects now render directly in the main panel, so there is no separate detail panel to manage here.
 
 
   function finishLoadingScreen(){
