@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     const techstackEl = projectWin.querySelector('#project-techstack');
     const galleryImageEl = projectWin.querySelector('#project-gallery-image');
     const galleryDotsEl = projectWin.querySelector('#project-gallery-dots');
-    const githubLinkEl = projectWin.querySelector('#project-github-link');
     const prevButton = projectWin.querySelector('#project-gallery-prev');
     const nextButton = projectWin.querySelector('#project-gallery-next');
 
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           'assets/web app screenshots/studio13.png'
         ],
         techstack: ['Python', 'Tesseract', 'JavaScript', 'C++', 'Supabase'],
-        role: 'Backend developer, assistant team lead, documentation',
+        role: 'Backend and AI developer, Assistant team lead, Documentation/Tester',
         github: 'https://github.com/jessaslg'
       },
       'studio360-mobile': {
@@ -136,12 +135,18 @@ document.addEventListener('DOMContentLoaded',()=>{
       },
       guidance: {
         title: 'Guidance E-Counselling System',
-        summary: 'An online guidance system concept for supporting student counselling and case management.',
-        overview: 'Guidance E-Counselling System is a digital counseling concept that focuses on appointment handling, communication flow, and structured student support. The interface is designed to present guidance services in a clear and approachable way.',
-        images: ['assets/img/project-logo.jpg'],
-        techstack: ['HTML', 'CSS', 'JavaScript'],
-        role: 'Developer',
-        github: 'https://github.com/jessaslg'
+        summary: 'A console-based C++ system for scheduling counseling appointments and managing student records.',
+        overview: 'The Guidance E-Counselling System is a console-based application developed using C++ that streamlines basic guidance office operations. It allows students to schedule counseling appointments, while administrators can create counseling notes and manage student records through basic CRUD (Create, Read, Update, and Delete) functionalities. Although the system does not use a database, it temporarily stores and manages student information using C++ vectors, demonstrating core data management concepts and fundamental software development principles.',
+        images: [
+          'assets/web app screenshots/ecounselling6.jpeg',
+          'assets/web app screenshots/ecounselling1.jpg',
+          'assets/web app screenshots/ecounselling2.jpg',
+          'assets/web app screenshots/ecounselling3.jpg',
+          'assets/web app screenshots/ecounselling4.jpg',
+          'assets/web app screenshots/ecounselling5.jpg'
+        ],
+        techstack: ['C++'],
+        role: 'Team lead and Developer'
       },
       'social-media': {
         title: 'Social Media Marketing',
@@ -208,10 +213,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(overviewEl) overviewEl.textContent = project.overview;
       if(roleEl) roleEl.textContent = project.role;
       if(techstackEl) techstackEl.innerHTML = project.techstack.map((tech)=>`<span class="project-tech-pill">${tech}</span>`).join('');
-      if(githubLinkEl){
-        githubLinkEl.href = project.github || 'https://github.com/jessaslg';
-        githubLinkEl.textContent = 'View On GitHub';
-      }
 
       renderGallery(project);
     }
