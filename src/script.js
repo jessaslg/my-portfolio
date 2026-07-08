@@ -116,21 +116,17 @@ document.addEventListener('DOMContentLoaded',()=>{
         github: 'https://github.com/jessaslg'
       },
       productive: {
-        title: 'Pro/ductive: Personal Diary Application',
-        summary: 'A personal diary experience focused on organization, reflection, and daily productivity tracking.',
-        overview: 'Pro/ductive is a diary-style application concept centered on personal logging, routine tracking, and lightweight productivity features. The layout emphasizes clarity, quick entry, and calm navigation to keep the user focused on writing and reviewing their day.',
-        images: ['assets/img/project-logo.jpg'],
-        techstack: ['HTML', 'CSS', 'JavaScript'],
-        role: 'Developer',
-        github: 'https://github.com/jessaslg'
-      },
-      bossing: {
-        title: 'Bossing Payroll Management System',
-        summary: 'A payroll workflow prototype that presents a structured view of employee and salary management.',
-        overview: 'Bossing Payroll Management System presents a practical payroll interface for managing employee records, pay computations, and related administrative tasks. The project is organized to keep common HR and payroll actions easy to scan and simple to operate.',
-        images: ['assets/img/project-logo.jpg'],
-        techstack: ['HTML', 'CSS', 'JavaScript'],
-        role: 'Developer',
+        title: 'Pro/ductive: Productivity Application',
+        summary: 'A C# Windows Forms desktop application for managing personal notes and tasks with MS Access database.',
+        overview: 'PRO/DUCTIVE is a simple productivity application developed using C# Windows Forms with an MS Access database as part of a second-year college project. It enables users to create, store, update, and delete personal notes through basic CRUD operations, providing a straightforward desktop solution for organizing daily tasks and reminders.',
+        images: [
+          'assets/web app screenshots/productive1.jpeg',
+          'assets/web app screenshots/productive2.jpeg',
+          'assets/web app screenshots/productive3.jpeg',
+          'assets/web app screenshots/productive4.jpeg'
+        ],
+        techstack: ['C#', 'Windows Forms', 'MS Access'],
+        role: 'Team lead and Developer',
         github: 'https://github.com/jessaslg'
       },
       guidance: {
@@ -195,6 +191,20 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(galleryImageEl){
         galleryImageEl.src = images[activeProjectIndex];
         galleryImageEl.alt = `${project.title} preview ${activeProjectIndex + 1}`;
+        // clicking the project gallery image opens it in the cert modal for a zoomed view
+        galleryImageEl.style.cursor = 'zoom-in';
+        try{ galleryImageEl.removeEventListener('click', galleryImageEl._openHandler); }catch(e){}
+        try{ galleryImageEl.removeEventListener('pointerdown', galleryImageEl._captureHandler, true); }catch(e){}
+        try{ galleryImageEl.removeEventListener('mousedown', galleryImageEl._captureHandler, true); }catch(e){}
+        // Prevent pointer/mouse events from reaching global window handlers so
+        // clicking the image only opens the modal and does NOT bring the
+        // Projects window to the front. Use capture-phase listeners to stop
+        // the event before document-level capture handlers run.
+        galleryImageEl._captureHandler = function(e){ try{ e.stopPropagation(); }catch(err){} };
+        galleryImageEl.addEventListener('pointerdown', galleryImageEl._captureHandler, true);
+        galleryImageEl.addEventListener('mousedown', galleryImageEl._captureHandler, true);
+        galleryImageEl._openHandler = function(e){ try{ e && e.stopPropagation(); }catch(err){} if(window.openCertModal) window.openCertModal(galleryImageEl.src, project.title || ''); };
+        galleryImageEl.addEventListener('click', galleryImageEl._openHandler);
       }
       if(galleryDotsEl){
         galleryDotsEl.innerHTML = images.map((_, index)=>`<button type="button" class="project-gallery-dot${index === activeProjectIndex ? ' is-active' : ''}" data-index="${index}" aria-label="Show image ${index + 1}"></button>`).join('');
@@ -1439,8 +1449,11 @@ document.addEventListener('DOMContentLoaded',()=>{
     mailWin.classList.remove('hidden');
     bringWindowToFront(mailWin);
     mailWin.focus && mailWin.focus();
+    // reflect in taskbar and ordering
+    addToTaskOrder('task-mail');
+    if(typeof reflectTaskbar === 'function') reflectTaskbar();
   }
-  function closeMailWindow(){ if(!mailWin) return; mailWin.classList.add('hidden'); }
+  function closeMailWindow(){ if(!mailWin) return; mailWin.classList.add('hidden'); removeFromTaskOrder('task-mail'); if(typeof reflectTaskbar === 'function') reflectTaskbar(); }
   if(mailIcon){ mailIcon.addEventListener('click', openMailWindow); mailIcon.addEventListener('dblclick', openMailWindow); }
   const mailClose = document.querySelector('#mail-window .win-btn.close');
   if(mailClose) mailClose.addEventListener('click', closeMailWindow);
@@ -1639,6 +1652,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const clockEl = document.getElementById('taskbar-clock');
   const clockTimeEl = clockEl.querySelector('.clock-time');
   const taskEr = document.getElementById('task-er');
+  const taskMail = document.getElementById('task-mail');
   const taskMusic = document.getElementById('task-music');
   const taskbarItems = document.getElementById('taskbar-items');
 
@@ -1736,6 +1750,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         taskEr.classList.remove('active');
       }
     }
+    // Mail task
+    if(taskMail){
+      if(mailWin && !mailWin.classList.contains('hidden')){ taskMail.classList.remove('hidden'); taskMail.classList.add('active'); }
+      else { taskMail.classList.add('hidden'); taskMail.classList.remove('active'); }
+    }
     // Music task
     if(taskWordpad){
       if(wordpadWin && !wordpadWin.classList.contains('hidden')){
@@ -1815,7 +1834,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   function updateTaskPositions(){
     // clear classes first
-    [taskEr, taskProject, taskWordpad, taskMusic].forEach(el=>{ if(el){ el.classList.remove('left','right'); } });
+    [taskEr, taskProject, taskWordpad, taskMusic, taskMail].forEach(el=>{ if(el){ el.classList.remove('left','right'); } });
     if(taskOrder.length>=1){ const first = document.getElementById(taskOrder[0]); if(first) first.classList.add('left'); }
     if(taskOrder.length>=2){ const second = document.getElementById(taskOrder[1]); if(second) second.classList.add('right'); }
   }
@@ -1839,6 +1858,16 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(!musicWin) return;
       if(musicWin.classList.contains('hidden')){ openMusicPlayer(); }
       else { closeMusicPlayer(); removeFromTaskOrder('task-music'); }
+      reflectTaskbar();
+    });
+  }
+
+  // toggle by clicking Mail taskbar button
+  if(taskMail){
+    taskMail.addEventListener('click',()=>{
+      if(!mailWin) return;
+      if(mailWin.classList.contains('hidden')){ openMailWindow(); }
+      else { closeMailWindow(); }
       reflectTaskbar();
     });
   }
@@ -2033,11 +2062,14 @@ document.addEventListener('DOMContentLoaded',()=>{
           modalBody.innerHTML = '';
           modalBody.appendChild(obj);
         }
-        try{ modal.style.zIndex = 99999; }catch(e){}
+        try{ modal.style.zIndex = '2147484001'; }catch(e){}
       }).catch(err=>{
         modalBody.innerHTML = `<div style="padding:18px;text-align:center;color:#fff;font-weight:600;">Certificate not found or unavailable.<br><a href="${cleanUrl}" target="_blank" rel="noopener">Open or download file</a></div>`;
       });
     }
+
+    // expose helper so other UI (project gallery) can reuse the same modal
+    try{ window.openCertModal = openCert; }catch(e){}
 
     // Clicking any visible part of a window should bring it to the front
     document.querySelectorAll('.window').forEach(w=>{
