@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     const summaryEl = projectWin.querySelector('#project-detail-summary');
     const overviewEl = projectWin.querySelector('#project-overview');
     const roleEl = projectWin.querySelector('#project-role');
+    const roleSectionEl = roleEl ? roleEl.closest('section') : null;
+    const githubLinkEl = projectWin.querySelector('#project-github-link');
+    const githubSectionEl = githubLinkEl ? githubLinkEl.closest('section') : null;
     const techstackEl = projectWin.querySelector('#project-techstack');
     const galleryImageEl = projectWin.querySelector('#project-gallery-image');
     const galleryDotsEl = projectWin.querySelector('#project-gallery-dots');
@@ -78,6 +81,20 @@ document.addEventListener('DOMContentLoaded',()=>{
     const nextButton = projectWin.querySelector('#project-gallery-next');
 
     const projectData = {
+      'jessa-portfolio': {
+        title: 'Jessa - Windows XP Inpired Portfolio',
+        summary: 'A simple and interactive website presenting projects, credentials, and profile information.',
+        overview: 'My Windows XP-inspired portfolio is a simple and interactive website that presents my work and background. It includes my application development projects, creative designs, certifications, experience, and personal information in a familiar desktop-style layout.',
+        images: [
+          'assets/web app screenshots/portfolio0.jpg',
+          'assets/web app screenshots/portfolio1.jpg',
+          'assets/web app screenshots/portfolio2.jpg',
+          'assets/web app screenshots/portfolio3.jpg',
+          'assets/web app screenshots/portfolio4.jpg'
+        ],
+        techstack: ['HTML', 'CSS', 'JavaScript'],
+        github: 'https://github.com/jessaslg'
+      },
       'studio360-web': {
         title: 'Studio360: A Web Management Platform for Kitch using Artificial Intelligence',
         summary: 'An AI-powered web-based business management system for creative micro-enterprises.',
@@ -97,8 +114,8 @@ document.addEventListener('DOMContentLoaded',()=>{
           'assets/web app screenshots/studio12.png',
           'assets/web app screenshots/studio13.png'
         ],
-        techstack: ['Python', 'Tesseract', 'JavaScript', 'C++', 'Supabase'],
-        role: 'Backend and AI developer, Assistant team lead, Documentation/Tester',
+        techstack: ['Python', 'Tesseract', 'JavaScript','C','C++', 'Supabase'],
+        role: 'Backend and AI Developer, Assistant Team Lead, Documentation/Tester',
         github: 'https://github.com/jessaslg'
       },
       'studio360-mobile': {
@@ -114,6 +131,27 @@ document.addEventListener('DOMContentLoaded',()=>{
         techstack: ['Flutter', 'Dart'],
         role: 'Team lead and Developer',
         github: 'https://github.com/jessaslg'
+      },
+      'san-juan-payroll': {
+        title: 'San Juan District Hospital Payroll Management',
+        summary: 'A payroll management work focused on streamlining salary and attendance processing.',
+        overview: "Employee Management and Payroll System is a web-based application developed as part of my internship at San Juan District Hospital. The project was intended to support employee management and payroll processing and was designed to be interoperable with the hospital's existing systems. However, the integration was not completed because payroll operations were later centralized under the Batangas Provincial Government. Despite this, the project served as a valuable training ground where I gained hands-on experience in web development, database management, and building real-world administrative systems.",
+        images: [
+          'assets/web app screenshots/sjdh1.jpg',
+          'assets/web app screenshots/sjdh2.jpg',
+          'assets/web app screenshots/sjdh3.jpg',
+          'assets/web app screenshots/sjdh4.jpg',
+          'assets/web app screenshots/sjdh5.jpg'
+        ],
+        techstack: ['HTML', 'CSS', 'JavaScript']
+      },
+      'boss-mix-payroll': {
+        title: 'Boss Mix Payroll Managament',
+        summary: 'A payroll management application work for organizing employee and compensation data.',
+        overview: 'Boss Mix Payroll Managament is an application development project that organizes payroll records, computes employee pay details, and supports payroll documentation. The work is aimed at improving payroll data consistency and providing a more efficient process for payroll administration.',
+        images: ['assets/web app screenshots/bossmix1.JPEG'],
+        techstack: ['C#', '.Net framework', 'Microsoft Access'],
+        role: 'Team lead and Full-Stack Developer'
       },
       productive: {
         title: 'Pro/ductive: Productivity Application',
@@ -221,7 +259,16 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(titleEl) titleEl.textContent = project.title;
       if(summaryEl) summaryEl.textContent = project.summary;
       if(overviewEl) overviewEl.textContent = project.overview;
-      if(roleEl) roleEl.textContent = project.role;
+      if(roleEl) roleEl.textContent = project.role || '';
+      if(roleSectionEl){
+        roleSectionEl.style.display = project.role ? '' : 'none';
+      }
+      if(githubLinkEl){
+        githubLinkEl.href = project.github || '#';
+      }
+      if(githubSectionEl){
+        githubSectionEl.style.display = project.github ? '' : 'none';
+      }
       if(techstackEl) techstackEl.innerHTML = project.techstack.map((tech)=>`<span class="project-tech-pill">${tech}</span>`).join('');
 
       renderGallery(project);
