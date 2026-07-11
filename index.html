@@ -279,49 +279,65 @@
 				
 								<button class="icon" id="xp-mail" aria-label="XP Mail" title="Mail" data-click-anim="float">
 									<img src="assets/img/xp-mail.png" alt="XP Mail" class="icon-art xp-mail-art">
-									<div class="icon-label">Mail</div>
+									<div class="icon-label">Contact Me</div>
 								</button>
 			</div>
 
-			<div id="er-window" class="window hidden firefox-window" role="dialog" aria-label="Jessa Portfolio">
-				<div class="titlebar">
-					<img src="assets/img/browser.svg" class="wmp-icon-svg ff-icon" alt="Mozilla Firefox">
-					<span>About Me</span>
-					<div class="window-controls win-controls">
-						<div class="win-btn" id="er-minimize">_</div><div class="win-btn" id="er-maximize">□</div><div class="win-btn close" id="er-close">×</div>
-					</div>
-				</div>
+			<div class="desktop-right-shortcuts">
+				<button class="icon minesweeper-desktop-icon" id="minesweeper-desktop" type="button" aria-label="Open Minesweeper" title="Minesweeper" data-click-anim="float">
+					<img src="assets/img/minesweeper-logo.jpg" alt="Minesweeper" class="icon-art minesweeper-art">
+					<div class="icon-label">Minesweeper</div>
+				</button>
+			</div>
+		</div>
 
-				<div class="menu-bar">
-					<span>File</span> <span>Edit</span> <span>View</span> <span>History</span> <span>Bookmarks</span> <span>Tools</span> <span>Help</span>
+		<div id="er-window" class="window hidden firefox-window" role="dialog" aria-label="Jessa Portfolio">
+			<div class="titlebar">
+				<img src="assets/img/browser.svg" class="wmp-icon-svg ff-icon" alt="About Me" width="28" height="28">
+				<span>About Me</span>
+				<div class="window-controls win-controls">
+					<div class="win-btn" id="er-minimize">_</div>
+					<div class="win-btn" id="er-maximize">□</div>
+					<div class="win-btn close" id="er-close">×</div>
 				</div>
+			</div>
 
-				<nav id="nav-tabs" class="tab-bar" role="tablist">
-					<div class="tab active disabled-tab" data-tab="home" role="tab" aria-selected="true">
-						<img src="assets/img/browser.svg" style="width:12px;" alt="">
-						Jessa Portfolio
-					</div>
-					<div class="tab" data-tab="portfolio" role="tab" aria-selected="false">
-						<img src="assets/img/projects.svg" style="width:12px;" alt="">
-						Projects
-					</div>
-					<div class="tab" data-tab="resume" role="tab" aria-selected="false">
-						<img src="assets/img/xp-wordpad.png" style="width:12px;" alt="">
-						Resume
-					</div>
-					<div class="plus-tab">+</div>
-				</nav>
+			<div class="menu-bar">
+				<span>File</span>
+				<span>Edit</span>
+				<span>View</span>
+				<span>History</span>
+				<span>Bookmarks</span>
+				<span>Tools</span>
+				<span>Help</span>
+			</div>
 
-				<div class="navbar">
-					<div class="nav-btn">←</div>
-					<div class="nav-btn">→</div>
-					<div class="url-bar">about:jessa</div>
-					<div class="search-bar">
-						<span style="font-size:11px; color:#666;">Google</span>
-						<span style="margin-left:auto; color:#999;">🔍</span>
-					</div>
-					<div class="nav-btn" style="border-radius:3px; width:22px; height:22px; font-size:12px;">🏠</div>
+			<nav id="nav-tabs" class="tab-bar" role="tablist">
+				<div class="tab active disabled-tab" data-tab="home" role="tab" aria-selected="true">
+					<img src="assets/img/browser.svg" style="width:12px;" alt="">
+					Jessa Portfolio
 				</div>
+				<div class="tab" data-tab="portfolio" role="tab" aria-selected="false">
+					<img src="assets/img/xp-projects.png" style="width:12px;" alt="">
+					Projects
+				</div>
+				<div class="tab" data-tab="resume" role="tab" aria-selected="false">
+					<img src="assets/img/xp-wordpad.png" style="width:12px;" alt="">
+					Resume
+				</div>
+				<div class="plus-tab">+</div>
+			</nav>
+
+			<div class="navbar">
+				<div class="nav-btn">←</div>
+				<div class="nav-btn">→</div>
+				<div class="url-bar">about:jessa</div>
+				<div class="search-bar">
+					<span style="font-size:11px; color:#666;">Google</span>
+					<span style="margin-left:auto; color:#999;">🔍</span>
+				</div>
+				<div class="nav-btn" style="border-radius:3px; width:22px; height:22px; font-size:12px;">🏠</div>
+			</div>
 
 				<div class="browser-content">
 					<div class="page hidden" id="page-about">
@@ -628,6 +644,30 @@
 			</div>
 			<!-- End Projects Window -->
 
+			<!-- Minesweeper Window -->
+			<div id="minesweeper-window" class="window hidden firefox-window" role="dialog" aria-label="Minesweeper">
+				<div class="titlebar">
+					<img src="assets/img/minesweeper-logo.jpg" class="wmp-icon-svg ff-icon" alt="Minesweeper" width="28" height="28">
+					<span>Minesweeper</span>
+					<div class="window-controls win-controls">
+						<div class="win-btn" id="minesweeper-minimize">_</div>
+						<div class="win-btn" id="minesweeper-maximize">□</div>
+						<div class="win-btn close" id="minesweeper-close">×</div>
+					</div>
+				</div>
+
+				<div class="menu-bar">
+					<span>Game</span>
+					<span>Window</span>
+					<span>Help</span>
+				</div>
+
+				<div class="minesweeper-browser-content">
+					<iframe src="minesweeper.html" title="Minesweeper game"></iframe>
+				</div>
+			</div>
+			<!-- End Minesweeper Window -->
+
 		<script src="assets/loadingScreen.js"></script>
 
 		<!-- Taskbar (Windows XP style) -->
@@ -639,7 +679,8 @@
 				<button class="task-item hidden" id="task-er">Jessa — About Me</button>
 				<button class="task-item hidden" id="task-wordpad">My Resume</button>
 				<button class="task-item hidden" id="task-project">My Projects</button>
-				<button class="task-item hidden" id="task-mail">Mail</button>
+				<button class="task-item hidden" id="task-mail">Contact Me</button>
+				<button class="task-item hidden" id="task-minesweeper">Minesweeper</button>
 			</div>
 			<div class="system-tray">
 				<div class="tray-icons">
@@ -722,12 +763,51 @@
 
 		<!-- Start menu -->
 		<div id="start-menu" class="start-menu hidden" role="menu" aria-hidden="true">
-			<ul>
-				<li><button data-page="home">Home</button></li>
-				<li><button data-page="about">About</button></li>
-				<li><button data-page="portfolio">Portfolio</button></li>
-				<li><button data-page="contact">Contact</button></li>
-			</ul>
+			<div class="start-menu-header">
+				<div class="start-menu-brand">
+					<img src="assets/img/jessa.JPEG" alt="Jessa Saligao" class="start-menu-avatar">
+					<div class="start-menu-title">Jessa Saligao's PC</div>
+				</div>
+			</div>
+			<div class="start-menu-body">
+				<div class="start-menu-col start-menu-col-left">
+					<button type="button" class="start-menu-item" data-action="about">
+						<img src="assets/img/browser.svg" alt="About Me">
+						<span>About Me</span>
+					</button>
+					<button type="button" class="start-menu-item" data-action="projects">
+						<img src="assets/img/xp-projects.png" alt="My Projects">
+						<span>My Projects</span>
+					</button>
+					<button type="button" class="start-menu-item" data-action="resume">
+						<img src="assets/img/xp-wordpad.png" alt="Resume">
+						<span>Resume</span>
+					</button>
+					<button type="button" class="start-menu-item" data-action="mail">
+						<img src="assets/img/xp-mail.png" alt="Mail">
+						<span>Contact Me</span>
+					</button>
+				</div>
+				<div class="start-menu-col start-menu-col-right">
+					<div class="start-menu-section-title">Social</div>
+					<a class="start-social-item" href="https://www.instagram.com/dyesaabel_" target="_blank" rel="noreferrer">
+						<img src="assets/img/instagram-logo.svg" alt="Instagram">
+						<span>Instagram</span>
+					</a>
+					<a class="start-social-item" href="https://www.facebook.com/saligaojessa" target="_blank" rel="noreferrer">
+						<img src="assets/img/facebook-logo.svg" alt="Facebook">
+						<span>Facebook</span>
+					</a>
+					<a class="start-social-item" href="https://www.linkedin.com/in/jessa-saligao-53834a380" target="_blank" rel="noreferrer">
+						<img src="assets/img/linkedin-logo.svg" alt="LinkedIn">
+						<span>LinkedIn</span>
+					</a>
+					<a class="start-social-item" href="https://github.com/jessaslg" target="_blank" rel="noreferrer">
+						<img src="assets/img/github-logo.svg" alt="GitHub">
+						<span>GitHub</span>
+					</a>
+				</div>
+			</div>
 		</div>
 
 			<!-- Background ambient sound controlled by the taskbar Sound button -->

@@ -195,6 +195,16 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 .desktop{position:fixed;inset:0;overflow:hidden}
 .wallpaper{position:absolute;inset:0;background-color:#6dbb2f;background-image: url('/assets/img/wallpaper.webp'), url('../assets/img/wallpaper.webp'), url('assets/img/wallpaper.webp');background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0.98}
 .icons{position:relative;padding:30px 20px;display:flex;flex-direction:column;gap:var(--desktop-icon-gap)}
+.desktop-right-shortcuts{
+  position:absolute;
+  top:30px;
+  right:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  z-index:2;
+}
 .icon{width:var(--desktop-icon-container-width);cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;transition:transform .16s ease;will-change:transform}
 
 /* Unified icon artwork sizing to match reference */
@@ -248,6 +258,14 @@ button.icon{
   display:block;
   object-fit:contain !important;
   margin-bottom:6px;
+}
+
+.minesweeper-art {
+  width: 82px !important;
+  height: 82px !important;
+  object-fit: cover !important;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.24);
 }
 
 
@@ -313,6 +331,40 @@ button.icon{
 
 /* Window */
 .window{position:absolute;left:140px;top:100px;width:760px;max-width:90%;background:var(--window-bg);border:4px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,0.6);font-family: Tahoma, "Segoe UI", sans-serif}
+/******** Minesweeper window chrome ********/
+#minesweeper-window {
+  width: min(840px, calc(100vw - 80px));
+  height: min(720px, calc(100vh - 140px));
+  min-height: 520px;
+}
+#minesweeper-window .minesweeper-browser-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #ffffff;
+  overflow: hidden;
+}
+#minesweeper-window iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #ffffff;
+}
+#minesweeper-window.maximized {
+  left: 8px !important;
+  top: 8px !important;
+  width: calc(100% - 16px) !important;
+  height: calc(100% - 56px) !important;
+}
+#minesweeper-window.prank-locked .window-controls,
+#minesweeper-window.prank-locked .win-btn {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+#minesweeper-window.prank-locked .win-btn {
+  opacity: 0.55;
+  filter: grayscale(0.4) brightness(0.8);
+}
 /* Ensure windows are clipped when moved off-screen and scroll internally when needed */
 .window{
   position:absolute;
@@ -916,6 +968,26 @@ body.loading-fullscreen .window{ visibility: hidden; }
 .tray-btn:focus{outline: 3px solid rgba(255,196,58,0.95); outline-offset: -3px}
 .tray-btn.active{outline: 3px solid rgba(255,196,58,0.95); outline-offset: -3px; border-color: rgba(255,255,255,0.08)}
 
+/* Minesweeper tray launcher: keep it compact and aligned with the XP tray */
+#minesweeper-btn{
+  min-width: 154px;
+  max-width: 154px;
+  margin-right: 8px;
+}
+#minesweeper-btn .tray-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  margin-right: 8px;
+  transform: scale(1.05);
+  transform-origin: center left;
+  border-radius: 4px;
+  filter: none;
+}
+#minesweeper-btn .tray-label {
+  letter-spacing: 0.15px;
+}
+
 
 /* Make the clock visually match the small rounded button area */
 .clock{padding:6px 10px;border-radius:6px;background:linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.06);display:inline-flex;align-items:center;gap:8px}
@@ -1189,10 +1261,137 @@ input[type="range"]::-webkit-slider-thumb{appearance:none;height:14px;width:14px
 .vol-slider::-moz-range-progress{background:var(--xp-blue);height:6px;border-radius:3px}
 
 
-.start-menu{position:fixed;left:8px;bottom:54px;width:220px;background:linear-gradient(#ffffff,#e6eef8);border:3px solid #000;padding:8px;z-index:70}
-.start-menu ul{list-style:none;margin:0;padding:0}
-.start-menu li{margin:6px 0}
-.start-menu button{width:100%;text-align:left;padding:6px;border:2px solid #fff;background:#000;cursor:pointer}
+.start-menu {
+  position: fixed;
+  left: 0;
+  bottom: 40px;
+  width: min(700px, calc(100vw - 16px));
+  background: linear-gradient(180deg, #f7fbff 0%, #e9f3ff 100%);
+  border: 2px solid #104790;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  z-index: 70;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.start-menu.hidden {
+  display: none !important;
+}
+
+.start-menu-header {
+  background: linear-gradient(180deg, #3191f6 0%, #205dbe 100%);
+  padding: 10px 12px;
+  border-bottom: 1px solid #113f89;
+}
+
+.start-menu-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.start-menu-avatar {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  background: #fff;
+  display: block;
+}
+
+.start-menu-title {
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+}
+
+.start-menu-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.start-menu-col {
+  min-height: 280px;
+}
+
+.start-menu-col-left {
+  background: linear-gradient(180deg, #e8f1fb 0%, #f5f9ff 100%);
+  padding: 14px;
+  border-right: 1px solid #bfd5f2;
+}
+
+.start-menu-col-right {
+  background: linear-gradient(180deg, #f8fbff 0%, #edf5ff 100%);
+  padding: 14px;
+}
+
+.start-menu-section-title {
+  margin: 0 0 8px 0;
+  color: #0d4f9a;
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.start-menu-item,
+.start-social-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  text-decoration: none;
+  margin-bottom: 8px;
+  border: 1px solid #bfd5f2;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
+  color: #113a62;
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.start-menu-item:hover,
+.start-social-item:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #dcecff 100%);
+  transform: translateY(-1px);
+}
+
+.start-menu-item img,
+.start-social-item img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.start-menu-item span,
+.start-social-item span {
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .start-menu {
+    width: calc(100vw - 16px);
+  }
+
+  .start-menu-body {
+    grid-template-columns: 1fr;
+  }
+
+  .start-menu-col-left {
+    border-right: 0;
+    border-bottom: 1px solid #bfd5f2;
+  }
+}
 
 
 /* Click animations: XP-style float-out and zoom-out for clicked items */

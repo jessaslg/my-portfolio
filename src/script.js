@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     const projectData = {
       'jessa-portfolio': {
-        title: 'Jessa - Windows XP Inpired Portfolio',
+        title: 'Jessa - Windows XP Inspired Portfolio',
         summary: 'A simple and interactive website presenting projects, credentials, and profile information.',
         overview: 'My Windows XP-inspired portfolio is a simple and interactive website that presents my work and background. It includes my application development projects, creative designs, certifications, experience, and personal information in a familiar desktop-style layout.',
         images: [
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           'assets/web app screenshots/portfolio4.jpg'
         ],
         techstack: ['HTML', 'CSS', 'JavaScript'],
-        github: 'https://github.com/jessaslg'
+        github: 'https://github.com/jessaslg/my-portfolio'
       },
       'studio360-web': {
         title: 'Studio360: A Web Management Platform for Kitch using Artificial Intelligence',
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         ],
         techstack: ['Python', 'Tesseract', 'JavaScript','C','C++', 'Supabase'],
         role: 'Backend and AI Developer, Assistant Team Lead, Documentation/Tester',
-        github: 'https://github.com/jessaslg'
+        github: 'https://github.com/jessaslg/JESSA-STUDIO360'
       },
       'studio360-mobile': {
         title: 'Studio360: Mobile Commerce Application',
@@ -216,8 +216,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           'assets/web app screenshots/mobile4.png'
         ],
         techstack: ['Flutter', 'Dart'],
-        role: 'Team lead and Developer',
-        github: 'https://github.com/jessaslg'
+        role: 'Team lead and Developer'
       },
       'san-juan-payroll': {
         title: 'San Juan District Hospital Payroll Management',
@@ -243,8 +242,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         ],
         techstack: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
         role: ['Developer', 'Team Lead'],
-        prototypeLink: 'https://www.figma.com/design/CUdgkB6usomTdVMd4qHN0A/SAD?node-id=32-7887&t=LeF0NzPXDM0ZvLjY-1',
-        linkLabel: 'View Prototype'
+        github: 'https://github.com/jessaslg/VentSpace-Integrated-Health---Mental-Clarity-Physical-Vitality'
       },
       'boss-mix-payroll': {
         title: 'Boss Mix Payroll Managament',
@@ -255,7 +253,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         role: 'Team lead and Full-Stack Developer'
       },
       productive: {
-        title: 'Pro/ductive: Productivity Application',
+        title: 'Pro/ductive: Personal Diary Application',
         summary: 'A C# Windows Forms desktop application for managing personal notes and tasks with MS Access database.',
         overview: 'PRO/DUCTIVE is a simple productivity application developed using C# Windows Forms with an MS Access database as part of a second-year college project. It enables users to create, store, update, and delete personal notes through basic CRUD operations, providing a straightforward desktop solution for organizing daily tasks and reminders.',
         images: [
@@ -266,7 +264,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         ],
         techstack: ['C#', 'Windows Forms', 'MS Access'],
         role: 'Team lead and Developer',
-        github: 'https://github.com/jessaslg'
+        github: 'https://github.com/jessaligao11/FINAL-PROJECT-DMS/tree/visual-studio-productive/MY%20APP'
       },
       guidance: {
         title: 'Guidance E-Counselling System',
@@ -639,70 +637,86 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // Open ER window on single OR double click (browser desktop icon)
   function showPage(pageId){
-    const erBrowserContent = erWindow ? erWindow.querySelector('.browser-content') : document;
-    erBrowserContent.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-    const show = document.getElementById(pageId);
-    if(show) show.classList.remove('hidden');
-    // When the About page is visible, prevent the outer browser-content from scrolling
-    // so the outer browser-content shows the scrollbar for the whole About content.
+    const scope = erWindow ? erWindow.querySelector('.browser-content') : document.querySelector('.browser-content');
+    const pageRoot = scope || document;
+    const pages = pageRoot.querySelectorAll('.page');
+    pages.forEach(p=>{
+      p.classList.add('hidden');
+      p.style.display = 'none';
+      p.style.visibility = 'hidden';
+      p.style.opacity = '0';
+    });
+
+    const show = pageRoot.querySelector('#' + pageId) || document.getElementById(pageId);
+    if(show){
+      show.classList.remove('hidden');
+      show.style.display = 'block';
+      show.style.visibility = 'visible';
+      show.style.opacity = '1';
+    }
+
+    if(pageId === 'page-about'){
+      const tabsEl = document.getElementById('about-tabs');
+      if(tabsEl){
+        const defaultBtn = tabsEl.querySelector('button[data-tab="general"].is-active') || tabsEl.querySelector('button[data-tab="general"]') || tabsEl.querySelector('button[data-tab]');
+        if(defaultBtn){
+          tabsEl.querySelectorAll('button[data-tab]').forEach(btn=>btn.classList.remove('is-active'));
+          defaultBtn.classList.add('is-active');
+        }
+      }
+      syncAboutPane('general');
+    }
+
     try{
-      const browserContent = document.querySelector('.browser-content');
+      const browserContent = scope || document.querySelector('.browser-content');
       if(browserContent){
-        if(pageId === 'page-about') browserContent.classList.remove('no-outer-scroll');
-        else browserContent.classList.remove('no-outer-scroll');
+        browserContent.classList.remove('no-outer-scroll');
       }
     }catch(e){/* non-blocking */}
+  }
+
+  function syncAboutPane(tabName){
+    const tabsEl = document.getElementById('about-tabs');
+    const panes = document.querySelectorAll('#about-panes > [data-pane]');
+    if(!tabsEl) return;
+
+    tabsEl.querySelectorAll('button[data-tab]').forEach((btn)=>{
+      btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tabName);
+    });
+
+    panes.forEach((p)=>{
+      const isActive = p.getAttribute('data-pane') === tabName;
+      p.classList.toggle('active', isActive);
+      p.classList.toggle('hidden', !isActive);
+      p.style.display = isActive ? 'block' : 'none';
+      p.style.visibility = isActive ? 'visible' : 'hidden';
+      p.style.opacity = isActive ? '1' : '0';
+    });
+
+    try{ const activePane = document.querySelector('#about-panes > [data-pane].active'); if(activePane) revealPaneElements(activePane); }catch(e){}
   }
 
   // Initialize About tabs (General / Experience / Mindset)
   function initAboutTabs(){
     const tabsEl = document.getElementById('about-tabs');
-    const panes = document.querySelectorAll('#about-panes > [data-pane]');
     if(!tabsEl) return;
-    tabsEl.querySelectorAll('button[data-tab]').forEach(btn=>{
-      btn.addEventListener('click', (e)=>{
+
+    if(tabsEl.dataset.aboutInitialized === 'true'){
+      const activeBtn = tabsEl.querySelector('button[data-tab].is-active') || tabsEl.querySelector('button[data-tab]');
+      if(activeBtn) syncAboutPane(activeBtn.getAttribute('data-tab'));
+      return;
+    }
+
+    tabsEl.dataset.aboutInitialized = 'true';
+
+    tabsEl.querySelectorAll('button[data-tab]').forEach((btn)=>{
+      btn.addEventListener('click', ()=>{
         const t = btn.getAttribute('data-tab');
-        // toggle active class
-        tabsEl.querySelectorAll('button[data-tab]').forEach(b=>b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        // show matching pane by explicitly showing/hiding panes so behavior is deterministic
+        syncAboutPane(t);
+
         const browserContent = document.querySelector('.browser-content');
         const aboutBlock = document.querySelector('#page-about .xp-about-system');
-        panes.forEach(p=>{
-          if(p.getAttribute('data-pane')===t){
-            p.classList.add('active');
-            p.classList.remove('hidden');
-            p.style.display = 'block';
-            console.log('Showing about pane:', t, 'content:', p.innerText.trim().slice(0,120));
-          } else {
-            p.classList.remove('active');
-            p.classList.add('hidden');
-            p.style.display = 'none';
-          }
-        });
-        try{ const activePane = document.querySelector('#about-panes > [data-pane].active'); if(activePane) revealPaneElements(activePane); }catch(e){}
-        try{
-          const ap = document.querySelector('#about-panes > [data-pane].active');
-          if(ap){
-            const top = ap.querySelector('.xp-system-top');
-            const specs = ap.querySelector('.xp-system-specs');
-            const diag = {
-              pane: ap.getAttribute('data-pane'),
-              childCount: ap.children.length,
-              innerTextLen: (ap.innerText||'').trim().length,
-              hasTop: !!top,
-              hasSpecs: !!specs,
-              topTextLen: top ? (top.innerText||'').trim().length : 0,
-              specsTextLen: specs ? (specs.innerText||'').trim().length : 0,
-              rect: ap.getBoundingClientRect(),
-              computed: {}
-            };
-            try{ const cs = getComputedStyle(ap); ['display','visibility','opacity','color','font-size','transform','clip','clip-path'].forEach(p=>diag.computed[p]=cs.getPropertyValue(p)); }catch(e){}
-            console.log('about-pane-diagnostics:', diag);
-          }
-        }catch(e){ console.error(e); }
-        // Debug injection removed to prevent visible debug banner in production.
-        // scroll the outer browser-content so the about block is visible at top
+
         try{
           if(browserContent && aboutBlock){
             const bcRect = browserContent.getBoundingClientRect();
@@ -711,7 +725,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             browserContent.scrollTop += Math.max(0, Math.round(scrollDelta));
           }
         }catch(e){}
-        // keep layout stable: run sizing & style-copy after paint so measurements are accurate
+
         try{ syncAboutPaneHeights(); }catch(e){}
         try{
           requestAnimationFrame(()=>{
@@ -728,23 +742,15 @@ document.addEventListener('DOMContentLoaded',()=>{
         }catch(e){}
       });
     });
-    // Open portfolio/home from about
+
     const openHomeBtn = document.getElementById('about-open-home');
     if(openHomeBtn){ openHomeBtn.addEventListener('click', (e)=>{ showPage('page-home'); }); }
     const openResumeBtn = document.getElementById('about-open-resume');
     if(openResumeBtn){ openResumeBtn.addEventListener('click', (e)=>{ openResumeInNewTab(); }); }
-    // Ensure there is an active pane on init (match the active tab button if present)
+
     const activeBtn = tabsEl.querySelector('button[data-tab].is-active') || tabsEl.querySelector('button[data-tab]');
     if(activeBtn){
-      const defaultTab = activeBtn.getAttribute('data-tab');
-      panes.forEach(p=>{
-        if(p.getAttribute('data-pane')===defaultTab){
-          p.classList.add('active'); p.classList.remove('hidden'); p.style.display = 'block';
-        } else {
-          p.classList.remove('active'); p.classList.add('hidden'); p.style.display = 'none';
-        }
-      });
-      try{ const activePane = document.querySelector('#about-panes > [data-pane].active'); if(activePane) revealPaneElements(activePane); }catch(e){}
+      syncAboutPane(activeBtn.getAttribute('data-tab'));
     }
   }
 
@@ -1034,6 +1040,130 @@ document.addEventListener('DOMContentLoaded',()=>{
       try{ normalizeAboutScrolling(); }catch(e){}
     }); });
   }catch(e){}
+
+  // Minesweeper window icon/controls
+  const minesweeperIcon = document.getElementById('minesweeper-desktop');
+  const minesweeperWin = document.getElementById('minesweeper-window');
+  const minesweeperMinBtn = document.getElementById('minesweeper-minimize');
+  const minesweeperMaxBtn = document.getElementById('minesweeper-maximize');
+  const minesweeperCloseBtn = document.getElementById('minesweeper-close');
+  let minesweeperIsMinimized = false;
+  let minesweeperIsMaximized = false;
+  let minesweeperRestoreRect = null;
+  let minesweeperPrankLock = false;
+
+  function setMinesweeperPrankLock(locked){
+    minesweeperPrankLock = Boolean(locked);
+    if(!minesweeperWin) return;
+
+    minesweeperWin.classList.toggle('prank-locked', minesweeperPrankLock);
+
+    [minesweeperMinBtn, minesweeperMaxBtn, minesweeperCloseBtn].forEach((btn)=>{
+      if(!btn) return;
+      btn.setAttribute('aria-disabled', String(minesweeperPrankLock));
+      btn.style.setProperty('pointer-events', minesweeperPrankLock ? 'none' : 'auto', 'important');
+      btn.style.setProperty('cursor', minesweeperPrankLock ? 'not-allowed' : 'pointer', 'important');
+      btn.style.setProperty('opacity', minesweeperPrankLock ? '0.55' : '1', 'important');
+      btn.style.setProperty('filter', minesweeperPrankLock ? 'grayscale(0.4) brightness(0.8)' : 'none', 'important');
+    });
+  }
+
+  function syncMinesweeperMaxButton(){
+    if(!minesweeperMaxBtn) return;
+    minesweeperMaxBtn.innerHTML = minesweeperIsMaximized ? '&#9638;' : '&#9633;';
+  }
+
+  function setMinesweeperRect(rect){
+    if(!minesweeperWin || !rect) return;
+    if(rect.left != null) minesweeperWin.style.setProperty('left', `${Math.round(rect.left)}px`, 'important');
+    if(rect.top != null) minesweeperWin.style.setProperty('top', `${Math.round(rect.top)}px`, 'important');
+    if(rect.width != null) minesweeperWin.style.setProperty('width', `${Math.round(rect.width)}px`, 'important');
+    if(rect.height != null) minesweeperWin.style.setProperty('height', `${Math.round(rect.height)}px`, 'important');
+  }
+
+  function clearMinesweeperRect(){
+    if(!minesweeperWin) return;
+    minesweeperWin.style.removeProperty('left');
+    minesweeperWin.style.removeProperty('top');
+    minesweeperWin.style.removeProperty('width');
+    minesweeperWin.style.removeProperty('height');
+  }
+
+  function openMinesweeperWindow(){
+    if(!minesweeperWin) return;
+    minesweeperIsMinimized = false;
+    minesweeperWin.classList.remove('hidden');
+    bringWindowToFront(minesweeperWin);
+    syncMinesweeperMaxButton();
+  }
+
+  function closeMinesweeperWindow(){
+    if(!minesweeperWin || minesweeperPrankLock) return;
+    minesweeperIsMinimized = false;
+    minesweeperIsMaximized = false;
+    minesweeperWin.classList.remove('maximized');
+    minesweeperWin.classList.add('hidden');
+    clearMinesweeperRect();
+    minesweeperRestoreRect = null;
+    syncMinesweeperMaxButton();
+  }
+
+  function minimizeMinesweeperWindow(){
+    if(!minesweeperWin || minesweeperWin.classList.contains('hidden') || minesweeperPrankLock) return;
+    minesweeperIsMinimized = true;
+    minesweeperWin.classList.add('hidden');
+    syncMinesweeperMaxButton();
+  }
+
+  function restoreMinesweeperWindow(){
+    if(!minesweeperWin) return;
+    minesweeperIsMinimized = false;
+    minesweeperWin.classList.remove('hidden');
+    bringWindowToFront(minesweeperWin);
+    syncMinesweeperMaxButton();
+  }
+
+  function toggleMinesweeperMaximize(){
+    if(!minesweeperWin || minesweeperPrankLock) return;
+    if(minesweeperWin.classList.contains('hidden')){
+      if(minesweeperIsMinimized) restoreMinesweeperWindow();
+      else openMinesweeperWindow();
+    }
+
+    if(!minesweeperIsMaximized){
+      const rect = minesweeperWin.getBoundingClientRect();
+      minesweeperRestoreRect = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height
+      };
+      minesweeperWin.classList.add('maximized');
+      minesweeperWin.style.setProperty('left', '8px', 'important');
+      minesweeperWin.style.setProperty('top', '8px', 'important');
+      minesweeperWin.style.setProperty('width', 'calc(100% - 16px)', 'important');
+      minesweeperWin.style.setProperty('height', 'calc(100% - 56px)', 'important');
+      minesweeperIsMaximized = true;
+    } else {
+      minesweeperWin.classList.remove('maximized');
+      if(minesweeperRestoreRect){
+        minesweeperWin.style.setProperty('left', `${Math.round(minesweeperRestoreRect.left)}px`, 'important');
+        minesweeperWin.style.setProperty('top', `${Math.round(minesweeperRestoreRect.top)}px`, 'important');
+        minesweeperWin.style.setProperty('width', `${Math.round(minesweeperRestoreRect.width)}px`, 'important');
+        minesweeperWin.style.setProperty('height', `${Math.round(minesweeperRestoreRect.height)}px`, 'important');
+      }
+      minesweeperIsMaximized = false;
+    }
+    syncMinesweeperMaxButton();
+  }
+
+  window.addEventListener('message', (event)=>{
+    if(event.data && event.data.type === 'minesweeper-prank-state'){
+      setMinesweeperPrankLock(Boolean(event.data.locked));
+    }
+  });
+
+  setMinesweeperPrankLock(false);
 
   // Music player icon open/close handling
   const musicIcon = document.getElementById('music-player');
@@ -1457,6 +1587,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 
+  // Minesweeper desktop shortcut opens a native XP-style window
+  if(minesweeperIcon){
+    minesweeperIcon.addEventListener('click', openMinesweeperWindow);
+    minesweeperIcon.addEventListener('dblclick', openMinesweeperWindow);
+  }
+  if(minesweeperMinBtn) minesweeperMinBtn.addEventListener('click', minimizeMinesweeperWindow);
+  if(minesweeperMaxBtn) minesweeperMaxBtn.addEventListener('click', toggleMinesweeperMaximize);
+  if(minesweeperCloseBtn) minesweeperCloseBtn.addEventListener('click', closeMinesweeperWindow);
+  const minesweeperTitlebar = document.querySelector('#minesweeper-window .titlebar');
+  if(minesweeperTitlebar){
+    minesweeperTitlebar.addEventListener('dblclick', (e)=>{
+      if(e.target.closest('.win-btn')) return;
+      bringWindowToFront(minesweeperWin);
+      toggleMinesweeperMaximize();
+    });
+  }
+
   function setSoundState(on, persist){
     const btn = document.getElementById('sound-btn');
     if(!btn) return;
@@ -1494,6 +1641,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // make WordPad window draggable like the others
   makeDraggable(wordpadWin, '.titlebar');
   makeDraggable(wordpadWin, '.title-bar');
+  makeDraggable(minesweeperWin, '.titlebar');
 
   // Ensure clicks on the Resume icon open the resume in a new browser tab (delegation fallback)
   document.addEventListener('click', (e) => {
@@ -1539,6 +1687,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     bringWindowToFront(erWindow);
     setTimeout(()=>bringWindowToFront(erWindow), 0);
     setTimeout(()=>bringWindowToFront(erWindow), 80);
+    showPage('page-about');
+    initAboutTabs();
     // update taskbar state
     addToTaskOrder('task-er');
     if(typeof reflectTaskbar === 'function') reflectTaskbar();
@@ -1565,37 +1715,39 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 
   // Tabs navigation (top nav tabs use data-tab attributes on .tab elements)
-  tabs.addEventListener('click', (e) => {
-    const el = e.target.closest('[data-tab]');
-    if(!el) return;
-    const tabName = el.getAttribute('data-tab');
-    // reflect active state
-    tabs.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active'));
-    el.classList.add('active');
-    // Resume opens the resume PDF in a new browser tab
-    if(tabName === 'resume'){
-      openResumeInNewTab();
-      return;
-    }
-    // Portfolio tab should open the Projects window (match desktop icon behavior)
-    if(tabName === 'portfolio'){
-      openProjectWindow();
-      return;
-    }
-    // For other tabs (home, about, contact), open the ER window and show the matching page
-    openWindow();
-    const erBrowserContent = erWindow ? erWindow.querySelector('.browser-content') : document;
-    erBrowserContent.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-    const show = erBrowserContent.querySelector('#page-' + tabName) || document.getElementById('page-' + tabName);
-    if(show) show.classList.remove('hidden');
-  });
+  if(tabs){
+    tabs.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-tab]');
+      if(!el) return;
+      const tabName = el.getAttribute('data-tab');
+      // reflect active state
+      tabs.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active'));
+      el.classList.add('active');
+      // Resume opens the resume PDF in a new browser tab
+      if(tabName === 'resume'){
+        openResumeInNewTab();
+        return;
+      }
+      // Portfolio tab should open the Projects window (match desktop icon behavior)
+      if(tabName === 'portfolio'){
+        openProjectWindow();
+        return;
+      }
+      // For other tabs (home, about, contact), open the ER window and show the matching page
+      openWindow();
+      const erBrowserContent = erWindow ? erWindow.querySelector('.browser-content') : document;
+      erBrowserContent.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+      const show = erBrowserContent.querySelector('#page-' + tabName) || document.getElementById('page-' + tabName);
+      if(show) show.classList.remove('hidden');
+    });
 
-  // Keyboard accessibility for ER nav tabs
-  tabs.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter' || e.key === ' '){
-      const el = e.target.closest('[data-tab]'); if(!el) return; el.click(); e.preventDefault();
-    }
-  });
+    // Keyboard accessibility for ER nav tabs
+    tabs.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        const el = e.target.closest('[data-tab]'); if(!el) return; el.click(); e.preventDefault();
+      }
+    });
+  }
 
   // Projects icon (replaces recycle) - open Projects window on click/dblclick
   const projectIcon = document.getElementById('project');
@@ -1609,7 +1761,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Direct titlebar/window click front handler.
   // This makes the clicked window front immediately, even if both windows overlap.
   function installDirectWindowFrontHandlers(){
-    const targetSelectors = '#er-window, #project-window, #wordpad-window, #music-player-window, #mail-window';
+    const targetSelectors = '#er-window, #project-window, #wordpad-window, #music-player-window, #mail-window, #minesweeper-window';
 
     function activateFromEvent(e){
       const clickedWindow = e.target.closest && e.target.closest(targetSelectors);
@@ -1621,7 +1773,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.addEventListener('mousedown', activateFromEvent, true);
     document.addEventListener('click', activateFromEvent, true);
 
-    ['#er-window', '#project-window', '#wordpad-window', '#music-player-window', '#mail-window'].forEach(selector=>{
+    ['#er-window', '#project-window', '#wordpad-window', '#music-player-window', '#mail-window', '#minesweeper-window'].forEach(selector=>{
       const win = document.querySelector(selector);
       if(!win || win.dataset.directFrontHandler === 'true') return;
       win.dataset.directFrontHandler = 'true';
@@ -1893,7 +2045,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const startBtn = document.getElementById('start-btn');
   const startMenu = document.getElementById('start-menu');
   const clockEl = document.getElementById('taskbar-clock');
-  const clockTimeEl = clockEl.querySelector('.clock-time');
+  const clockTimeEl = clockEl ? clockEl.querySelector('.clock-time') : null;
   const taskEr = document.getElementById('task-er');
   const taskMail = document.getElementById('task-mail');
   const taskMusic = document.getElementById('task-music');
@@ -1939,6 +2091,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   startBtn.addEventListener('click',(e)=>{
     // toggle start menu and stop propagation so the document click handler doesn't immediately close it
     e.stopPropagation();
+    const menuRect = startMenu.getBoundingClientRect();
+    const btnRect = startBtn.getBoundingClientRect();
+    const nextLeft = Math.max(0, Math.min(btnRect.left, window.innerWidth - Math.max(260, menuRect.width)));
+    startMenu.style.left = `${nextLeft}px`;
     startMenu.classList.toggle('hidden');
     startMenu.setAttribute('aria-hidden', startMenu.classList.contains('hidden'));
   });
@@ -1951,21 +2107,39 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   });
 
-  // Start menu navigation buttons reuse existing tab switching
+  // Start menu navigation buttons reuse the app windows and pages
   startMenu.addEventListener('click',(e)=>{
-    const btn = e.target.closest('button[data-page]');
+    const btn = e.target.closest('button[data-action]');
     if(!btn) return;
-    const page = btn.dataset.page;
-    // open ER window and show requested page
-    openWindow();
-    const erBrowserContent = erWindow ? erWindow.querySelector('.browser-content') : document;
-    erBrowserContent.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-    const show = erBrowserContent.querySelector('#page-'+page) || document.getElementById('page-'+page);
-    if(show) show.classList.remove('hidden');
-    // reflect active tab button in window nav
-    document.querySelectorAll('#nav-tabs button').forEach(b=>b.classList.remove('active'));
-    const tab = document.querySelector(`#nav-tabs button[data-page="${page}"]`);
-    if(tab) tab.classList.add('active');
+    e.stopPropagation();
+    const action = btn.dataset.action;
+
+    if(action === 'about'){
+      openWindow();
+      showPage('page-about');
+      try{ initAboutTabs(); }catch(e){}
+      try{ scheduleUpdateAboutHeights(); }catch(e){}
+      try{ copyExperienceSizeToGeneral(); }catch(e){}
+      try{ copyExperienceStylesToGeneral(); }catch(e){}
+      try{ fitErWindowToExperience(); }catch(e){}
+      try{ normalizeAboutScrolling(); }catch(e){}
+    }
+
+    if(action === 'projects'){
+      openProjectWindow();
+      if(typeof reflectTaskbar === 'function') reflectTaskbar();
+    }
+
+    if(action === 'resume'){
+      openResumeInNewTab();
+    }
+
+    if(action === 'mail'){
+      openMailWindow();
+    }
+
+    startMenu.classList.add('hidden');
+    startMenu.setAttribute('aria-hidden', 'true');
   });
 
   // Quick-launch browser button should open the ER window on click
@@ -1980,9 +2154,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // Reflect ER window in taskbar
   function reflectTaskbar(){
+    const erVisible = Boolean(erWindow && !erWindow.classList.contains('hidden'));
+
     // ER task
     if(taskEr){
-      if(!erWindow.classList.contains('hidden')){
+      if(erVisible){
         taskEr.classList.remove('hidden');
         taskEr.classList.add('active');
       } else if(erIsMinimized){

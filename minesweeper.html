@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minesweeper</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6fb;
+      --panel: #ffffff;
+      --border: #c9d8ea;
+      --text: #0b2b3a;
+      --muted: #58707c;
+      --accent: #0b66cc;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #eff5fb, #deeaf8);
+      font-family: Tahoma, "Segoe UI", sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    body.prank-active {
+      overflow: hidden;
+    }
+
+    .wrap {
+      width: min(92vw, 420px);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(12,38,63,0.12);
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    p {
+      margin: 0 0 16px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .score {
+      font-weight: 700;
+      padding: 8px 12px;
+      background: #f6f9ff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    button {
+      background: linear-gradient(180deg, #ffffff, #eaf3ff);
+      border: 1px solid #aac5e5;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 2px;
+      background: #bdd2ea;
+      padding: 4px;
+      border-radius: 8px;
+      user-select: none;
+    }
+
+    .cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 1px solid #9eb7d1;
+      background: #dfeaf7;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .cell.revealed {
+      background: #ffffff;
+      cursor: default;
+    }
+
+    .cell.flagged {
+      background: #fff3d6;
+      color: #8d4b00;
+    }
+
+    .cell.mine {
+      background: #ffd9d9;
+      color: #9b1c1c;
+    }
+
+    .cell[data-value="1"] { color: #1d4ed8; }
+    .cell[data-value="2"] { color: #15803d; }
+    .cell[data-value="3"] { color: #b45309; }
+    .cell[data-value="4"] { color: #4f46e5; }
+    .cell[data-value="5"] { color: #991b1b; }
+    .cell[data-value="6"] { color: #0f766e; }
+    .cell[data-value="7"] { color: #111827; }
+    .cell[data-value="8"] { color: #6b7280; }
+
+    .prank-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, #ff00c8 0%, transparent 14%),
+        radial-gradient(circle at 80% 15%, #00f5ff 0%, transparent 14%),
+        radial-gradient(circle at 15% 75%, #ffea00 0%, transparent 16%),
+        radial-gradient(circle at 85% 80%, #3bff00 0%, transparent 18%),
+        linear-gradient(135deg, #ff0000, #ff7b00, #ffe600, #11ff6a, #00d8ff, #5936ff, #ff00dd);
+      background-size: 220% 220%, 220% 220%, 220% 220%, 220% 220%, 300% 300%;
+      background-position: 0 0, 50% 0, 0 100%, 100% 100%, 0 0;
+      animation: discoShift 0.09s infinite steps(1), discoPulse 0.18s infinite alternate;
+      overflow: hidden;
+    }
+
+    .prank-overlay.show {
+      display: flex;
+    }
+
+    .prank-overlay::before,
+    .prank-overlay::after {
+      content: '';
+      position: absolute;
+      inset: -20%;
+      pointer-events: none;
+      opacity: 0.55;
+      animation: spinGlow 10s linear infinite;
+    }
+
+    .prank-overlay::before {
+      background: conic-gradient(from 0deg, #ff00aa, #ffcc00, #00ff88, #00d0ff, #7a5cff, #ff00aa);
+      filter: blur(26px);
+    }
+
+    .prank-overlay::after {
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.35), rgba(255,255,255,0.35) 2px, transparent 2px, transparent 8px);
+      mix-blend-mode: soft-light;
+    }
+
+    .prank-panel {
+      position: relative;
+      z-index: 2;
+      max-width: min(90vw, 900px);
+      text-align: center;
+      color: white;
+      padding: 32px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 30px rgba(255,255,255,0.25), inset 0 0 24px rgba(255,255,255,0.15);
+      animation: shake 0.18s infinite alternate;
+    }
+
+    .prank-countdown {
+      font-size: clamp(42px, 8vw, 92px);
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 18px;
+      text-shadow: 0 0 14px rgba(255,255,255,0.9), 0 0 26px rgba(0, 255, 245, 0.95);
+      animation: blinkFlash 0.5s infinite;
+    }
+
+    .prank-title {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 64px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 1.15;
+      text-shadow: 0 0 18px rgba(255,255,255,0.95), 0 0 30px rgba(255, 0, 209, 0.85);
+      animation: blinkFlash 0.35s infinite;
+    }
+
+    .prank-subtitle {
+      margin: 0 0 18px;
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    .prank-close {
+      display: none;
+      margin: 16px auto 0;
+      min-width: 160px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.85);
+      background: linear-gradient(180deg, #ffffff, #e8f7ff);
+      color: #111827;
+      font-size: 16px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.32);
+    }
+
+    .prank-close.show {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes discoShift {
+      0%   { background-position: 0 0, 50% 0, 0 100%, 100% 100%, 0 0; }
+      25%  { background-position: 100% 25%, 0 50%, 50% 0, 0 100%, 25% 20%; }
+      50%  { background-position: 50% 100%, 100% 0, 100% 100%, 0 0, 75% 40%; }
+      75%  { background-position: 0 75%, 50% 100%, 0 0, 100% 25%, 10% 65%; }
+      100% { background-position: 100% 0, 0 25%, 50% 100%, 0 50%, 90% 10%; }
+    }
+
+    @keyframes discoPulse {
+      from { filter: saturate(1.2) brightness(1.05); }
+      to   { filter: saturate(1.9) brightness(1.25); }
+    }
+
+    @keyframes spinGlow {
+      from { transform: rotate(0deg) scale(1); }
+      to   { transform: rotate(360deg) scale(1.06); }
+    }
+
+    @keyframes shake {
+      from { transform: translateX(-4px) rotate(-0.8deg); }
+      to   { transform: translateX(4px) rotate(0.8deg); }
+    }
+
+    @keyframes blinkFlash {
+      0%, 47%, 53%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Minesweeper</h1>
+    <p>Reveal all safe cells without hitting a mine.</p>
+    <div class="controls">
+      <div class="score" id="status">Mines: 10</div>
+      <button id="restartBtn">Restart</button>
+    </div>
+    <div class="board" id="board" aria-label="Minesweeper board"></div>
+  </div>
+
+  <div id="prank-overlay" class="prank-overlay" aria-hidden="true">
+    <div class="prank-panel" role="dialog" aria-modal="true">
+      <div class="prank-countdown" id="prank-countdown">10</div>
+      <h2 class="prank-title" id="prank-title">⚠ SYSTEM ALERT ⚠</h2>
+      <p class="prank-subtitle" id="prank-subtitle">Installing Virus...</p>
+      <button type="button" class="prank-close" id="closePrankBtn">Close</button>
+    </div>
+  </div>
+
+  <audio id="meme-audio" src="assets/music/Omori Caramelldansen  Animation Meme.mp3" preload="auto"></audio>
+
+  <script>
+    const boardEl = document.getElementById('board');
+    const statusEl = document.getElementById('status');
+    const restartBtn = document.getElementById('restartBtn');
+    const prankOverlay = document.getElementById('prank-overlay');
+    const prankCountdown = document.getElementById('prank-countdown');
+    const prankTitle = document.getElementById('prank-title');
+    const prankSubtitle = document.getElementById('prank-subtitle');
+    const closePrankBtn = document.getElementById('closePrankBtn');
+    const memeAudio = document.getElementById('meme-audio');
+
+    const rows = 9;
+    const cols = 9;
+    const mines = 10;
+    let board = [];
+    let gameOver = false;
+    let prankInterval = null;
+    let countdownLeft = 10;
+
+    function createBoard() {
+      board = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ({
+        mine: false,
+        revealed: false,
+        flagged: false,
+        count: 0,
+      })));
+
+      let placed = 0;
+      while (placed < mines) {
+        const r = Math.floor(Math.random() * rows);
+        const c = Math.floor(Math.random() * cols);
+        if (!board[r][c].mine) {
+          board[r][c].mine = true;
+          placed++;
+        }
+      }
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (board[r][c].mine) continue;
+          board[r][c].count = neighbors(r, c).filter(([rr, cc]) => board[rr][cc].mine).length;
+        }
+      }
+    }
+
+    function neighbors(r, c) {
+      const out = [];
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const rr = r + dr;
+          const cc = c + dc;
+          if (rr >= 0 && rr < rows && cc >= 0 && cc < cols) {
+            out.push([rr, cc]);
+          }
+        }
+      }
+      return out;
+    }
+
+    function triggerPrankOverlay() {
+      countdownLeft = 10;
+      prankCountdown.textContent = String(countdownLeft);
+      prankTitle.textContent = '⚠ SYSTEM ALERT ⚠';
+      prankSubtitle.textContent = 'Installing Virus...';
+      closePrankBtn.classList.remove('show');
+      prankOverlay.classList.add('show');
+      prankOverlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('prank-active');
+      window.parent.postMessage({ type: 'minesweeper-prank-state', locked: true }, '*');
+
+      if (memeAudio) {
+        memeAudio.currentTime = 0;
+        memeAudio.volume = 1;
+        memeAudio.play().catch(() => {});
+      }
+
+      clearInterval(prankInterval);
+      prankInterval = setInterval(() => {
+        countdownLeft -= 1;
+        if (countdownLeft <= 0) {
+          clearInterval(prankInterval);
+          prankCountdown.textContent = '00';
+          prankTitle.textContent = '🤣 JUST KIDDING YOU GOT PRANKED 🤣';
+          prankSubtitle.textContent = 'The virus install was a prank. You are safe now.';
+          closePrankBtn.classList.add('show');
+          window.parent.postMessage({ type: 'minesweeper-prank-state', locked: false }, '*');
+          return;
+        }
+        prankCountdown.textContent = String(countdownLeft);
+      }, 1000);
+    }
+
+    function closePrankOverlay() {
+      clearInterval(prankInterval);
+      prankOverlay.classList.remove('show');
+      prankOverlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('prank-active');
+      closePrankBtn.classList.remove('show');
+      window.parent.postMessage({ type: 'minesweeper-prank-state', locked: false }, '*');
+
+      if (memeAudio) {
+        memeAudio.pause();
+        try { memeAudio.currentTime = 0; } catch (e) {}
+      }
+
+      restartGame();
+    }
+
+    function revealCell(r, c) {
+      if (gameOver) return;
+      const cell = board[r][c];
+      if (cell.revealed || cell.flagged) return;
+
+      cell.revealed = true;
+
+      if (cell.mine) {
+        cell.revealed = true;
+        gameOver = true;
+        revealAllMines();
+        statusEl.textContent = 'Boom! Try again.';
+        render();
+        triggerPrankOverlay();
+        return;
+      }
+
+      if (cell.count === 0) {
+        neighbors(r, c).forEach(([rr, cc]) => {
+          if (!board[rr][cc].revealed && !board[rr][cc].flagged) {
+            revealCell(rr, cc);
+          }
+        });
+      }
+
+      checkWin();
+      render();
+    }
+
+    function toggleFlag(r, c) {
+      if (gameOver) return;
+      const cell = board[r][c];
+      if (cell.revealed) return;
+      cell.flagged = !cell.flagged;
+      render();
+    }
+
+    function revealAllMines() {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (board[r][c].mine) {
+            board[r][c].revealed = true;
+          }
+        }
+      }
+    }
+
+    function checkWin() {
+      const safeCells = rows * cols - mines;
+      const revealedSafe = board.flat().filter(cell => !cell.mine && cell.revealed).length;
+      if (revealedSafe === safeCells) {
+        gameOver = true;
+        statusEl.textContent = 'You win!';
+      }
+    }
+
+    function render() {
+      boardEl.innerHTML = '';
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = board[r][c];
+          const btn = document.createElement('button');
+          btn.className = 'cell';
+          btn.dataset.row = r;
+          btn.dataset.col = c;
+
+          if (cell.revealed) {
+            btn.classList.add('revealed');
+            if (cell.mine) {
+              btn.classList.add('mine');
+              btn.textContent = '💣';
+            } else if (cell.count > 0) {
+              btn.dataset.value = String(cell.count);
+              btn.textContent = cell.count;
+            }
+          } else if (cell.flagged) {
+            btn.classList.add('flagged');
+            btn.textContent = '🚩';
+          }
+
+          btn.addEventListener('click', () => revealCell(r, c));
+          btn.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            toggleFlag(r, c);
+          });
+
+          boardEl.appendChild(btn);
+        }
+      }
+    }
+
+    function restartGame() {
+      createBoard();
+      gameOver = false;
+      statusEl.textContent = 'Mines: 10';
+      render();
+    }
+
+    restartBtn.addEventListener('click', restartGame);
+    closePrankBtn.addEventListener('click', closePrankOverlay);
+    restartGame();
+  </script>
+</body>
+</html>
