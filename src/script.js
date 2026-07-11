@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const galleryDotsEl = projectWin.querySelector('#project-gallery-dots');
     const prevButton = projectWin.querySelector('#project-gallery-prev');
     const nextButton = projectWin.querySelector('#project-gallery-next');
+    const galleryFrameEl = projectWin.querySelector('.project-gallery-frame');
 
     const graphicDesignImages = [
       'assets/socmedposter/BACK TO FRIENDS.png',
@@ -128,7 +129,28 @@ document.addEventListener('DOMContentLoaded',()=>{
       'assets/socmedposter/SMTESERY4.png',
       'assets/socmedposter/SMTESERY5.png',
       'assets/socmedposter/SUMMER SUNSCREEN.png',
-      'assets/socmedposter/TRUSTED PET CORNER.png'
+      'assets/socmedposter/TRUSTED PET CORNER.png',
+      'assets/socmedposter/PARISA WANG.png',
+      'assets/socmedposter/SJDH - DOCTORS.png',
+      'assets/socmedposter/SJDH - DOCTORS2.png',
+      'assets/socmedposter/SJDH - DOCTORS3.png',
+      'assets/socmedposter/SJDH - DOCTORS4.png',
+      'assets/socmedposter/SJDH SERVICES 1.png',
+      'assets/socmedposter/SJDH SERVICES 2.png',
+      'assets/socmedposter/SJDH SERVICES 3.png',
+      'assets/socmedposter/SJDH SERVICES 4.png',
+      'assets/socmedposter/SJDH BE PATIENT.png',
+      'assets/socmedposter/SJDH YAKAP.png',
+    ];
+
+    const thumbnailImages = [
+      'assets/thumbnail/a day in my life.png',
+      'assets/thumbnail/explore batangas.png',
+      'assets/thumbnail/graduated podcast.png',
+      'assets/thumbnail/laiya batangas.png',
+      'assets/thumbnail/lomi review.png',
+      'assets/thumbnail/stop using canva.png',
+      'assets/thumbnail/unlimited meta hack.png'
     ];
 
     function escapeHtml(value){
@@ -210,6 +232,20 @@ document.addEventListener('DOMContentLoaded',()=>{
         ],
         techstack: ['HTML', 'CSS', 'JavaScript']
       },
+      'ventspace': {
+        title: 'VentSpace: Integrated Health Management',
+        summary: 'An integrated health management system for organizing healthcare workflows and records.',
+        overview: 'VentSpace: The main goal is to create a safe space where people can talk about their mental health openly. The platform will help reduce the stigma by encouraging users to share their feelings. It will allow people to connect with others who face similar struggles. Users will be able to post anonymously to feel more comfortable. The platform will also provide resources to help people manage their mental health. Overall, it aims to raise awareness and support emotional well-being. It also inlude Physical Health support such as BMI Calculator, Meal Planning, and Exercise Suggetions to support overall health and well-being.',
+        images: [
+          'assets/web app screenshots/ventspace1.png',
+          'assets/web app screenshots/ventspace2.png',
+          'assets/web app screenshots/ventspace3.png'
+        ],
+        techstack: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
+        role: ['Developer', 'Team Lead'],
+        prototypeLink: 'https://www.figma.com/design/CUdgkB6usomTdVMd4qHN0A/SAD?node-id=32-7887&t=LeF0NzPXDM0ZvLjY-1',
+        linkLabel: 'View Prototype'
+      },
       'boss-mix-payroll': {
         title: 'Boss Mix Payroll Managament',
         summary: 'A payroll management application work for organizing employee and compensation data.',
@@ -257,11 +293,40 @@ document.addEventListener('DOMContentLoaded',()=>{
         github: 'https://github.com/jessaslg',
         hideDetails: true
       },
+      'email-newsletter': {
+        title: 'Email Newsletter',
+        summary: 'A creative email newsletter design collection.',
+        overview: 'This email newsletter design entry showcases a polished set of promotional email visuals used for digital marketing and audience engagement. The layout focuses on clear hierarchy, readable typography, and visually engaging content blocks.',
+        images: [
+          'assets/email newsletter/beach products.png',
+          'assets/email newsletter/crickle.png',
+          'assets/email newsletter/goodie hoodie.png',
+          'assets/email newsletter/goodie hoodie2.png',
+          'assets/email newsletter/siren glow.png',
+          'assets/email newsletter/soaphisticated.png',
+          'assets/email newsletter/ube drinks.png'
+        ],
+        techstack: ['Canva', 'Photoshop'],
+        role: 'Designer',
+        github: 'https://github.com/jessaslg',
+        hideDetails: true
+      },
+      'video-editing': {
+        title: 'Video Editing',
+        summary: 'A creative video editing portfolio item.',
+        overview: 'This video editing entry presents edited visual content created to support online promotion and storytelling. It highlights sequencing, pacing, and visual polish across short-form and campaign-style video work.',
+        images: [],
+        techstack: ['Canva', 'Photoshop'],
+        role: 'Designer',
+        github: 'https://github.com/jessaslg',
+        hideDetails: true,
+        videoLink: 'https://drive.google.com/drive/folders/1iwRimiU8sraEBKqSVPywwUEs4CmDYKgd?usp=sharing'
+      },
       thumbnails: {
-        title: 'Graphic Design Portfolio',
-        summary: 'A complete gallery of my graphic design works.',
-        overview: 'This graphic design portfolio presents a complete collection of my social media posters and creative visual works. The gallery highlights a range of promotional, celebratory, and concept-driven designs arranged in a familiar desktop-style viewer.',
-        images: graphicDesignImages,
+        title: 'Thumbnails',
+        summary: 'A complete gallery of my thumbnail designs.',
+        overview: 'This thumbnail portfolio presents a complete collection of my video and content thumbnail works. The gallery highlights strong visual hierarchy, bold subjects, and readable compositions arranged in a familiar desktop-style viewer.',
+        images: thumbnailImages,
         techstack: ['Photoshop', 'Canva'],
         role: 'Designer',
         github: 'https://github.com/jessaslg',
@@ -271,7 +336,14 @@ document.addEventListener('DOMContentLoaded',()=>{
         title: 'Graphic Design Portfolio',
         summary: 'A complete gallery of my graphic design works.',
         overview: 'This graphic design portfolio presents a complete collection of my social media posters and creative visual works. The gallery highlights a range of promotional, celebratory, and concept-driven designs arranged in a familiar desktop-style viewer.',
-        images: graphicDesignImages,
+        images: [
+          'assets/poster/500-days.jpg',
+          'assets/poster/DESERTER.jpg',
+          'assets/poster/LIWANAG SA DILIM.jpg',
+          'assets/poster/PINNACLE.jpg',
+          'assets/poster/STREET-SIGN.jpg',
+          'assets/poster/THE-LOVED-ONE.jpg'
+        ],
         techstack: ['Photoshop', 'Canva'],
         role: 'Designer',
         github: 'https://github.com/jessaslg',
@@ -294,15 +366,50 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(activeProjectIndex < 0 || activeProjectIndex >= images.length){
         activeProjectIndex = 0;
       }
+
+      if(galleryFrameEl){
+        const existingLinkCard = galleryFrameEl.querySelector('.project-video-link-card');
+        if(existingLinkCard){ existingLinkCard.remove(); }
+      }
+
+      if(project.videoLink){
+        if(galleryImageEl){
+          try{ galleryImageEl.removeEventListener('click', galleryImageEl._openHandler); }catch(e){}
+          try{ galleryImageEl.removeEventListener('pointerdown', galleryImageEl._captureHandler, true); }catch(e){}
+          try{ galleryImageEl.removeEventListener('mousedown', galleryImageEl._captureHandler, true); }catch(e){}
+          galleryImageEl.style.display = 'none';
+        }
+        if(prevButton){ prevButton.style.display = 'none'; }
+        if(nextButton){ nextButton.style.display = 'none'; }
+        if(galleryDotsEl){
+          galleryDotsEl.style.display = 'none';
+          galleryDotsEl.innerHTML = '';
+        }
+        if(galleryFrameEl){
+          const safeLink = escapeHtml(project.videoLink);
+          const linkCard = document.createElement('a');
+          linkCard.className = 'project-video-link-card';
+          linkCard.href = safeLink;
+          linkCard.target = '_blank';
+          linkCard.rel = 'noreferrer noopener';
+          linkCard.innerHTML = '<span class="project-video-link-kicker">Google Drive</span><span class="project-video-link-title">Open Video Editing File</span><span class="project-video-link-subtitle">View the full video in a new tab</span>';
+          galleryFrameEl.appendChild(linkCard);
+        }
+        return;
+      }
+      if(galleryDotsEl){ galleryDotsEl.style.display = ''; }
       if(prevButton && !prevButton.dataset.iconReady){
+        prevButton.style.display = '';
         prevButton.innerHTML = '<img src="assets/img/slider_left.png" alt="Previous">';
         prevButton.dataset.iconReady = 'true';
       }
       if(nextButton && !nextButton.dataset.iconReady){
+        nextButton.style.display = '';
         nextButton.innerHTML = '<img src="assets/img/slider_right.png" alt="Next">';
         nextButton.dataset.iconReady = 'true';
       }
       if(galleryImageEl){
+        galleryImageEl.style.display = '';
         galleryImageEl.src = images[activeProjectIndex];
         galleryImageEl.alt = `${project.title} preview ${activeProjectIndex + 1}`;
         // clicking the project gallery image opens it in the cert modal for a zoomed view
@@ -349,11 +456,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(roleSectionEl){
         roleSectionEl.style.display = project.hideDetails || !project.role ? 'none' : '';
       }
+      const projectLink = project.github || project.prototypeLink || '';
       if(githubLinkEl){
-        githubLinkEl.href = project.github || '#';
+        githubLinkEl.href = projectLink || '#';
+        githubLinkEl.textContent = project.linkLabel || (project.prototypeLink ? 'View Prototype' : 'View On GitHub');
+        githubLinkEl.style.display = projectLink && !project.hideDetails ? '' : 'none';
       }
       if(githubSectionEl){
-        githubSectionEl.style.display = project.github && !project.hideDetails ? '' : 'none';
+        githubSectionEl.style.display = projectLink && !project.hideDetails ? '' : 'none';
       }
       if(techstackEl) techstackEl.innerHTML = project.techstack.map((tech)=>`<span class="project-tech-pill">${tech}</span>`).join('');
 

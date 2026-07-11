@@ -152,6 +152,27 @@
 			#project-window .project-gallery-dot img{ width:86px; height:64px; object-fit:contain; border:3px solid #fff; border-radius:4px; box-shadow:0 3px 8px rgba(0,0,0,0.14); display:block; margin:0 auto 6px; background:#fff; padding:2px; box-sizing:border-box }
 			#project-window .project-gallery-dot.is-active img{ box-shadow:0 0 0 3px rgba(42,102,201,0.35), 0 3px 8px rgba(0,0,0,0.14) }
 			#project-window .project-gallery-thumb-label{ display:block; max-width:92px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+			#project-window .project-video-link-card{
+				display:flex;
+				flex-direction:column;
+				justify-content:center;
+				align-items:center;
+				gap:8px;
+				min-height:120px;
+				padding:18px 22px;
+				border-radius:12px;
+				border:1px solid #c6daf0;
+				background:linear-gradient(180deg,#ffffff,#eaf4ff);
+				box-shadow:0 6px 18px rgba(12,38,63,0.08);
+				color:#16252f;
+				text-decoration:none;
+				text-align:center;
+				max-width:100%;
+			}
+			#project-window .project-video-link-card:hover{ transform:translateY(-1px) }
+			#project-window .project-video-link-kicker{ font-size:12px; letter-spacing:0.5px; text-transform:uppercase; color:#4a5963; font-weight:700 }
+			#project-window .project-video-link-title{ font-size:18px; font-weight:800; color:#16252f }
+			#project-window .project-video-link-subtitle{ font-size:13px; color:#3d4a53; line-height:1.4 }
 			#project-window .project-info-panel{ background:#f1f1f1; border:1px solid #d6d6d6; padding:16px; border-radius:10px; box-shadow:0 4px 10px rgba(12,38,63,0.05); box-sizing:border-box; }
 			#project-window .project-section-card,
 			#project-window .project-section-card *{ color:#16252f; }
@@ -539,6 +560,7 @@
 								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="studio360-web"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: A Web Management Platform for Kitch using Artificial Intelligence</span></button></li>
 								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="studio360-mobile"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Studio360: Mobile Commerce Application</span></button></li>
 								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="san-juan-payroll"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">San Juan District Payroll Managament</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="ventspace"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">VentSpace: Integrated Health Management</span></button></li>
 								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="boss-mix-payroll"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Boss Mix Payroll Managament</span></button></li>
 								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="productive"><img src="assets/img/folder.svg" alt="folder"><span class="item-title">Pro/ductive: Personal Diary Application</span></button></li>
 
@@ -547,11 +569,13 @@
 						</div>
 
 						<div class="sidebar-box">
-							<div class="sidebar-title">Graphic Design</div>
+							<div class="sidebar-title">Creative Designs</div>
 							<ul class="sidebar-list">
-								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="social-media"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Social Media Marketing</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="social-media"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Social Media Posters</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="email-newsletter"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Email Newsletter</span></button></li>
+								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="video-editing"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Video Editing</span></button></li>
 								<li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="thumbnails"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Thumbnails</span></button></li>
-							    <li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="posters"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Posters</span></button></li>
+							    <li class="sidebar-item"><button type="button" class="sidebar-btn" data-project="posters"><img src="assets/img/folder_image.png" alt="pic"><span class="item-title">Album</span></button></li>
 							</ul>
 						</div>
 					</aside>
@@ -582,6 +606,13 @@
 									<div class="project-techstack" id="project-techstack">
 										<span class="project-tech-pill">Flutter</span>
 										<span class="project-tech-pill">Dart</span>
+									</div>
+								</section>
+
+								<section class="project-section-card" id="project-link-section">
+									<h3>Project Link</h3>
+									<div class="project-links-row">
+										<a class="project-link-button" id="project-github-link" href="#" target="_blank" rel="noreferrer">View On GitHub</a>
 									</div>
 								</section>
 
@@ -633,8 +664,6 @@
 				<img src="assets/img/xp-mail.png" class="wmp-icon-svg ff-icon" alt="Mail" width="28" height="28">
 				<span>Contact Me</span>
 				<div class="window-controls win-controls">
-					<div class="win-btn mail-control-disabled" id="mail-minimize" aria-disabled="true">_</div>
-					<div class="win-btn mail-control-disabled" id="mail-maximize" aria-disabled="true">□</div>
 					<div class="win-btn close" id="mail-close">×</div>
 				</div>
 			</div>
