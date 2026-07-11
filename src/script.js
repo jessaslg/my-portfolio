@@ -80,6 +80,71 @@ document.addEventListener('DOMContentLoaded',()=>{
     const prevButton = projectWin.querySelector('#project-gallery-prev');
     const nextButton = projectWin.querySelector('#project-gallery-next');
 
+    const graphicDesignImages = [
+      'assets/socmedposter/BACK TO FRIENDS.png',
+      'assets/socmedposter/CHERRY VAPE.png',
+      'assets/socmedposter/DEANS LIST PONY.png',
+      'assets/socmedposter/DUBAI COOKIE.png',
+      'assets/socmedposter/HAPPY BIRTHDAY.png',
+      'assets/socmedposter/iRISE.png',
+      'assets/socmedposter/iRISE2.png',
+      'assets/socmedposter/iRISE3.png',
+      'assets/socmedposter/iRISE4.png',
+      'assets/socmedposter/JISULIFE.png',
+      'assets/socmedposter/MAXAI1.png',
+      'assets/socmedposter/MAXAI10.png',
+      'assets/socmedposter/MAXAI11.png',
+      'assets/socmedposter/MAXAI2.png',
+      'assets/socmedposter/MAXAI3.png',
+      'assets/socmedposter/MAXAI4.png',
+      'assets/socmedposter/MAXAI5.png',
+      'assets/socmedposter/MAXAI6.png',
+      'assets/socmedposter/MAXAI7.png',
+      'assets/socmedposter/MAXAI8.png',
+      'assets/socmedposter/MAXAI9.png',
+      'assets/socmedposter/MAXAISA1.png',
+      'assets/socmedposter/MAXAISA2.png',
+      'assets/socmedposter/MAXAISA3.png',
+      'assets/socmedposter/MAXAISA4.png',
+      'assets/socmedposter/MAXAISA5.png',
+      'assets/socmedposter/MAXAISA6.png',
+      'assets/socmedposter/MIQUESI ERAS TOUR.png',
+      'assets/socmedposter/MIQUESI FACEBOOK INSIRED.png',
+      'assets/socmedposter/MIQUESI TIKTOK INSPIRED 2.png',
+      'assets/socmedposter/MIQUESI TIKTOK INSPIRED 3.png',
+      'assets/socmedposter/MIQUESI TIKTOK INSPIRED.png',
+      'assets/socmedposter/NEW BALANCE X STRAVA.png',
+      'assets/socmedposter/PIKACHU.png',
+      'assets/socmedposter/PINK BACK TO SCHOOL.png',
+      'assets/socmedposter/SATESERY1.png',
+      'assets/socmedposter/SATESERY2.png',
+      'assets/socmedposter/SATESERY3.png',
+      'assets/socmedposter/SATESERY4.png',
+      'assets/socmedposter/SATESERY5.png',
+      'assets/socmedposter/SATESERY6.png',
+      'assets/socmedposter/SMTESERY1.png',
+      'assets/socmedposter/SMTESERY2.png',
+      'assets/socmedposter/SMTESERY3.png',
+      'assets/socmedposter/SMTESERY4.png',
+      'assets/socmedposter/SMTESERY5.png',
+      'assets/socmedposter/SUMMER SUNSCREEN.png',
+      'assets/socmedposter/TRUSTED PET CORNER.png'
+    ];
+
+    function escapeHtml(value){
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getImageLabel(imagePath){
+      const fileName = imagePath.split('/').pop() || imagePath;
+      return fileName.replace(/\.[^.]+$/, '').replace(/_/g, ' ').trim();
+    }
+
     const projectData = {
       'jessa-portfolio': {
         title: 'Jessa - Windows XP Inpired Portfolio',
@@ -183,31 +248,34 @@ document.addEventListener('DOMContentLoaded',()=>{
         role: 'Team lead and Developer'
       },
       'social-media': {
-        title: 'Social Media Marketing',
-        summary: 'A set of marketing visuals created for social platform promotion and brand presence.',
-        overview: 'This graphic design project showcases social media marketing outputs built to support brand visibility and promotional campaigns. The visuals are arranged to communicate key messages quickly and with strong hierarchy.',
-        images: ['assets/img/project-logo.jpg'],
+        title: 'Graphic Design Portfolio',
+        summary: 'A complete gallery of my graphic design works.',
+        overview: 'This graphic design portfolio presents a complete collection of my social media posters and creative visual works. The gallery highlights a range of promotional, celebratory, and concept-driven designs arranged in a familiar desktop-style viewer.',
+        images: graphicDesignImages,
         techstack: ['Canva', 'Photoshop'],
         role: 'Designer',
-        github: 'https://github.com/jessaslg'
+        github: 'https://github.com/jessaslg',
+        hideDetails: true
       },
       thumbnails: {
-        title: 'Thumbnails',
-        summary: 'Video thumbnail designs focused on attention, readability, and click-through appeal.',
-        overview: 'The thumbnail collection highlights compact visual layouts that balance subject emphasis, headline readability, and high-contrast composition for digital content.',
-        images: ['assets/img/project-logo.jpg'],
+        title: 'Graphic Design Portfolio',
+        summary: 'A complete gallery of my graphic design works.',
+        overview: 'This graphic design portfolio presents a complete collection of my social media posters and creative visual works. The gallery highlights a range of promotional, celebratory, and concept-driven designs arranged in a familiar desktop-style viewer.',
+        images: graphicDesignImages,
         techstack: ['Photoshop', 'Canva'],
         role: 'Designer',
-        github: 'https://github.com/jessaslg'
+        github: 'https://github.com/jessaslg',
+        hideDetails: true
       },
       posters: {
-        title: 'Posters',
-        summary: 'A poster design collection built around strong composition and clear visual messaging.',
-        overview: 'The poster set focuses on layout balance, typography, and image treatment to communicate events and concepts in a visually engaging way.',
-        images: ['assets/img/project-logo.jpg'],
+        title: 'Graphic Design Portfolio',
+        summary: 'A complete gallery of my graphic design works.',
+        overview: 'This graphic design portfolio presents a complete collection of my social media posters and creative visual works. The gallery highlights a range of promotional, celebratory, and concept-driven designs arranged in a familiar desktop-style viewer.',
+        images: graphicDesignImages,
         techstack: ['Photoshop', 'Canva'],
         role: 'Designer',
-        github: 'https://github.com/jessaslg'
+        github: 'https://github.com/jessaslg',
+        hideDetails: true
       }
     };
 
@@ -225,6 +293,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       const images = project.images && project.images.length ? project.images : ['assets/img/project-logo.jpg'];
       if(activeProjectIndex < 0 || activeProjectIndex >= images.length){
         activeProjectIndex = 0;
+      }
+      if(prevButton && !prevButton.dataset.iconReady){
+        prevButton.innerHTML = '<img src="assets/img/slider_left.png" alt="Previous">';
+        prevButton.dataset.iconReady = 'true';
+      }
+      if(nextButton && !nextButton.dataset.iconReady){
+        nextButton.innerHTML = '<img src="assets/img/slider_right.png" alt="Next">';
+        nextButton.dataset.iconReady = 'true';
       }
       if(galleryImageEl){
         galleryImageEl.src = images[activeProjectIndex];
@@ -245,7 +321,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         galleryImageEl.addEventListener('click', galleryImageEl._openHandler);
       }
       if(galleryDotsEl){
-        galleryDotsEl.innerHTML = images.map((_, index)=>`<button type="button" class="project-gallery-dot${index === activeProjectIndex ? ' is-active' : ''}" data-index="${index}" aria-label="Show image ${index + 1}"></button>`).join('');
+        galleryDotsEl.innerHTML = images.map((imagePath, index)=>{
+          const label = escapeHtml(getImageLabel(imagePath));
+          const safePath = escapeHtml(imagePath);
+          return `<button type="button" class="project-gallery-dot${index === activeProjectIndex ? ' is-active' : ''}" data-index="${index}" aria-label="Show image ${index + 1}: ${label}"><img src="${safePath}" alt="${label}"><span class="project-gallery-thumb-label">${label}</span></button>`;
+        }).join('');
       }
     }
 
@@ -258,16 +338,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 
       if(titleEl) titleEl.textContent = project.title;
       if(summaryEl) summaryEl.textContent = project.summary;
-      if(overviewEl) overviewEl.textContent = project.overview;
+      if(overviewEl) overviewEl.textContent = project.overview || '';
       if(roleEl) roleEl.textContent = project.role || '';
+      if(overviewEl && overviewEl.closest('section')){
+        overviewEl.closest('section').style.display = project.hideDetails ? 'none' : '';
+      }
+      if(techstackEl && techstackEl.closest('section')){
+        techstackEl.closest('section').style.display = project.hideDetails ? 'none' : '';
+      }
       if(roleSectionEl){
-        roleSectionEl.style.display = project.role ? '' : 'none';
+        roleSectionEl.style.display = project.hideDetails || !project.role ? 'none' : '';
       }
       if(githubLinkEl){
         githubLinkEl.href = project.github || '#';
       }
       if(githubSectionEl){
-        githubSectionEl.style.display = project.github ? '' : 'none';
+        githubSectionEl.style.display = project.github && !project.hideDetails ? '' : 'none';
       }
       if(techstackEl) techstackEl.innerHTML = project.techstack.map((tech)=>`<span class="project-tech-pill">${tech}</span>`).join('');
 
