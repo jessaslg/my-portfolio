@@ -668,7 +668,6 @@
 			</div>
 			<!-- End Minesweeper Window -->
 
-		<script type="module" src="./src/loadingScreen.js?v=2"></script>
 
 		<!-- Taskbar (Windows XP style) -->
 		<div class="taskbar" role="toolbar" aria-label="Taskbar">
@@ -821,8 +820,11 @@
 					<div class="cert-body" id="cert-body" aria-live="polite"></div>
 				</div>
 			</div>
-<!-- EmailJS SDK (client-side) - replace USER/SERVICE/TEMPLATE IDs in src/script.js -->
+<!-- EmailJS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script type="module" src="./src/script.js?v=2"></script>
+
+<!-- Load site scripts once, after the complete HTML has been parsed -->
+<script type="module" src="./src/loadingScreen.js"></script>
+<script type="module" src="./src/script.js"></script>
 	</body>
 </html>
