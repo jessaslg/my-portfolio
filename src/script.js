@@ -612,6 +612,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(bootLines) bootLines.classList.add('hidden');
     if(progress) progress.classList.add('hidden');
 
+    // Show the boot screen container
+    if(boot){
+      boot.classList.remove('hidden');
+      boot.setAttribute('aria-hidden','false');
+    }
+
     if(xpStarting){
       xpStarting.classList.remove('hidden');
       xpStarting.setAttribute('aria-hidden','false');
@@ -626,6 +632,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     // after XP screen finishes, show desktop and restore taskbar immediately
     setTimeout(finishLoadingScreen, 2600);
   };
+
+  // Listen for the loadingScreenDone event dispatched by loadingScreen.js
+  // This triggers the Windows XP boot sequence when the START button is clicked
+  window.addEventListener('loadingScreenDone', () => {
+    if(window.startBoot) window.startBoot();
+  });
 
   // Fallback: if the loading screen is removed by another script or by CSS,
   // still make the website taskbar visible after the page settles.
