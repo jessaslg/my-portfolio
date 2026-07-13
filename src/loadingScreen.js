@@ -34,11 +34,18 @@
   function start(){
     var overlay = createOverlay();
     if(!overlay) return;
+    // hide the overlay and show the XP boot screen
     overlay.classList.add('hidden');
-    window.dispatchEvent(new CustomEvent('loadingScreenDone', {}));
-    var ui = document.getElementById('ui');
-    if(ui) ui.style.pointerEvents = 'none';
-    setTimeout(function(){ if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 500);
+    overlay.setAttribute('aria-hidden','true');
+    var bootEl = document.getElementById('boot');
+    if(bootEl){ bootEl.classList.remove('hidden'); bootEl.setAttribute('aria-hidden','false'); }
+    // call the app boot sequence (if provided by src/app.js)
+    if(typeof window.startBoot === 'function'){
+      window.startBoot();
+    } else {
+      // fallback: dispatch done immediately
+      window.dispatchEvent(new CustomEvent('loadingScreenDone', {}));
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function(){
@@ -52,15 +59,23 @@
     if(startBtn) startBtn.addEventListener('click', start);
 
     var urlParams = new URLSearchParams(window.location.search);
+    var bootEl = document.getElementById('boot');
+
     if(urlParams.has('debug')){
-      // auto-start
-      start();
+      // debug: skip boot, show overlay immediately
+      if(bootEl) bootEl.classList.add('hidden');
+      overlay.classList.remove('hidden');
+      overlay.setAttribute('aria-hidden','false');
+      if(!detectWebGL()) showWebGLError(); else showStartPopup();
       return;
     }
 
+    // Standard flow: show the overlay and Start popup, await user click.
+    overlay.classList.remove('hidden');
+    overlay.setAttribute('aria-hidden','false');
     if(!detectWebGL()){
       showWebGLError();
-    }else{
+    } else {
       showStartPopup();
     }
   });
