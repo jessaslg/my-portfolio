@@ -460,8 +460,8 @@ button.icon:focus-visible{
 }
 
 
-.firefox-window .win-controls, .firefox-window .window-controls { margin-left: auto; display:flex; gap:6px; }
-.firefox-window .win-btn { width:clamp(26px, 5vw, 30px) !important; height:clamp(26px, 5vw, 30px) !important; min-width:44px !important; min-height:44px !important; font-size:clamp(12px, 2.5vw, 14px) !important; border-radius:4px !important; }
+.firefox-window .win-controls, .firefox-window .window-controls { margin-left: auto; display:flex; gap:4px; }
+.firefox-window .win-btn { width:18px !important; height:18px !important; min-width:18px !important; min-height:18px !important; font-size:11px !important; border-radius:3px !important; }
 
 
 /* Crop avatar image in project titlebar to a circle and ensure it covers the box */
@@ -1209,10 +1209,10 @@ body.loading-fullscreen .window{ visibility: hidden; }
 
 .win-controls { margin-left: auto; display: flex; gap: 2px; }
 .win-btn {
-  width: clamp(26px, 5vw, 30px);
-  height: clamp(26px, 5vw, 30px);
-  min-width: 44px;
-  min-height: 44px;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
   border: 1px solid rgba(255,255,255,0.65);
   border-radius: 3px;
   background: linear-gradient(to bottom, #cbe9ff 0%, #6fb8ff 50%, #0d6fd6 100%);
@@ -1221,7 +1221,7 @@ body.loading-fullscreen .window{ visibility: hidden; }
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: clamp(12px, 2.5vw, 14px);
+  font-size: 11px;
   transition: transform .1s ease, box-shadow .1s ease, background .12s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.12) inset;
 }
@@ -1372,8 +1372,8 @@ body.loading-fullscreen .window{ visibility: hidden; }
   object-fit:contain;
   flex-shrink:0;
 }
-.window-controls{margin-left:auto;display:flex;gap:3px}
-.win-btn{width:26px;height:26px;border:1px solid rgba(255,255,255,0.65);border-radius:4px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-size:14px;transition:transform .1s ease, box-shadow .1s ease}
+.window-controls{margin-left:auto;display:flex;gap:2px}
+.win-btn{width:18px;height:18px;border:1px solid rgba(255,255,255,0.65);border-radius:3px;background:linear-gradient(to bottom,#cbe9ff 0%, #6fb8ff 50%, #2b6fe6 100%);color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-size:11px;transition:transform .1s ease, box-shadow .1s ease}
 .win-btn.close{background:linear-gradient(to bottom,#ffd1d1 0%, #e04343 50%, #b82222 100%)}
 .menu-bar{background:#fff;padding:4px 12px;font-size:11px;display:flex;gap:15px;border-bottom:1px solid #999}
 .wmp-content{flex-grow:1;background:var(--wmp-bg);display:flex;padding:clamp(8px, 2vw, 10px);gap:5px;overflow:hidden}
