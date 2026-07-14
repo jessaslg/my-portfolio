@@ -88,16 +88,18 @@
 }
 
 #page-about .xp-system-tabs button {
-  padding: 8px 14px;
+  padding: clamp(6px, 1.5vh, 8px) clamp(10px, 2vw, 14px);
   border-radius: 8px;
   background: linear-gradient(180deg,#f3f8fc,#e6f0fa);
   border: 1px solid #c6daf0;
   box-shadow: 0 2px 0 rgba(0,0,0,0.03);
   font-weight: 700;
   color: #0b2b3a;
-  font-size: 14px;
+  font-size: clamp(12px, 2.5vw, 14px);
   cursor: pointer;
   transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  min-height:44px;
+  min-width:44px;
 }
 
 #page-about .xp-system-tabs button:hover { box-shadow: 0 4px 8px rgba(12,38,63,0.06); transform: translateY(-1px); }
@@ -192,14 +194,14 @@
 
 #page-about .xp-system-top {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 18px;
+  grid-template-columns: clamp(100px, 20vw, 140px) 1fr;
+  gap: clamp(12px, 2vw, 18px);
   align-items: start;
 }
 
 #page-about .xp-system-avatar {
-  width: 120px;
-  height: 140px;
+  width: clamp(80px, 18vw, 120px);
+  height: clamp(100px, 22vw, 140px);
   object-fit: cover;
   display: block;
   background: #fff;
@@ -209,7 +211,7 @@
 }
 
 #page-about .xp-system-headline h1 {
-  font-size: 26px;
+  font-size: clamp(18px, 4vw, 26px);
   margin: 0 0 6px 0;
   color: #0e2633;
 }
@@ -228,9 +230,9 @@
 
 #page-about .xp-system-row {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr clamp(180px, 35vw, 320px);
   align-items: center;
-  padding: 10px 12px;
+  padding: clamp(8px, 1.5vh, 10px) clamp(10px, 2vw, 12px);
   border: 1px solid #e6eef8;
   background: #ffffff;
   border-radius: 3px;
@@ -294,9 +296,51 @@
   text-justify: inter-word;
 }
 
-/* Smaller screens: allow panels to shrink naturally */
+@media (max-width: 900px) {
+  .firefox-window:not(.hidden) {
+    max-width: calc(100vw - 16px);
+  }
+  #er-window:not(.hidden),
+  #project-window:not(.hidden),
+  #mail-window:not(.hidden) {
+    width: min(900px, calc(100vw - 16px)) !important;
+    max-height: calc(100vh - 56px);
+  }
+}
+
 @media (max-width: 700px) {
   #page-about .xp-system-panel { min-height: auto; }
+
+  #page-about .xp-about-system {
+    max-width: 100%;
+    padding: 6px 4px;
+  }
+
+  #page-about .xp-system-tabs {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  #page-about .xp-system-tabs button {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+
+  #page-about .xp-bg-row {
+    flex-direction: column;
+  }
+
+  .detail-inner {
+    flex-direction: column;
+  }
+
+  .detail-left {
+    flex: 0 0 auto;
+    max-width: 140px;
+    margin: 0 auto;
+  }
 }
 
 /* Background details card for Experience pane */

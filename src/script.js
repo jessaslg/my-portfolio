@@ -1593,7 +1593,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const enabled = saved === null ? true : saved === 'true';
     setSoundState(enabled, false);
 
-    soundBtn.addEventListener('click', ()=>{
+    soundBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
       const isOn = soundBtn.classList.contains('active');
       setSoundState(!isOn, true);
     });
@@ -2600,5 +2601,102 @@ document.addEventListener('DOMContentLoaded',()=>{
       }
     }, true);
   }
+
+  /* =========================================================
+     RESPONSIVE DESKTOP ICON POSITIONING
+     Automatically arranges desktop icons based on available space
+     ========================================================= */
+  
+  const TASKBAR_HEIGHT = 40;
+  const ICON_GAP = 28;
+  const ICON_CONTAINER_WIDTH = 120;
+  const ICON_HEIGHT = 120;
+  
+  function getAvailableDesktopHeight(){
+    return window.innerHeight - TASKBAR_HEIGHT;
+  }
+  
+  function getAvailableDesktopWidth(){
+    return window.innerWidth;
+  }
+  
+  function positionDesktopIcons(){
+    const iconsContainer = document.querySelector('.icons');
+    const rightShortcuts = document.querySelector('.desktop-right-shortcuts');
+    const minesweeperIcon = document.querySelector('.minesweeper-desktop-icon');
+    
+    if(!iconsContainer) return;
+    
+    const leftIcons = Array.from(iconsContainer.querySelectorAll('.icon:not(.minesweeper-desktop-icon)'));
+    if(leftIcons.length === 0) return;
+    
+    const availableHeight = getAvailableDesktopHeight();
+    const availableWidth = getAvailableDesktopWidth();
+    
+    const iconHeight = ICON_HEIGHT + ICON_GAP;
+    const iconsPerColumn = Math.floor((availableHeight - 60) / iconHeight);
+    const maxColumns = Math.ceil(leftIcons.length / iconsPerColumn);
+    
+    const startX = 20;
+    const startY = 20;
+    
+    leftIcons.forEach((icon, index) => {
+      const column = Math.floor(index / iconsPerColumn);
+      const row = index % iconsPerColumn;
+      
+      const left = startX + (column * (ICON_CONTAINER_WIDTH + ICON_GAP));
+      const top = startY + (row * iconHeight);
+      
+      icon.style.position = 'absolute';
+      icon.style.left = `${left}px`;
+      icon.style.top = `${top}px`;
+      icon.style.transform = 'none';
+    });
+    
+    if(rightShortcuts && minesweeperIcon){
+      const minesweeperWidth = minesweeperIcon.offsetWidth || 100;
+      const minesweeperRightMargin = 20;
+      const minesweeperTopMargin = 20;
+      
+      const maxLeftIconRight = leftIcons.length > 0 
+        ? startX + ((maxColumns - 1) * (ICON_CONTAINER_WIDTH + ICON_GAP)) + ICON_CONTAINER_WIDTH + ICON_GAP
+        : 0;
+      
+      const minesweeperLeft = Math.max(
+        maxLeftIconRight + minesweeperRightMargin,
+        availableWidth - minesweeperWidth - minesweeperRightMargin
+      );
+      
+      rightShortcuts.style.position = 'absolute';
+      rightShortcuts.style.right = `${minesweeperRightMargin}px`;
+      rightShortcuts.style.top = `${minesweeperTopMargin}px`;
+      
+      minesweeperIcon.style.position = 'relative';
+      minesweeperIcon.style.left = 'auto';
+      minesweeperIcon.style.right = 'auto';
+      minesweeperIcon.style.top = 'auto';
+    }
+    
+    iconsContainer.style.position = 'relative';
+    iconsContainer.style.width = '100%';
+    iconsContainer.style.height = '100%';
+    iconsContainer.style.display = 'block';
+  }
+  
+  function initResponsiveIcons(){
+    positionDesktopIcons();
+    
+    const debouncedPosition = debounce(() => {
+      positionDesktopIcons();
+    }, 100);
+    
+    window.addEventListener('resize', debouncedPosition);
+    window.addEventListener('zoom', debouncedPosition);
+    
+    setTimeout(positionDesktopIcons, 50);
+    setTimeout(positionDesktopIcons, 200);
+  }
+  
+  try{ initResponsiveIcons(); }catch(e){}
 
 });
