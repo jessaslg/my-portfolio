@@ -347,8 +347,8 @@ button.icon:focus-visible{
 .window{position:absolute;left:140px;top:100px;width:clamp(320px, 90vw, 760px);max-width:calc(100vw - 40px);max-height:calc(100vh - 120px);background:var(--window-bg);border:4px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,0.6);font-family: Tahoma, "Segoe UI", sans-serif;box-sizing:border-box;overflow:auto}
 /******** Minesweeper window chrome ********/
 #minesweeper-window {
-  width: clamp(420px, 85vw, 520px);
-  height: clamp(500px, 80vh, 650px);
+  width: clamp(380px, 80vw, 480px);
+  height: clamp(450px, 75vh, 550px);
   min-height: 0;
   left: clamp(12px, 5vw, 140px);
   top: clamp(60px, 10vh, 100px);
@@ -357,7 +357,7 @@ button.icon:focus-visible{
   flex: 1 1 auto;
   min-height: 320px;
   background: #ffffff;
-  overflow: auto;
+  overflow: hidden;
   -webkit-overflow-scrolling: touch;
 }
 #minesweeper-window iframe {

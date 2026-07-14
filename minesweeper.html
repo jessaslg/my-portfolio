@@ -7,12 +7,17 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4f6fb;
-      --panel: #ffffff;
-      --border: #c9d8ea;
-      --text: #0b2b3a;
-      --muted: #58707c;
-      --accent: #0b66cc;
+      --win-xp-blue: #0054e3;
+      --win-xp-title-bar: linear-gradient(180deg, #0058ee 0%, #3a93ff 8%, #0058ee 18%, #0047c7 92%, #003c9e 100%);
+      --win-xp-border: #0055e6;
+      --win-xp-gray: #ece9d8;
+      --win-xp-button: linear-gradient(180deg, #ffffff 0%, #ece9d8 50%, #d4d0c8 100%);
+      --win-xp-button-hover: linear-gradient(180deg, #ffffff 0%, #f5f0e6 50%, #e0dcd0 100%);
+      --win-xp-cell: #c0c0c0;
+      --win-xp-cell-revealed: #c0c0c0;
+      --win-xp-cell-border-light: #ffffff;
+      --win-xp-cell-border-dark: #808080;
+      --win-xp-cell-border-darkest: #404040;
     }
 
     * { box-sizing: border-box; }
@@ -28,135 +33,220 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: clamp(8px, 2vh, 16px);
-      background: linear-gradient(180deg, #eff5fb, #deeaf8);
+      padding: 20px;
+      background: linear-gradient(180deg, #245edb 0%, #3f8cf3 50%, #245edb 100%);
       font-family: Tahoma, "Segoe UI", sans-serif;
-      color: var(--text);
       overflow: auto;
-      -webkit-overflow-scrolling: touch;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
     body.prank-active {
       overflow: hidden;
     }
 
-    .wrap {
-      width: min(100%, 420px);
-      max-height: 100%;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(12,38,63,0.12);
-      padding: clamp(10px, 2vh, 20px);
-      position: relative;
-      z-index: 1;
+    .window {
+      background: var(--win-xp-gray);
+      border: 3px solid var(--win-xp-border);
+      border-radius: 8px 8px 0 0;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+      max-width: min(95vw, 500px);
+      width: auto;
+      min-width: 280px;
       display: flex;
       flex-direction: column;
-      gap: clamp(8px, 1.5vh, 14px);
+      position: relative;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(18px, 4vw, 24px);
-      text-align: center;
-      line-height: 1.15;
+    .title-bar {
+      background: var(--win-xp-title-bar);
+      padding: 4px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 5px 5px 0 0;
+      min-height: 28px;
+      margin: -3px -3px 0 -3px;
     }
 
-    p {
-      margin: 0;
-      text-align: center;
-      color: var(--muted);
-      font-size: clamp(12px, 2.8vw, 14px);
-      line-height: 1.35;
+    .title-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .window-icon {
+      width: 16px;
+      height: 16px;
+      background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+      border-radius: 2px;
+      border: 1px solid #cc5500;
+    }
+
+    .window-title {
+      color: white;
+      font-size: 13px;
+      font-weight: bold;
+      text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+      white-space: nowrap;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .window-btn {
+      width: 21px;
+      height: 21px;
+      background: linear-gradient(180deg, #ffffff 0%, #d4d0c8 100%);
+      border: 1px solid #808080;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+      min-width: 21px;
+      padding: 0;
+    }
+
+    .window-btn:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #e8e4d8 100%);
+    }
+
+    .menu-bar {
+      background: var(--win-xp-gray);
+      padding: 2px 4px;
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid #808080;
+      font-size: 11px;
+    }
+
+    .menu-item {
+      padding: 2px 8px;
+      cursor: pointer;
+      color: #000;
+    }
+
+    .menu-item:hover {
+      background: #316ac5;
+      color: white;
+    }
+
+    .game-container {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #ffffff #808080 #808080 #ffffff;
+      padding: 4px 8px;
     }
 
     .score {
-      font-weight: 700;
-      padding: clamp(6px, 1.5vh, 8px) clamp(10px, 2vw, 12px);
-      background: #f6f9ff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: clamp(12px, 2.5vw, 14px);
-      min-height: 36px;
+      font-family: 'Digital-7', monospace;
+      font-weight: bold;
+      font-size: 18px;
+      background: #000;
+      color: #ff0000;
+      padding: 2px 8px;
+      min-width: 60px;
+      text-align: center;
+      border: 2px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
     }
 
     button {
-      background: linear-gradient(180deg, #ffffff, #eaf3ff);
-      border: 1px solid #aac5e5;
-      border-radius: 8px;
-      padding: clamp(8px, 1.5vh, 12px) clamp(10px, 2vw, 16px);
+      background: var(--win-xp-button);
+      border: 2px solid;
+      border-color: #ffffff #808080 #808080 #ffffff;
+      padding: 4px 12px;
       cursor: pointer;
-      font-weight: 700;
-      color: var(--text);
-      min-height: 44px;
-      min-width: 44px;
-      font-size: clamp(12px, 2.5vw, 14px);
+      font-weight: normal;
+      color: #000;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+    }
+
+    button:hover {
+      background: var(--win-xp-button-hover);
+    }
+
+    button:active {
+      border-color: #808080 #ffffff #ffffff #808080;
     }
 
     .board {
-      --board-size: clamp(260px, 85vw, min(calc(100vw - 32px), calc(100vh - 190px), 360px));
       display: grid;
-      grid-template-columns: repeat(9, minmax(0, 1fr));
-      gap: 2px;
-      width: var(--board-size);
-      max-width: 100%;
-      aspect-ratio: 1 / 1;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 0;
+      width: 100%;
       margin: 0 auto;
-      background: #bdd2ea;
-      padding: clamp(4px, 1vh, 6px);
-      border-radius: 8px;
+      background: #c0c0c0;
+      border: 3px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
       user-select: none;
       touch-action: manipulation;
-      flex: 0 0 auto;
+      aspect-ratio: 1 / 1;
+      max-width: min(90vw, 400px);
+      min-width: 200px;
+      overflow: hidden;
     }
 
     .cell {
       width: 100%;
       aspect-ratio: 1 / 1;
-      min-width: 28px;
-      min-height: 28px;
-      border: 1px solid #9eb7d1;
-      background: #dfeaf7;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #ffffff #808080 #808080 #ffffff;
       display: grid;
       place-items: center;
-      font-weight: 700;
-      font-size: clamp(11px, calc(var(--board-size) / 14), 17px);
+      font-weight: bold;
+      font-size: clamp(12px, 3vw, 16px);
       cursor: pointer;
       padding: 0;
       touch-action: manipulation;
+      font-family: Tahoma, sans-serif;
+    }
+
+    .cell:active {
+      border-color: #808080 #ffffff #ffffff #808080;
     }
 
     .cell.revealed {
-      background: #ffffff;
+      background: #c0c0c0;
+      border: 1px solid #808080;
       cursor: default;
     }
 
     .cell.flagged {
-      background: #fff3d6;
-      color: #8d4b00;
+      background: #c0c0c0;
     }
 
     .cell.mine {
-      background: #ffd9d9;
-      color: #9b1c1c;
+      background: #c0c0c0;
     }
 
-    .cell[data-value="1"] { color: #1d4ed8; }
-    .cell[data-value="2"] { color: #15803d; }
-    .cell[data-value="3"] { color: #b45309; }
-    .cell[data-value="4"] { color: #4f46e5; }
-    .cell[data-value="5"] { color: #991b1b; }
-    .cell[data-value="6"] { color: #0f766e; }
-    .cell[data-value="7"] { color: #111827; }
-    .cell[data-value="8"] { color: #6b7280; }
+    .cell[data-value="1"] { color: #0000ff; }
+    .cell[data-value="2"] { color: #008000; }
+    .cell[data-value="3"] { color: #ff0000; }
+    .cell[data-value="4"] { color: #000080; }
+    .cell[data-value="5"] { color: #800000; }
+    .cell[data-value="6"] { color: #008080; }
+    .cell[data-value="7"] { color: #000000; }
+    .cell[data-value="8"] { color: #808080; }
 
     .prank-overlay {
       position: fixed;
@@ -291,15 +381,75 @@
       0%, 47%, 53%, 100% { opacity: 1; }
       50% { opacity: 0.2; }
     }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .window {
+        max-width: 95vw;
+      }
+
+      .board {
+        max-width: min(95vw, 350px);
+      }
+
+      .cell {
+        font-size: clamp(10px, 4vw, 14px);
+      }
+
+      .score {
+        font-size: clamp(14px, 4vw, 18px);
+        min-width: 50px;
+      }
+
+      button {
+        font-size: clamp(10px, 3vw, 11px);
+        padding: 4px 8px;
+      }
+
+      .menu-item {
+        padding: 2px 6px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .window {
+        max-width: 98vw;
+      }
+
+      .board {
+        max-width: min(98vw, 300px);
+      }
+
+      .cell {
+        font-size: clamp(9px, 4.5vw, 12px);
+      }
+
+      .score {
+        font-size: clamp(12px, 4vw, 16px);
+        min-width: 45px;
+      }
+
+      .window-title {
+        font-size: 11px;
+      }
+
+      .menu-item {
+        padding: 2px 4px;
+        font-size: 9px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Minesweeper</h1>
-    <p>Reveal all safe cells without hitting a mine.</p>
+  <div class="window">
     <div class="controls">
-      <div class="score" id="status">Mines: 10</div>
-      <button id="restartBtn">Restart</button>
+      <div class="score" id="status">010</div>
+      <button id="restartBtn">😊</button>
+      <div class="score" id="timer">000</div>
     </div>
     <div class="board" id="board" aria-label="Minesweeper board"></div>
   </div>
@@ -319,6 +469,7 @@
     const boardEl = document.getElementById('board');
     const statusEl = document.getElementById('status');
     const restartBtn = document.getElementById('restartBtn');
+    const timerEl = document.getElementById('timer');
     const prankOverlay = document.getElementById('prank-overlay');
     const prankCountdown = document.getElementById('prank-countdown');
     const prankTitle = document.getElementById('prank-title');
@@ -333,6 +484,9 @@
     let gameOver = false;
     let prankInterval = null;
     let countdownLeft = 10;
+    let timerInterval = null;
+    let timeElapsed = 0;
+    let gameStarted = false;
 
     function createBoard() {
       board = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ({
@@ -424,18 +578,49 @@
       restartGame();
     }
 
+    function startTimer() {
+      if (gameStarted || gameOver) return;
+      gameStarted = true;
+      timeElapsed = 0;
+      timerEl.textContent = '000';
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeElapsed++;
+        if (timeElapsed > 999) {
+          timeElapsed = 999;
+          clearInterval(timerInterval);
+        }
+        timerEl.textContent = String(timeElapsed).padStart(3, '0');
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function updateMineCount() {
+      const flaggedCount = board.flat().filter(cell => cell.flagged).length;
+      const remaining = mines - flaggedCount;
+      statusEl.textContent = String(Math.max(0, remaining)).padStart(3, '0');
+    }
+
     function revealCell(r, c) {
       if (gameOver) return;
       const cell = board[r][c];
       if (cell.revealed || cell.flagged) return;
+
+      if (!gameStarted) {
+        startTimer();
+      }
 
       cell.revealed = true;
 
       if (cell.mine) {
         cell.revealed = true;
         gameOver = true;
+        stopTimer();
+        restartBtn.textContent = '😵';
         revealAllMines();
-        statusEl.textContent = 'Boom! Try again.';
         render();
         triggerPrankOverlay();
         return;
@@ -458,6 +643,7 @@
       const cell = board[r][c];
       if (cell.revealed) return;
       cell.flagged = !cell.flagged;
+      updateMineCount();
       render();
     }
 
@@ -476,7 +662,9 @@
       const revealedSafe = board.flat().filter(cell => !cell.mine && cell.revealed).length;
       if (revealedSafe === safeCells) {
         gameOver = true;
-        statusEl.textContent = 'You win!';
+        stopTimer();
+        restartBtn.textContent = '😎';
+        statusEl.textContent = '000';
       }
     }
 
@@ -519,7 +707,12 @@
     function restartGame() {
       createBoard();
       gameOver = false;
-      statusEl.textContent = 'Mines: 10';
+      gameStarted = false;
+      timeElapsed = 0;
+      stopTimer();
+      timerEl.textContent = '000';
+      statusEl.textContent = '010';
+      restartBtn.textContent = '😊';
       render();
     }
 
