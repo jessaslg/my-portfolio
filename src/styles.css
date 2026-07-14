@@ -347,9 +347,11 @@ button.icon:focus-visible{
 .window{position:absolute;left:140px;top:100px;width:clamp(320px, 90vw, 760px);max-width:calc(100vw - 40px);max-height:calc(100vh - 120px);background:var(--window-bg);border:4px solid #000;box-shadow:8px 8px 0 rgba(0,0,0,0.6);font-family: Tahoma, "Segoe UI", sans-serif;box-sizing:border-box;overflow:auto}
 /******** Minesweeper window chrome ********/
 #minesweeper-window {
-  width: min(500px, calc(100vw - 32px));
-  height: min(680px, calc(100vh - 56px));
+  width: clamp(420px, 85vw, 520px);
+  height: clamp(500px, 80vh, 650px);
   min-height: 0;
+  left: clamp(12px, 5vw, 140px);
+  top: clamp(60px, 10vh, 100px);
 }
 #minesweeper-window .minesweeper-browser-content {
   flex: 1 1 auto;
@@ -1089,9 +1091,8 @@ body.loading-fullscreen .window{ visibility: hidden; }
   backdrop-filter: blur(6px);
   box-sizing: border-box;
   touch-action: manipulation;
-  height: clamp(32px, 7vh, 36px);
+  height: clamp(36px, 7vh, 40px);
   min-width: clamp(140px, 25vw, 180px);
-  min-height:44px;
   justify-content: flex-start;
   position: relative;
   pointer-events: auto;
