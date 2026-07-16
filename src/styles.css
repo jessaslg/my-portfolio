@@ -113,7 +113,7 @@ html,body{height:100%;margin:0;background:#0b2b3a;color:var(--text);overflow:hid
 html, body { height:100%; margin:0; background:#0b2b3a; color:var(--text); overflow:hidden; overscroll-behavior:none; }
 html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;background:#0b2b3a;color:var(--text);overflow:hidden}
 .boot-screen{position:fixed;inset:0;background:#000;color:var(--accent);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:50}
-.boot-content{width:80%;max-width:800px}
+.boot-content{width:clamp(60%, 80vw, 90%);max-width:clamp(400px, 80vw, 800px);padding:0 clamp(10px, 2vw, 20px);box-sizing:border-box}
 .logo{font-family: Tahoma, "Segoe UI", sans-serif;color:#7fffd4;margin-bottom:10px;text-align:center}
 .boot-lines{background:transparent;border:none;color:var(--accent);font-family:inherit;white-space:pre-wrap}
 .progress{height:10px;background:#222;margin-top:16px;border:2px solid #333}
@@ -122,14 +122,14 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 
 /* XP-like starting screen */
-.xp-starting{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:24px}
-.xp-big-logo{width:360px;max-width:80%;height:auto;display:block}
-.xp-loading{display:flex;flex-direction:column;align-items:center;gap:10px;width:420px;max-width:90%}
+.xp-starting{display:flex;flex-direction:column;align-items:center;gap:clamp(8px, 2vh, 14px);margin-top:clamp(12px, 3vh, 24px);width:100%;max-width:100%;padding:0 clamp(10px, 2vw, 20px);box-sizing:border-box}
+.xp-big-logo{width:clamp(180px, 40vw, 360px);max-width:80%;height:auto;display:block}
+.xp-loading{display:flex;flex-direction:column;align-items:center;gap:clamp(6px, 1.5vh, 10px);width:clamp(200px, 50vw, 420px);max-width:90%}
 .xp-progress-container {
-  width: 300px;
-  height: 100px;
-  border: 2px solid #7c7c7c;
-  border-radius: 6px;
+  width: clamp(150px, 35vw, 300px);
+  height: clamp(50px, 10vh, 100px);
+  border: clamp(1px, 0.2vw, 2px) solid #7c7c7c;
+  border-radius: clamp(3px, 0.6vw, 6px);
   background-color: #000;
   position: relative;
   overflow: hidden;
@@ -141,16 +141,16 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 .block-group {
   display: flex;
-  gap: 4px;
+  gap: clamp(2px, 0.4vw, 4px);
   position: absolute;
   animation: xp-chase 2s linear infinite;
 }
 
 
 .block {
-  width: 12px;
-  height: 14px;
-  border-radius: 1px;
+  width: clamp(6px, 1.2vw, 12px);
+  height: clamp(7px, 1.4vw, 14px);
+  border-radius: clamp(0.5px, 0.1vw, 1px);
   background: linear-gradient(
     to bottom,
     #3a76ff 0%,
@@ -163,27 +163,27 @@ html,body{height:100%;margin:0;font-family: Tahoma, "Segoe UI", sans-serif;backg
 
 
 @keyframes xp-chase {
-  0% { transform: translateX(-50px); }
-  100% { transform: translateX(310px); }
+  0% { transform: translateX(clamp(-25px, -5vw, -50px)); }
+  100% { transform: translateX(clamp(155px, 35vw, 310px)); }
 }
 
 
-.copyright{font-family: Tahoma, "Segoe UI", sans-serif;color:#fff;opacity:0.85;font-size:12px;text-shadow:0 1px 0 rgba(0,0,0,0.6)}
+.copyright{font-family: Tahoma, "Segoe UI", sans-serif;color:#fff;opacity:0.85;font-size:clamp(10px, 2vw, 12px);text-shadow:0 1px 0 rgba(0,0,0,0.6)}
 
 
 /* Boot screen bottom text (XP style) */
 .boot-copyright,
 .boot-microsoft{
   position:fixed;
-  bottom:10px;
+  bottom:clamp(8px, 2vh, 10px);
   color:#fff;
   text-shadow:0 1px 0 rgba(0,0,0,0.8);
   opacity:0.9;
-  font-size:12px;
+  font-size:clamp(10px, 2vw, 12px);
   z-index:80;
 }
-.boot-copyright{left:12px;font-family: Tahoma, "Segoe UI", sans-serif}
-.boot-microsoft{right:12px;font-family: Tahoma, "Segoe UI", sans-serif;letter-spacing:1px;font-size:14px}
+.boot-copyright{left:clamp(8px, 2vw, 12px);font-family: Tahoma, "Segoe UI", sans-serif}
+.boot-microsoft{right:clamp(8px, 2vw, 12px);font-family: Tahoma, "Segoe UI", sans-serif;letter-spacing:clamp(0.5px, 0.1vw, 1px);font-size:clamp(11px, 2.2vw, 14px)}
 
 
 

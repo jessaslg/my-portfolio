@@ -1321,15 +1321,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(resumeSaveBtn){
     resumeSaveBtn.addEventListener('click',()=>{
       // trigger download of resume PDF (read from data or src)
-      const url = resumePdf ? (resumePdf.getAttribute('data') || resumePdf.getAttribute('src') || '/assets/PDF/resume.pdf') : '/assets/PDF/resume.pdf';
+      const url = resumePdf ? (resumePdf.getAttribute('data') || resumePdf.getAttribute('src') || '/assets/PDF/saligao-jessa-resume.pdf ') : '/assets/PDF/saligao-jessa-resume.pdf';
       const cleanUrl = url.split('#')[0];
-      const a = document.createElement('a'); a.href = cleanUrl; a.download = 'resume.pdf'; document.body.appendChild(a); a.click(); a.remove();
+      const a = document.createElement('a'); a.href = cleanUrl; a.download = 'saligao-jessa-resume.pdf'; document.body.appendChild(a); a.click(); a.remove();
     });
   }
   if(resumePrintBtn){
     resumePrintBtn.addEventListener('click',()=>{
       // open the PDF in a new tab and call print (best-effort)
-      const url = resumePdf ? (resumePdf.getAttribute('data') || resumePdf.getAttribute('src') || '/assets/PDF/resume.pdf') : '/assets/PDF/resume.pdf';
+      const url = resumePdf ? (resumePdf.getAttribute('data') || resumePdf.getAttribute('src') || '/assets/PDF/saligao-jessa-resume.pdf') : '/assets/PDF/saligao-jessa-resume.pdf';
       const w = window.open(url.split('#')[0], '_blank');
       if(w){ w.focus(); try{ w.print(); }catch(e){} }
     });
@@ -1557,7 +1557,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   function openResumeInNewTab(){
     // Backwards-compatible: open resume in a new tab if requested.
-    const url = (resumePdf && (resumePdf.getAttribute('data') || resumePdf.getAttribute('src'))) || '/assets/PDF/resume.pdf';
+    const url = (resumePdf && (resumePdf.getAttribute('data') || resumePdf.getAttribute('src'))) || '/assets/PDF/saligao-jessa-resume.pdf';
     try{ const w = window.open(url.split('#')[0], '_blank'); if(w) w.focus(); }catch(e){ window.location.href = url.split('#')[0]; }
   }
 
@@ -1866,7 +1866,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const mailClose = document.querySelector('#mail-window .win-btn.close');
   if(mailClose) mailClose.addEventListener('click', closeMailWindow);
   const mailCancel = document.getElementById('mail-cancel'); if(mailCancel) mailCancel.addEventListener('click', closeMailWindow);
-
+  
   // Mail form submit: open default mail client with prefilled fields (mailto)
   try{
     const contactFormEl = document.getElementById('contact-form');
