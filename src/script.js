@@ -82,75 +82,75 @@ document.addEventListener('DOMContentLoaded',()=>{
     const galleryFrameEl = projectWin.querySelector('.project-gallery-frame');
 
     const graphicDesignImages = [
-      'assets/socmedposter/BACK TO FRIENDS.png',
-      'assets/socmedposter/CHERRY VAPE.png',
-      'assets/socmedposter/DEANS LIST PONY.png',
-      'assets/socmedposter/DUBAI COOKIE.png',
-      'assets/socmedposter/HAPPY BIRTHDAY.png',
-      'assets/socmedposter/iRISE.png',
-      'assets/socmedposter/iRISE2.png',
-      'assets/socmedposter/iRISE3.png',
-      'assets/socmedposter/iRISE4.png',
-      'assets/socmedposter/JISULIFE.png',
-      'assets/socmedposter/MAXAI1.png',
-      'assets/socmedposter/MAXAI10.png',
-      'assets/socmedposter/MAXAI11.png',
-      'assets/socmedposter/MAXAI2.png',
-      'assets/socmedposter/MAXAI3.png',
-      'assets/socmedposter/MAXAI4.png',
-      'assets/socmedposter/MAXAI5.png',
-      'assets/socmedposter/MAXAI6.png',
-      'assets/socmedposter/MAXAI7.png',
-      'assets/socmedposter/MAXAI8.png',
-      'assets/socmedposter/MAXAI9.png',
-      'assets/socmedposter/MAXAISA1.png',
-      'assets/socmedposter/MAXAISA2.png',
-      'assets/socmedposter/MAXAISA3.png',
-      'assets/socmedposter/MAXAISA4.png',
-      'assets/socmedposter/MAXAISA5.png',
-      'assets/socmedposter/MAXAISA6.png',
-      'assets/socmedposter/MIQUESI ERAS TOUR.png',
-      'assets/socmedposter/MIQUESI FACEBOOK INSIRED.png',
-      'assets/socmedposter/MIQUESI TIKTOK INSPIRED 2.png',
-      'assets/socmedposter/MIQUESI TIKTOK INSPIRED 3.png',
-      'assets/socmedposter/MIQUESI TIKTOK INSPIRED.png',
-      'assets/socmedposter/NEW BALANCE X STRAVA.png',
-      'assets/socmedposter/PIKACHU.png',
-      'assets/socmedposter/PINK BACK TO SCHOOL.png',
-      'assets/socmedposter/SATESERY1.png',
-      'assets/socmedposter/SATESERY2.png',
-      'assets/socmedposter/SATESERY3.png',
-      'assets/socmedposter/SATESERY4.png',
-      'assets/socmedposter/SATESERY5.png',
-      'assets/socmedposter/SATESERY6.png',
-      'assets/socmedposter/SMTESERY1.png',
-      'assets/socmedposter/SMTESERY2.png',
-      'assets/socmedposter/SMTESERY3.png',
-      'assets/socmedposter/SMTESERY4.png',
-      'assets/socmedposter/SMTESERY5.png',
-      'assets/socmedposter/SUMMER SUNSCREEN.png',
-      'assets/socmedposter/TRUSTED PET CORNER.png',
-      'assets/socmedposter/PARISA WANG.png',
-      'assets/socmedposter/SJDH - DOCTORS.png',
-      'assets/socmedposter/SJDH - DOCTORS2.png',
-      'assets/socmedposter/SJDH - DOCTORS3.png',
-      'assets/socmedposter/SJDH - DOCTORS4.png',
-      'assets/socmedposter/SJDH SERVICES 1.png',
-      'assets/socmedposter/SJDH SERVICES 2.png',
-      'assets/socmedposter/SJDH SERVICES 3.png',
-      'assets/socmedposter/SJDH SERVICES 4.png',
-      'assets/socmedposter/SJDH BE PATIENT.png',
-      'assets/socmedposter/SJDH YAKAP.png',
+      '/assets/socmedposter/BACK TO FRIENDS.png',
+      '/assets/socmedposter/CHERRY VAPE.png',
+      '/assets/socmedposter/DEANS LIST PONY.png',
+      '/assets/socmedposter/DUBAI COOKIE.png',
+      '/assets/socmedposter/HAPPY BIRTHDAY.png',
+      '/assets/socmedposter/iRISE.png',
+      '/assets/socmedposter/iRISE2.png',
+      '/assets/socmedposter/iRISE3.png',
+      '/assets/socmedposter/iRISE4.png',
+      '/assets/socmedposter/JISULIFE.png',
+      '/assets/socmedposter/MAXAI1.png',
+      '/assets/socmedposter/MAXAI10.png',
+      '/assets/socmedposter/MAXAI11.png',
+      '/assets/socmedposter/MAXAI2.png',
+      '/assets/socmedposter/MAXAI3.png',
+      '/assets/socmedposter/MAXAI4.png',
+      '/assets/socmedposter/MAXAI5.png',
+      '/assets/socmedposter/MAXAI6.png',
+      '/assets/socmedposter/MAXAI7.png',
+      '/assets/socmedposter/MAXAI8.png',
+      '/assets/socmedposter/MAXAI9.png',
+      '/assets/socmedposter/MAXAISA1.png',
+      '/assets/socmedposter/MAXAISA2.png',
+      '/assets/socmedposter/MAXAISA3.png',
+      '/assets/socmedposter/MAXAISA4.png',
+      '/assets/socmedposter/MAXAISA5.png',
+      '/assets/socmedposter/MAXAISA6.png',
+      '/assets/socmedposter/MIQUESI ERAS TOUR.png',
+      '/assets/socmedposter/MIQUESI FACEBOOK INSIRED.png',
+      '/assets/socmedposter/MIQUESI TIKTOK INSPIRED 2.png',
+      '/assets/socmedposter/MIQUESI TIKTOK INSPIRED 3.png',
+      '/assets/socmedposter/MIQUESI TIKTOK INSPIRED.png',
+      '/assets/socmedposter/NEW BALANCE X STRAVA.png',
+      '/assets/socmedposter/PIKACHU.png',
+      '/assets/socmedposter/PINK BACK TO SCHOOL.png',
+      '/assets/socmedposter/SATESERY1.png',
+      '/assets/socmedposter/SATESERY2.png',
+      '/assets/socmedposter/SATESERY3.png',
+      '/assets/socmedposter/SATESERY4.png',
+      '/assets/socmedposter/SATESERY5.png',
+      '/assets/socmedposter/SATESERY6.png',
+      '/assets/socmedposter/SMTESERY1.png',
+      '/assets/socmedposter/SMTESERY2.png',
+      '/assets/socmedposter/SMTESERY3.png',
+      '/assets/socmedposter/SMTESERY4.png',
+      '/assets/socmedposter/SMTESERY5.png',
+      '/assets/socmedposter/SUMMER SUNSCREEN.png',
+      '/assets/socmedposter/TRUSTED PET CORNER.png',
+      '/assets/socmedposter/PARISA WANG.png',
+      '/assets/socmedposter/SJDH - DOCTORS.png',
+      '/assets/socmedposter/SJDH - DOCTORS2.png',
+      '/assets/socmedposter/SJDH - DOCTORS3.png',
+      '/assets/socmedposter/SJDH - DOCTORS4.png',
+      '/assets/socmedposter/SJDH SERVICES 1.png',
+      '/assets/socmedposter/SJDH SERVICES 2.png',
+      '/assets/socmedposter/SJDH SERVICES 3.png',
+      '/assets/socmedposter/SJDH SERVICES 4.png',
+      '/assets/socmedposter/SJDH BE PATIENT.png',
+      '/assets/socmedposter/SJDH YAKAP.png',
     ];
 
     const thumbnailImages = [
-      'assets/thumbnail/a day in my life.png',
-      'assets/thumbnail/explore batangas.png',
-      'assets/thumbnail/graduated podcast.png',
-      'assets/thumbnail/laiya batangas.png',
-      'assets/thumbnail/lomi review.png',
-      'assets/thumbnail/stop using canva.png',
-      'assets/thumbnail/unlimited meta hack.png'
+      '/assets/thumbnail/a day in my life.png',
+      '/assets/thumbnail/explore batangas.png',
+      '/assets/thumbnail/graduated podcast.png',
+      '/assets/thumbnail/laiya batangas.png',
+      '/assets/thumbnail/lomi review.png',
+      '/assets/thumbnail/stop using canva.png',
+      '/assets/thumbnail/unlimited meta hack.png'
     ];
 
     function escapeHtml(value){
@@ -173,11 +173,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A simple and interactive website presenting projects, credentials, and profile information.',
         overview: 'My Windows XP-inspired portfolio is a simple and interactive website that presents my work and background. It includes my application development projects, creative designs, certifications, experience, and personal information in a familiar desktop-style layout.',
         images: [
-          'assets/web app screenshots/portfolio0.jpg',
-          'assets/web app screenshots/portfolio1.jpg',
-          'assets/web app screenshots/portfolio2.jpg',
-          'assets/web app screenshots/portfolio3.jpg',
-          'assets/web app screenshots/portfolio4.jpg'
+          '/assets/web app screenshots/portfolio0.jpg',
+          '/assets/web app screenshots/portfolio1.jpg',
+          '/assets/web app screenshots/portfolio2.jpg',
+          '/assets/web app screenshots/portfolio3.jpg',
+          '/assets/web app screenshots/portfolio4.jpg'
         ],
         techstack: ['HTML', 'CSS', 'JavaScript'],
         github: 'https://github.com/jessaslg/my-portfolio'
@@ -187,19 +187,19 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'An AI-powered web-based business management system for creative micro-enterprises.',
         overview: 'Studio360 is an AI-powered web-based business management system designed for creative micro-enterprises, with its core focus on automating the bookkeeping process and providing intelligent business insights. The system utilizes artificial intelligence to read and process invoice data, automatically classify transactions, and transfer them to the appropriate books of accounts, including the General Journal, General Ledger, Cash Receipts Journal, and Cash Disbursements Journal, based on the transaction type. By eliminating manual bookkeeping, Studio360 reduces human error, saves time, and improves the accuracy of financial records. In addition to financial automation, the system analyzes historical sales data to identify seasonal trends and generate sales forecasts, providing business owners with an interactive dashboard that visualizes sales performance, including periods of low, consistent, and high sales. These AI-driven features enable data-informed decision-making, improve financial management, and help small businesses optimize inventory planning, monitor business performance, and support sustainable growth through intelligent automation.',
         images: [
-          'assets/web app screenshots/studio1.png',
-          'assets/web app screenshots/studio2.png',
-          'assets/web app screenshots/studio3.png',
-          'assets/web app screenshots/studio4.png',
-          'assets/web app screenshots/studio5.png',
-          'assets/web app screenshots/studio6.png',
-          'assets/web app screenshots/studio7.png',
-          'assets/web app screenshots/studio8.png',
-          'assets/web app screenshots/studio9.png',
-          'assets/web app screenshots/studio10.png',
-          'assets/web app screenshots/studio11.png',
-          'assets/web app screenshots/studio12.png',
-          'assets/web app screenshots/studio13.png'
+          '/assets/web app screenshots/studio1.png',
+          '/assets/web app screenshots/studio2.png',
+          '/assets/web app screenshots/studio3.png',
+          '/assets/web app screenshots/studio4.png',
+          '/assets/web app screenshots/studio5.png',
+          '/assets/web app screenshots/studio6.png',
+          '/assets/web app screenshots/studio7.png',
+          '/assets/web app screenshots/studio8.png',
+          '/assets/web app screenshots/studio9.png',
+          '/assets/web app screenshots/studio10.png',
+          '/assets/web app screenshots/studio11.png',
+          '/assets/web app screenshots/studio12.png',
+          '/assets/web app screenshots/studio13.png'
         ],
         techstack: ['Python', 'Tesseract', 'JavaScript','C','C++', 'Supabase'],
         role: 'Backend and AI Developer, Assistant Team Lead, Documentation/Tester',
@@ -210,10 +210,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A front-end mobile commerce prototype built to showcase a complete retail user journey.',
         overview: 'Studio360 Mobile Application is a front-end mobile application designed to showcase the core features of an online retail platform. Built without a backend or database integration, the application demonstrates a complete user interface and user experience flow, including user authentication, product browsing, coupon claiming, shopping cart management, checkout process, and user profile management. It serves as a functional prototype that highlights the design and navigation of a modern e-commerce mobile application.',
         images: [
-          'assets/web app screenshots/mobile1.png',
-          'assets/web app screenshots/mobile2.png',
-          'assets/web app screenshots/mobile3.png',
-          'assets/web app screenshots/mobile4.png'
+          '/assets/web app screenshots/mobile1.png',
+          '/assets/web app screenshots/mobile2.png',
+          '/assets/web app screenshots/mobile3.png',
+          '/assets/web app screenshots/mobile4.png'
         ],
         techstack: ['Flutter', 'Dart'],
         role: 'Team lead and Developer'
@@ -223,11 +223,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A payroll management work focused on streamlining salary and attendance processing.',
         overview: "Employee Management and Payroll System is a web-based application developed as part of my internship at San Juan District Hospital. The project was intended to support employee management and payroll processing and was designed to be interoperable with the hospital's existing systems. However, the integration was not completed because payroll operations were later centralized under the Batangas Provincial Government. Despite this, the project served as a valuable training ground where I gained hands-on experience in web development, database management, and building real-world administrative systems.",
         images: [
-          'assets/web app screenshots/sjdh1.jpg',
-          'assets/web app screenshots/sjdh2.jpg',
-          'assets/web app screenshots/sjdh3.jpg',
-          'assets/web app screenshots/sjdh4.jpg',
-          'assets/web app screenshots/sjdh5.jpg'
+          '/assets/web app screenshots/sjdh1.jpg',
+          '/assets/web app screenshots/sjdh2.jpg',
+          '/assets/web app screenshots/sjdh3.jpg',
+          '/assets/web app screenshots/sjdh4.jpg',
+          '/assets/web app screenshots/sjdh5.jpg'
         ],
         techstack: ['HTML', 'CSS', 'JavaScript']
       },
@@ -236,9 +236,9 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'An integrated health management system for organizing healthcare workflows and records.',
         overview: 'VentSpace: The main goal is to create a safe space where people can talk about their mental health openly. The platform will help reduce the stigma by encouraging users to share their feelings. It will allow people to connect with others who face similar struggles. Users will be able to post anonymously to feel more comfortable. The platform will also provide resources to help people manage their mental health. Overall, it aims to raise awareness and support emotional well-being. It also inlude Physical Health support such as BMI Calculator, Meal Planning, and Exercise Suggetions to support overall health and well-being.',
         images: [
-          'assets/web app screenshots/ventspace1.png',
-          'assets/web app screenshots/ventspace2.png',
-          'assets/web app screenshots/ventspace3.png'
+          '/assets/web app screenshots/ventspace1.png',
+          '/assets/web app screenshots/ventspace2.png',
+          '/assets/web app screenshots/ventspace3.png'
         ],
         techstack: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
         role: ['Developer', 'Team Lead'],
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         title: 'Boss Mix Payroll Managament',
         summary: 'A payroll management application work for organizing employee and compensation data.',
         overview: 'Boss Mix Payroll Managament is an application development project that organizes payroll records, computes employee pay details, and supports payroll documentation. The work is aimed at improving payroll data consistency and providing a more efficient process for payroll administration.',
-        images: ['assets/web app screenshots/bossmix1.JPEG'],
+        images: ['/assets/web app screenshots/bossmix1.JPEG'],
         techstack: ['C#', '.Net framework', 'Microsoft Access'],
         role: 'Team lead and Full-Stack Developer'
       },
@@ -257,10 +257,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A C# Windows Forms desktop application for managing personal notes and tasks with MS Access database.',
         overview: 'PRO/DUCTIVE is a simple productivity application developed using C# Windows Forms with an MS Access database as part of a second-year college project. It enables users to create, store, update, and delete personal notes through basic CRUD operations, providing a straightforward desktop solution for organizing daily tasks and reminders.',
         images: [
-          'assets/web app screenshots/productive1.jpeg',
-          'assets/web app screenshots/productive2.jpeg',
-          'assets/web app screenshots/productive3.jpeg',
-          'assets/web app screenshots/productive4.jpeg'
+          '/assets/web app screenshots/productive1.JPEG',
+          '/assets/web app screenshots/productive2.JPEG',
+          '/assets/web app screenshots/productive3.JPEG',
+          '/assets/web app screenshots/productive4.JPEG'
         ],
         techstack: ['C#', 'Windows Forms', 'MS Access'],
         role: 'Team lead and Developer',
@@ -271,12 +271,12 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A console-based C++ system for scheduling counseling appointments and managing student records.',
         overview: 'The Guidance E-Counselling System is a console-based application developed using C++ that streamlines basic guidance office operations. It allows students to schedule counseling appointments, while administrators can create counseling notes and manage student records through basic CRUD (Create, Read, Update, and Delete) functionalities. Although the system does not use a database, it temporarily stores and manages student information using C++ vectors, demonstrating core data management concepts and fundamental software development principles.',
         images: [
-          'assets/web app screenshots/ecounselling6.jpeg',
-          'assets/web app screenshots/ecounselling1.jpg',
-          'assets/web app screenshots/ecounselling2.jpg',
-          'assets/web app screenshots/ecounselling3.jpg',
-          'assets/web app screenshots/ecounselling4.jpg',
-          'assets/web app screenshots/ecounselling5.jpg'
+          '/assets/web app screenshots/ecounselling6.JPEG',
+          '/assets/web app screenshots/ecounselling1.jpg',
+          '/assets/web app screenshots/ecounselling2.jpg',
+          '/assets/web app screenshots/ecounselling3.jpg',
+          '/assets/web app screenshots/ecounselling4.jpg',
+          '/assets/web app screenshots/ecounselling5.jpg'
         ],
         techstack: ['C++'],
         role: 'Team lead and Developer'
@@ -296,13 +296,13 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A creative email newsletter design collection.',
         overview: 'This email newsletter design entry showcases a polished set of promotional email visuals used for digital marketing and audience engagement. The layout focuses on clear hierarchy, readable typography, and visually engaging content blocks.',
         images: [
-          'assets/email newsletter/beach products.png',
-          'assets/email newsletter/crickle.png',
-          'assets/email newsletter/goodie hoodie.png',
-          'assets/email newsletter/goodie hoodie2.png',
-          'assets/email newsletter/siren glow.png',
-          'assets/email newsletter/soaphisticated.png',
-          'assets/email newsletter/ube drinks.png'
+          '/assets/email newsletter/beach products.png',
+          '/assets/email newsletter/crickle.png',
+          '/assets/email newsletter/goodie hoodie.png',
+          '/assets/email newsletter/goodie hoodie2.png',
+          '/assets/email newsletter/siren glow.png',
+          '/assets/email newsletter/soaphisticated.png',
+          '/assets/email newsletter/ube drinks.png'
         ],
         techstack: ['Canva', 'Photoshop'],
         role: 'Designer',
@@ -335,12 +335,12 @@ document.addEventListener('DOMContentLoaded',()=>{
         summary: 'A complete gallery of my graphic design works.',
         overview: 'This graphic design portfolio presents a complete collection of my social media posters and creative visual works. The gallery highlights a range of promotional, celebratory, and concept-driven designs arranged in a familiar desktop-style viewer.',
         images: [
-          'assets/poster/500-days.jpg',
-          'assets/poster/DESERTER.jpg',
-          'assets/poster/LIWANAG SA DILIM.jpg',
-          'assets/poster/PINNACLE.jpg',
-          'assets/poster/STREET-SIGN.jpg',
-          'assets/poster/THE-LOVED-ONE.jpg'
+          '/assets/poster/500-days.jpg',
+          '/assets/poster/DESERTER.jpg',
+          '/assets/poster/LIWANAG SA DILIM.jpg',
+          '/assets/poster/PINNACLE.jpg',
+          '/assets/poster/STREET-SIGN.jpg',
+          '/assets/poster/THE-LOVED-ONE.jpg'
         ],
         techstack: ['Photoshop', 'Canva'],
         role: 'Designer',
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     function renderGallery(project){
-      const images = project.images && project.images.length ? project.images : ['assets/img/project-logo.jpg'];
+      const images = project.images && project.images.length ? project.images : ['/assets/img/project-logo.jpg'];
       if(activeProjectIndex < 0 || activeProjectIndex >= images.length){
         activeProjectIndex = 0;
       }
@@ -398,12 +398,12 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(galleryDotsEl){ galleryDotsEl.style.display = ''; }
       if(prevButton && !prevButton.dataset.iconReady){
         prevButton.style.display = '';
-        prevButton.innerHTML = '<img src="assets/img/slider_left.png" alt="Previous">';
+        prevButton.innerHTML = '<img src="/assets/img/slider_left.png" alt="Previous">';
         prevButton.dataset.iconReady = 'true';
       }
       if(nextButton && !nextButton.dataset.iconReady){
         nextButton.style.display = '';
-        nextButton.innerHTML = '<img src="assets/img/slider_right.png" alt="Next">';
+        nextButton.innerHTML = '<img src="/assets/img/slider_right.png" alt="Next">';
         nextButton.dataset.iconReady = 'true';
       }
       if(galleryImageEl){
@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     function stepGallery(step){
       const project = getProject(activeProjectId);
-      const images = project.images && project.images.length ? project.images : ['assets/img/project-logo.jpg'];
+      const images = project.images && project.images.length ? project.images : ['/assets/img/project-logo.jpg'];
       activeProjectIndex = (activeProjectIndex + step + images.length) % images.length;
       renderProject(activeProjectId, activeProjectIndex);
     }
